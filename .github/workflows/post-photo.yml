@@ -1,4 +1,4 @@
-name: Кейс Магазин одежды (фото + кнопка)
+name: Кейс Брендинг (фото + кнопка)
 
 on:
   workflow_dispatch:
@@ -19,29 +19,14 @@ jobs:
           CHAT_ID = os.environ["RAW_CHAT_ID"].strip()
           BASE = f"https://api.telegram.org/bot{TOKEN}"
 
-          photo_url = "https://litter.catbox.moe/p63nj7.jpeg"
+          photo_url = "https://litter.catbox.moe/q9acel.jpeg"
 
           caption = (
-              '<b>Магазин женской одежды</b> <tg-emoji emoji-id="5431449001532594346">⚡️</tg-emoji>\n'
+              '<b>Пример Брендинга</b> <tg-emoji emoji-id="5427042798878610107">🌈</tg-emoji>\n'
               '\n'
-              '<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> <b>Задача:</b>\n'
-              'Запустить рекламу на сообщения в группу ВК по продаже одежды. Ранее реклама не запускалась, главная цель — заявки.\n'
+              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Пример:</b>\n'
               '\n'
-              '<tg-emoji emoji-id="5350460637182993292">🎯</tg-emoji> <b>Результат:</b>\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>58</b> лидов\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>96 ₽</b> за лид\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>5 606 ₽</b> затраты\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>35</b> покупок из 58 лидов\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Средний чек — <b>12 500 ₽</b>\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Реклама <b>окупилась!</b>\n'
-              '\n'
-              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>\n'
-              '\n'
-              '<blockquote><tg-emoji emoji-id="5471883477219549006">💪</tg-emoji> Лид по 96 ₽ и конверсия в покупку 60% — отличный результат для магазина одежды. Вложения вернули с прибылью.</blockquote>\n'
-              '\n'
-              '<tg-emoji emoji-id="5465665476971471368">❌</tg-emoji> <b>Задать вопрос</b> <tg-emoji emoji-id="5465665476971471368">❌</tg-emoji>\n'
-              '\n'
-              '#ТаргетВК #СообществоВК #КейсМагазинОдежды'
+              '#Брендинг #КейсБрендинг'
           )
 
           keyboard = {
