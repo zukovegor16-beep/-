@@ -24,17 +24,15 @@ jobs:
           caption = (
               '<b>Пример Сайта</b> <tg-emoji emoji-id="5235630047959727475">💎</tg-emoji>\n'
               '\n'
-              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Ниже картинка:</b>\n'
-              '\n'
-              '<tg-emoji emoji-id="5471883477219549006">💪</tg-emoji> <b>Хочу такой же сайт</b>\n'
-              '\n'
-              '#ВебДизайн #КейсСайт'
+             
+            
+            ВебДизайн #КейсСайт'
           )
 
           keyboard = {
               "inline_keyboard": [
-                  [{
-                      "text": "Задать вопрос",
+                  
+                      "text": "Хочу такой же сайт💪",
                       "url": "https://t.me/Keis_Marketing_bot?start=price"
                   }]
               ]
