@@ -19,9 +19,7 @@ jobs:
           CHAT_ID = os.environ["RAW_CHAT_ID"].strip()
           BASE = f"https://api.telegram.org/bot{TOKEN}"
 
-          # ⚠️ Замените ссылку на свою картинку (прямой URL, доступный публично)
-          photo_url = "https://litter.catbox.moe/ae5snp.jpeg"
-
+      
           caption = (
               '<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>Мульти-компания полного цикла</b>\n'
               '100+ услуг — <u>только Штатные специалисты</u> <tg-emoji emoji-id="5471883477219549006">💪</tg-emoji>\n'
