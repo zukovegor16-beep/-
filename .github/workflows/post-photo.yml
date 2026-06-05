@@ -1,13 +1,13 @@
-name: Premium витрина (фото + эмодзи)
+name: Premium витрина (без фото)
 
 on:
   workflow_dispatch:
 
 jobs:
-  send-photo-and-pin:
+  send-message-and-pin:
     runs-on: ubuntu-latest
     steps:
-      - name: Отправка фото и закрепление
+      - name: Отправка сообщения и закрепление
         env:
           RAW_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           RAW_CHAT_ID: ${{ secrets.CHAT_ID }}
@@ -19,8 +19,7 @@ jobs:
           CHAT_ID = os.environ["RAW_CHAT_ID"].strip()
           BASE = f"https://api.telegram.org/bot{TOKEN}"
 
-      
-          caption = (
+          text = (
               '<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>Мульти-компания полного цикла</b>\n'
               '100+ услуг — <u>только Штатные специалисты</u> <tg-emoji emoji-id="5471883477219549006">💪</tg-emoji>\n'
               '\n'
@@ -51,14 +50,14 @@ jobs:
 
           payload = {
               "chat_id": CHAT_ID,
-              "photo": photo_url,
-              "caption": caption,
+              "text": text,
               "parse_mode": "HTML",
+              "disable_web_page_preview": True,
               "reply_markup": keyboard
           }
 
           req = urllib.request.Request(
-              f"{BASE}/sendPhoto",
+              f"{BASE}/sendMessage",
               data=json.dumps(payload).encode("utf-8"),
               headers={"Content-Type": "application/json"}
           )
@@ -76,7 +75,7 @@ jobs:
               sys.exit(1)
 
           msg_id = result["result"]["message_id"]
-          print("✅ Фото отправлено, id:", msg_id)
+          print("✅ Сообщение отправлено, id:", msg_id)
 
           pin_payload = {
               "chat_id": CHAT_ID,
