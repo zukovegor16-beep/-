@@ -1,0 +1,100 @@
+name: Premium витрина (фото + эмодзи)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  send-photo-and-pin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Отправка фото и закрепление
+        env:
+          RAW_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          RAW_CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          python3 << 'PYEOF'
+          import os, json, urllib.request, sys
+
+          TOKEN = os.environ["RAW_TOKEN"].strip()
+          CHAT_ID = os.environ["RAW_CHAT_ID"].strip()
+          BASE = f"https://api.telegram.org/bot{TOKEN}"
+
+          # ⚠️ Замените ссылку на свою картинку (прямой URL, доступный публично)
+          photo_url = "https://example.com/your-photo.jpg"
+
+          caption = (
+              '<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>Мульти-компания полного цикла</b>\n'
+              '100+ услуг — <u>только Штатные специалисты</u> <tg-emoji emoji-id="5471883477219549006">💪</tg-emoji>\n'
+              '\n'
+              '━━━━━━━━━━━━━━━━━━━━\n'
+              '<blockquote><tg-emoji emoji-id="5465665476971471368">❌</tg-emoji> <b>Проблема 2026:</b>\n'
+              'Сотни исполнителей, хаос цен, риск потерять бюджет</blockquote>\n'
+              '\n'
+              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Наш подход:</b> минимум цены, максимум качества\n'
+              '\n'
+              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Наша гарантия:</b> возврат оплаты при отсутствии результата в <tg-emoji emoji-id="5370704514561093615">1️⃣</tg-emoji>Первую неделю\n'
+              '\n'
+              '━━━━━━━━━━━━━━━━━━━━\n'
+              '<tg-emoji emoji-id="5213306719215577669">🧩</tg-emoji> <b>Экспертиза:</b> SEO, соцсети, маркетплейсы, реклама, сайты, CRM, боты, Mini App (TG/VK), ИИ, аналитика, креатив, рассылки, накрутка, аккаунты — <a href="https://t.me/Keis_Marketing_bot?start=price">под ключ</a>.\n'
+              '\n'
+              '<tg-emoji emoji-id="5235630047959727475">💎</tg-emoji> <b>Хотите расчёт под ваш проект?</b> <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>'
+          )
+
+          keyboard = {
+              "inline_keyboard": [
+                  [{
+                      "text": "⚡️ Рассчитать цену ✅",
+                      "url": "https://t.me/Keis_Marketing_bot?start=price",
+                      "style": "success",
+                      "has_shine_effect": True
+                  }]
+              ]
+          }
+
+          payload = {
+              "chat_id": CHAT_ID,
+              "photo": photo_url,
+              "caption": caption,
+              "parse_mode": "HTML",
+              "reply_markup": keyboard
+          }
+
+          req = urllib.request.Request(
+              f"{BASE}/sendPhoto",
+              data=json.dumps(payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"}
+          )
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  result = json.loads(resp.read().decode())
+          except urllib.error.HTTPError as e:
+              error_body = e.read().decode()
+              print(f"Ошибка API Telegram: {e.code} {e.reason}")
+              print("Ответ:", error_body)
+              sys.exit(1)
+
+          if not result.get("ok"):
+              print("Ошибка отправки:", result)
+              sys.exit(1)
+
+          msg_id = result["result"]["message_id"]
+          print("✅ Фото отправлено, id:", msg_id)
+
+          pin_payload = {
+              "chat_id": CHAT_ID,
+              "message_id": msg_id,
+              "disable_notification": False
+          }
+          req = urllib.request.Request(
+              f"{BASE}/pinChatMessage",
+              data=json.dumps(pin_payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"}
+          )
+          with urllib.request.urlopen(req) as resp:
+              pin_res = json.loads(resp.read().decode())
+              if pin_res.get("ok"):
+                  print("📌 Сообщение закреплено!")
+              else:
+                  print("Ошибка закрепления:", pin_res)
+                  sys.exit(1)
+          PYEOF
