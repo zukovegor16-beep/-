@@ -20,7 +20,7 @@ jobs:
           BASE = f"https://api.telegram.org/bot{TOKEN}"
 
           # ⚠️ Замените ссылку на свою картинку (прямой URL, доступный публично)
-          photo_url = "https://example.com/your-photo.jpg"
+          photo_url = "https://litter.catbox.moe/ae5snp.jpeg"
 
           caption = (
               '<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>Мульти-компания полного цикла</b>\n'
