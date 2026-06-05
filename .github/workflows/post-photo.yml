@@ -1,20 +1,84 @@
-<b>Магазин женской одежды</b> <tg-emoji emoji-id="5431449001532594346">⚡️</tg-emoji>
+name: Кейс Магазин одежды (фото + кнопка)
 
-<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> <b>Задача:</b>
-Запустить рекламу на сообщения в группу ВК по продаже одежды. Ранее реклама не запускалась, главная цель — заявки.
+on:
+  workflow_dispatch:
 
-<tg-emoji emoji-id="5350460637182993292">🎯</tg-emoji> <b>Результат:</b>
-<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>58</b> лидов
-<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>96 ₽</b> за лид
-<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>5 606 ₽</b> затраты
-<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>35</b> покупок из 58 лидов
-<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Средний чек — <b>12 500 ₽</b>
-<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Реклама <b>окупилась!</b>
+jobs:
+  send-photo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Отправка фото
+        env:
+          RAW_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          RAW_CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          python3 << 'PYEOF'
+          import os, json, urllib.request, sys
 
-<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>
+          TOKEN = os.environ["RAW_TOKEN"].strip()
+          CHAT_ID = os.environ["RAW_CHAT_ID"].strip()
+          BASE = f"https://api.telegram.org/bot{TOKEN}"
 
-<blockquote><tg-emoji emoji-id="5471883477219549006">💪</tg-emoji> Лид по 96 ₽ и конверсия в покупку 60% — отличный результат для магазина одежды. Вложения вернули с прибылью.</blockquote>
+          photo_url = "https://litter.catbox.moe/p63nj7.jpeg"
 
-<tg-emoji emoji-id="5465665476971471368">❌</tg-emoji> <b>Задать вопрос</b> <tg-emoji emoji-id="5465665476971471368">❌</tg-emoji>
+          caption = (
+              '<b>Магазин женской одежды</b> <tg-emoji emoji-id="5431449001532594346">⚡️</tg-emoji>\n'
+              '\n'
+              '<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> <b>Задача:</b>\n'
+              'Запустить рекламу на сообщения в группу ВК по продаже одежды. Ранее реклама не запускалась, главная цель — заявки.\n'
+              '\n'
+              '<tg-emoji emoji-id="5350460637182993292">🎯</tg-emoji> <b>Результат:</b>\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>58</b> лидов\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>96 ₽</b> за лид\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>5 606 ₽</b> затраты\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>35</b> покупок из 58 лидов\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Средний чек — <b>12 500 ₽</b>\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Реклама <b>окупилась!</b>\n'
+              '\n'
+              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>\n'
+              '\n'
+              '<blockquote><tg-emoji emoji-id="5471883477219549006">💪</tg-emoji> Лид по 96 ₽ и конверсия в покупку 60% — отличный результат для магазина одежды. Вложения вернули с прибылью.</blockquote>\n'
+              '\n'
+              '<tg-emoji emoji-id="5465665476971471368">❌</tg-emoji> <b>Задать вопрос</b> <tg-emoji emoji-id="5465665476971471368">❌</tg-emoji>\n'
+              '\n'
+              '#ТаргетВК #СообществоВК #КейсМагазинОдежды'
+          )
 
-#ТаргетВК #СообществоВК #КейсМагазинОдежды
+          keyboard = {
+              "inline_keyboard": [
+                  [{
+                      "text": "Задать вопрос",
+                      "url": "https://t.me/Keis_Marketing_bot?start=price"
+                  }]
+              ]
+          }
+
+          payload = {
+              "chat_id": CHAT_ID,
+              "photo": photo_url,
+              "caption": caption,
+              "parse_mode": "HTML",
+              "reply_markup": keyboard
+          }
+
+          req = urllib.request.Request(
+              f"{BASE}/sendPhoto",
+              data=json.dumps(payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"}
+          )
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  result = json.loads(resp.read().decode())
+          except urllib.error.HTTPError as e:
+              error_body = e.read().decode()
+              print(f"Ошибка API Telegram: {e.code} {e.reason}")
+              print("Ответ:", error_body)
+              sys.exit(1)
+
+          if not result.get("ok"):
+              print("Ошибка отправки:", result)
+              sys.exit(1)
+
+          msg_id = result["result"]["message_id"]
+          print("✅ Фото отправлено, id:", msg_id)
+          PYEOF
