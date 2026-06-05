@@ -1,4 +1,4 @@
-name: Кейс Брендинг (фото + кнопка)
+name: Кейс Сайт (фото + кнопка)
 
 on:
   workflow_dispatch:
@@ -19,14 +19,16 @@ jobs:
           CHAT_ID = os.environ["RAW_CHAT_ID"].strip()
           BASE = f"https://api.telegram.org/bot{TOKEN}"
 
-          photo_url = "https://litter.catbox.moe/q9acel.jpeg"
+          photo_url = "https://litter.catbox.moe/o6ppvz.jpeg"
 
           caption = (
-              '<b>Пример Брендинга</b> <tg-emoji emoji-id="5427042798878610107">🌈</tg-emoji>\n'
+              '<b>Пример Сайта</b> <tg-emoji emoji-id="5235630047959727475">💎</tg-emoji>\n'
               '\n'
-              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Пример:</b>\n'
+              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Ниже картинка:</b>\n'
               '\n'
-              '#Брендинг #КейсБрендинг'
+              '<tg-emoji emoji-id="5471883477219549006">💪</tg-emoji> <b>Хочу такой же сайт</b>\n'
+              '\n'
+              '#ВебДизайн #КейсСайт'
           )
 
           keyboard = {
