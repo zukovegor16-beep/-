@@ -1,13 +1,13 @@
-name: Premium витрина (без фото)
+name: Кейс Логистика (фото + кнопка)
 
 on:
   workflow_dispatch:
 
 jobs:
-  send-message-and-pin:
+  send-photo-and-pin:
     runs-on: ubuntu-latest
     steps:
-      - name: Отправка сообщения и закрепление
+      - name: Отправка фото и закрепление
         env:
           RAW_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           RAW_CHAT_ID: ${{ secrets.CHAT_ID }}
@@ -19,45 +19,50 @@ jobs:
           CHAT_ID = os.environ["RAW_CHAT_ID"].strip()
           BASE = f"https://api.telegram.org/bot{TOKEN}"
 
-          text = (
-              '<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>Мульти-компания полного цикла</b>\n'
-              '100+ услуг — <u>только Штатные специалисты</u> <tg-emoji emoji-id="5471883477219549006">💪</tg-emoji>\n'
+          photo_url = "https://litter.catbox.moe/ae5snp.jpeg"
+
+          caption = (
+              'Реклама полного спектра услуг по выкупу и доставке товаров из Китая.\n'
               '\n'
-              '━━━━━━━━━━━━━━━━━━━━\n'
-              '<blockquote><tg-emoji emoji-id="5465665476971471368">❌</tg-emoji> <b>Проблема 2026:</b>\n'
-              'Сотни исполнителей, хаос цен, риск потерять бюджет</blockquote>\n'
+              '<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> Было:\n'
+              'Профиль в Инстаграм с небольшим числом подписчиков.\n'
+              'Цель: получать от 5 лидов в день за 20$.\n'
               '\n'
-              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Наш подход:</b> минимум цены, максимум качества\n'
+              '<tg-emoji emoji-id="5244837092042750681">📈</tg-emoji> Сейчас:\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> 4 500 подписчиков\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> 68 целевых лидов за последние 7 дней\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> 1,65$ за лид\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> 0,45$ за переход\n'
               '\n'
-              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Наша гарантия:</b> возврат оплаты при отсутствии результата в <tg-emoji emoji-id="5370704514561093615">1️⃣</tg-emoji>Первую неделю\n'
+              '<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> В планах:\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> 10 000 подписчиков\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> 100 целевых лидов в неделю\n'
+              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> 1,00$ за лид и 0,20$ за переход\n'
               '\n'
-              '━━━━━━━━━━━━━━━━━━━━\n'
-              '<tg-emoji emoji-id="5213306719215577669">🧩</tg-emoji> <b>Экспертиза:</b> SEO, соцсети, маркетплейсы, реклама, сайты, CRM, боты, Mini App (TG/VK), ИИ, аналитика, креатив, рассылки, накрутка, аккаунты — <a href="https://t.me/Keis_Marketing_bot?start=price">под ключ</a>.\n'
+              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики (см. вложение)\n'
               '\n'
-              '<tg-emoji emoji-id="5235630047959727475">💎</tg-emoji> <b>Хотите расчёт под ваш проект?</b> <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>'
+              '#ТаргетИнст #КейсЛогистика'
           )
 
           keyboard = {
               "inline_keyboard": [
                   [{
-                      "text": "⚡️ Рассчитать цену ✅",
-                      "url": "https://t.me/Keis_Marketing_bot?start=price",
-                      "style": "success",
-                      "has_shine_effect": True
+                      "text": "Хочу также 👆",
+                      "url": "https://t.me/Keis_Marketing_bot?start=price"
                   }]
               ]
           }
 
           payload = {
               "chat_id": CHAT_ID,
-              "text": text,
+              "photo": photo_url,
+              "caption": caption,
               "parse_mode": "HTML",
-              "disable_web_page_preview": True,
               "reply_markup": keyboard
           }
 
           req = urllib.request.Request(
-              f"{BASE}/sendMessage",
+              f"{BASE}/sendPhoto",
               data=json.dumps(payload).encode("utf-8"),
               headers={"Content-Type": "application/json"}
           )
@@ -75,7 +80,7 @@ jobs:
               sys.exit(1)
 
           msg_id = result["result"]["message_id"]
-          print("✅ Сообщение отправлено, id:", msg_id)
+          print("✅ Фото отправлено, id:", msg_id)
 
           pin_payload = {
               "chat_id": CHAT_ID,
