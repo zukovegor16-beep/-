@@ -41,7 +41,7 @@ jobs:
               "inline_keyboard": [
                   [{
                       "text": "⚡️ Рассчитать цену ✅",
-                      "url": "https://t.me/+Ii3LUA4Zt1U4ZmRi",
+                      "url": "https://t.me/Keis_Market_bot",
                       "style": "success",
                       "has_shine_effect": True
                   }]
