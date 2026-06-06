@@ -47,7 +47,7 @@ jobs:
           keyboard = {
               "inline_keyboard": [
                   [{
-                      "text": "Узнатл подробнее 👈",
+                      "text": "Узнать подробнее 👈",
                       "url": "https://t.me/Keis_Market_bot"
                   }]
               ]
