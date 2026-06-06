@@ -41,7 +41,7 @@ jobs:
               "inline_keyboard": [
                   [{
                       "text": "⚡️ Рассчитать цену ✅",
-                      "url": "https://t.me/Keis_Marketing_bot?start=price",
+                      "url": "https://t.me/Keis_Market_bot?start=price",
                       "style": "success",
                       "has_shine_effect": True
                   }]
@@ -90,4 +90,4 @@ jobs:
           with urllib.request.urlopen(req) as resp:
               pin_res = json.loads(resp.read().decode())
               if pin_res.get("ok"):
-                  print("📌 Сообщение закреплено!")
+                  print("📌 Сообщение закреплено!")n
