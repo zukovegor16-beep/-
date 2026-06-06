@@ -90,4 +90,4 @@ jobs:
           with urllib.request.urlopen(req) as resp:
               pin_res = json.loads(resp.read().decode())
               if pin_res.get("ok"):
-                  print("📌 Сообщение закреплено!")n
+                  print("📌 Сообщение закреплено!")
