@@ -1,13 +1,13 @@
-name: Кейс Агентство недвижимости 2 (фото + кнопка)
+name: Premium витрина (без фото)
 
 on:
   workflow_dispatch:
 
 jobs:
-  send-photo:
+  send-message-and-pin:
     runs-on: ubuntu-latest
     steps:
-      - name: Отправка фото
+      - name: Отправка сообщения и закрепление
         env:
           RAW_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           RAW_CHAT_ID: ${{ secrets.CHAT_ID }}
@@ -19,47 +19,45 @@ jobs:
           CHAT_ID = os.environ["RAW_CHAT_ID"].strip()
           BASE = f"https://api.telegram.org/bot{TOKEN}"
 
-          photo_url = "https://litter.catbox.moe/lb46dk.jpeg"
-
-          caption = (
-              '<b>Агентство недвижимости</b> <tg-emoji emoji-id="5235630047959727475">💎</tg-emoji>\n'
+          text = (
+              '<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>Мульти-компания полного цикла</b>\n'
+              '100+ услуг — <u>только Штатные специалисты</u> <tg-emoji emoji-id="5471883477219549006">💪</tg-emoji>\n'
               '\n'
-              '<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> <b>На старте:</b>\n'
-              'Проблема — нет заявок на покупку недвижимости.\n'
-              'Цели: повысить узнаваемость бренда, принести заявки.\n'
+              '━━━━━━━━━━━━━━━━━━━━\n'
+              '<blockquote><tg-emoji emoji-id="5465665476971471368">❌</tg-emoji> <b>Проблема 2026:</b>\n'
+              'Сотни исполнителей, хаос цен, риск потерять бюджет</blockquote>\n'
               '\n'
-              '<tg-emoji emoji-id="5350460637182993292">🎯</tg-emoji> <b>По окончании:</b>\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>1 590</b> переходов на сайт по <b>0,06$</b>\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>564</b> лида на сайте\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>124</b> записавшихся и пришедших на показ объектов\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Период рекламы: <b>1 месяц</b>\n'
+              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Наш подход:</b> минимум цены, максимум качества\n'
               '\n'
-              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>\n'
+              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Наша гарантия:</b> возврат оплаты при отсутствии результата в <tg-emoji emoji-id="5370704514561093615">1️⃣</tg-emoji>Первую неделю\n'
               '\n'
-              '<blockquote><tg-emoji emoji-id="5471883477219549006">💪</tg-emoji> Переходы по 6 центов и 124 реальных показа за месяц — реклама отработала мощно.</blockquote>\n'
+              '━━━━━━━━━━━━━━━━━━━━\n'
+              '<tg-emoji emoji-id="5213306719215577669">🧩</tg-emoji> <b>Экспертиза:</b> SEO, соцсети, маркетплейсы, реклама, сайты, CRM, боты, Mini App (TG/VK), ИИ, аналитика, креатив, рассылки, накрутка, аккаунты — <a href="https://t.me/Keis_Marketing_bot?start=price">под ключ</a>.\n'
               '\n'
-              '#ТаргетВК #КейсНедвижимость #Лиды'
+              '<tg-emoji emoji-id="5235630047959727475">💎</tg-emoji> <b>Хотите расчёт под ваш проект?</b> <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>'
           )
 
           keyboard = {
               "inline_keyboard": [
                   [{
-                      "text": "💪 Хочу такие же лиды",
-                      "url": "https://t.me/Keis_Market_bot"
+                      "text": "⚡️ Рассчитать цену ✅",
+                      "url": "https://t.me/Keis_Market_bot",
+                      "style": "success",
+                      "has_shine_effect": True
                   }]
               ]
           }
 
           payload = {
               "chat_id": CHAT_ID,
-              "photo": photo_url,
-              "caption": caption,
+              "text": text,
               "parse_mode": "HTML",
+              "disable_web_page_preview": True,
               "reply_markup": keyboard
           }
 
           req = urllib.request.Request(
-              f"{BASE}/sendPhoto",
+              f"{BASE}/sendMessage",
               data=json.dumps(payload).encode("utf-8"),
               headers={"Content-Type": "application/json"}
           )
@@ -77,5 +75,19 @@ jobs:
               sys.exit(1)
 
           msg_id = result["result"]["message_id"]
-          print("✅ Фото отправлено, id:", msg_id)
-          PYEOF
+          print("✅ Сообщение отправлено, id:", msg_id)
+
+          pin_payload = {
+              "chat_id": CHAT_ID,
+              "message_id": msg_id,
+              "disable_notification": False
+          }
+          req = urllib.request.Request(
+              f"{BASE}/pinChatMessage",
+              data=json.dumps(pin_payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"}
+          )
+          with urllib.request.urlopen(req) as resp:
+              pin_res = json.loads(resp.read().decode())
+              if pin_res.get("ok"):
+                  print("📌 Сообщение закреплено!")
