@@ -17,7 +17,7 @@ jobs:
           TOKEN = os.environ["RAW_TOKEN"].strip()
           BASE = f"https://api.telegram.org/bot{TOKEN}"
 
-          chat_ids = ["-5163008856", "-1004298276638", "-1003977287366"]
+          chat_ids = -5163008856
 
           posts = [
               # 1. Premium витрина (текст)
