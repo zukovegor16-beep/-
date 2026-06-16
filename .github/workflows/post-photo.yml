@@ -1,36 +1,20 @@
-name: Кейс Трейдинг (массовая рассылка в 12 групп)
+name: Кейс Трейдинг (чат -1004125779446)
 
 on:
   workflow_dispatch:
 
 jobs:
-  mass-send:
+  send-photo:
     runs-on: ubuntu-latest
     steps:
-      - name: Отправка поста во все группы
-        env:
-          RAW_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+      - name: Отправка фото
         run: |
           python3 << 'PYEOF'
-          import os, json, urllib.request, sys, time
+          import json, urllib.request
 
-          TOKEN = os.environ["RAW_TOKEN"].strip()
+          TOKEN = "8664485659:AAHP0QkuqUg2rFW1McDrqVrKXcQHgHAOw-c"
           BASE = f"https://api.telegram.org/bot{TOKEN}"
-
-          chat_ids = [
-              "-5279257345",
-              "-1003842142193",
-              "-1003999780199",
-              "-1003928237837",
-              "-1003892980689",
-              "-1003751677425",
-              "-1003934265637",
-              "-5227701268",
-              "-1004125779446",
-              "-5163008856",
-              "-1004298276638",
-              "-1003977287366"
-          ]
+          CHAT_ID = "-1004125779446"
 
           photo_url = "https://s10.iimage.su/s/16/g1ADdtgxzCjR4BHC11zqnRSKkTmZube97ChmdeNno.jpg"
 
@@ -64,34 +48,26 @@ jobs:
               ]
           }
 
-          def send_photo(chat_id):
-              payload = {
-                  "chat_id": chat_id,
-                  "photo": photo_url,
-                  "caption": caption,
-                  "parse_mode": "HTML",
-                  "reply_markup": keyboard
-              }
-              req = urllib.request.Request(
-                  f"{BASE}/sendPhoto",
-                  data=json.dumps(payload).encode("utf-8"),
-                  headers={"Content-Type": "application/json"}
-              )
-              try:
-                  with urllib.request.urlopen(req) as resp:
-                      return json.loads(resp.read().decode())
-              except urllib.error.HTTPError as e:
-                  error_body = e.read().decode()
-                  print(f"  ❌ Ошибка HTTP {e.code}: {error_body}")
-                  return None
+          payload = {
+              "chat_id": CHAT_ID,
+              "photo": photo_url,
+              "caption": caption,
+              "parse_mode": "HTML",
+              "reply_markup": keyboard
+          }
 
-          for chat in chat_ids:
-              print(f"Отправка в чат {chat}")
-              result = send_photo(chat)
-              if result and result.get("ok"):
-                  print(f"  ✅ Пост отправлен, id={result['result']['message_id']}")
+          req = urllib.request.Request(
+              f"{BASE}/sendPhoto",
+              data=json.dumps(payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"}
+          )
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  result = json.loads(resp.read().decode())
+              if result.get("ok"):
+                  print(f"✅ Пост отправлен, id={result['result']['message_id']}")
               else:
-                  print(f"  ❌ Ошибка при отправке (бот не админ или чат не найден)")
-              time.sleep(3)
-          print("Готово!")
+                  print(f"❌ Ошибка API: {result}")
+          except Exception as e:
+              print(f"❌ Исключение: {e}")
           PYEOF
