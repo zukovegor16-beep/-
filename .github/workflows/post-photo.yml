@@ -1,82 +1,289 @@
-name: Кейс Трейдинг (фото + кнопка)
+name: Массовая рассылка всех кейсов (12 групп)
 
 on:
   workflow_dispatch:
 
 jobs:
-  send-photo:
+  mass-send:
     runs-on: ubuntu-latest
     steps:
-      - name: Отправка фото
+      - name: Отправка всех постов в 12 групп
         env:
           RAW_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          RAW_CHAT_ID: ${{ secrets.CHAT_ID }}
         run: |
           python3 << 'PYEOF'
-          import os, json, urllib.request, sys
+          import os, json, urllib.request, sys, time
 
           TOKEN = os.environ["RAW_TOKEN"].strip()
-          CHAT_ID = os.environ["RAW_CHAT_ID"].strip()
           BASE = f"https://api.telegram.org/bot{TOKEN}"
 
-          photo_url = "https://s10.iimage.su/s/16/g1ADdtgxzCjR4BHC11zqnRSKkTmZube97ChmdeNno.jpg"
+          chat_ids = [
+              "-5279257345",
+              "-1003842142193",
+              "-1003999780199",
+              "-1003928237837",
+              "-1003892980689",
+              "-1003751677425",
+              "-1003934265637",
+              "-5227701268",
+              "-1004125779446",
+              "-5163008856",
+              "-1004298276638",
+              "-1003977287366"
+          ]
 
-          caption = (
-              '<b>ТГ-канал с обучением трейдингу</b> <tg-emoji emoji-id="5431449001532594346">⚡️</tg-emoji>\n'
-              '\n'
-              '<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> <b>На старте:</b>\n'
-              'Пустой ТГ-канал про трейдинг и инвестиции.\n'
-              '\n'
-              '<tg-emoji emoji-id="5350460637182993292">🎯</tg-emoji> <b>Задача:</b>\n'
-              'Набрать подписчиков для монетизации блога рекламой.\n'
-              '\n'
-              '<tg-emoji emoji-id="5244837092042750681">📈</tg-emoji> <b>Сейчас (первая неделя):</b>\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>475</b> переходов по <b>17,28 ₽</b>\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>249</b> подписчиков\n'
-              '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Конверсия в подписку — <b>52%</b>\n'
-              '\n'
-              '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>\n'
-              '\n'
-              '<blockquote><tg-emoji emoji-id="5420315771991497307">🔥</tg-emoji> 249 живых подписчиков за неделю с конверсией 52% при стоимости перехода 17₽. Клиент увеличивает бюджет — результат пошёл.</blockquote>\n'
-              '\n'
-              '#ТаргетИнст #Трейдинг #ПродвижениеКанала'
-          )
+          posts = [
+              # 1. Premium витрина (текст)
+              {
+                  "type": "text",
+                  "text": (
+                      '<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>Мульти-компания полного цикла</b>\n'
+                      '100+ услуг — <u>только Штатные специалисты</u> <tg-emoji emoji-id="5471883477219549006">💪</tg-emoji>\n'
+                      '\n'
+                      '━━━━━━━━━━━━━━━━━━━━\n'
+                      '<blockquote><tg-emoji emoji-id="5465665476971471368">❌</tg-emoji> <b>Проблема 2026:</b>\n'
+                      'Сотни исполнителей, хаос цен, риск потерять бюджет</blockquote>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Наш подход:</b> минимум цены, максимум качества\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Наша гарантия:</b> возврат оплаты при отсутствии результата в <tg-emoji emoji-id="5370704514561093615">1️⃣</tg-emoji>Первую неделю\n'
+                      '\n'
+                      '━━━━━━━━━━━━━━━━━━━━\n'
+                      '<tg-emoji emoji-id="5213306719215577669">🧩</tg-emoji> <b>Экспертиза:</b> SEO, соцсети, маркетплейсы, реклама, сайты, CRM, боты, Mini App (TG/VK), ИИ, аналитика, креатив, рассылки, накрутка, аккаунты — <a href="https://t.me/Keis_Marketing_bot?start=price">под ключ</a>.\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5235630047959727475">💎</tg-emoji> <b>Хотите расчёт под ваш проект?</b> <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>'
+                  ),
+                  "keyboard": [
+                      [{"text": "⚡️ Рассчитать цену ✅", "url": "https://t.me/Keis_Market_bot", "style": "success", "has_shine_effect": True}]
+                  ]
+              },
+              # 2. Кейс Логистика
+              {
+                  "type": "photo",
+                  "photo_url": "https://litter.catbox.moe/ae5snp.jpeg",
+                  "caption": (
+                      '<b>Реклама полного спектра услуг по выкупу и доставке товаров из Китая</b> <tg-emoji emoji-id="5431449001532594346">⚡️</tg-emoji>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> <b>Было:</b>\n'
+                      'Профиль в Инстаграм с небольшим числом подписчиков.\n'
+                      'Цель: получать от 5 лидов в день за <b>20$</b>.\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5244837092042750681">📈</tg-emoji> <b>Сейчас:</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>4 500</b> подписчиков\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>68</b> целевых лидов за последние 7 дней\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>1,65$</b> за лид\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>0,45$</b> за переход\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>В планах:</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>10 000</b> подписчиков\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>100</b> целевых лидов в неделю\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>1,00$</b> за лид и <b>0,20$</b> за переход\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>\n'
+                      '\n'
+                      '<blockquote><tg-emoji emoji-id="5420315771991497307">🔥</tg-emoji> Снизили стоимость лида в <b>12 раз</b>. Лиды по 1,65$ при плане 20$ — это реальность. Можно масштабировать в любой нише услуг.</blockquote>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5350460637182993292">🎯</tg-emoji> <b>Хочешь так же?</b> Пиши, запустим под твой проект.\n'
+                      '\n'
+                      '#ТаргетИнст #Кейс #ДоставкаИзКитая #Логистика'
+                  ),
+                  "keyboard": [
+                      [{"text": "Хочу также 👆", "url": "https://t.me/Keis_Market_bot"}]
+                  ]
+              },
+              # 3. Кейс Брендинг
+              {
+                  "type": "photo",
+                  "photo_url": "https://litter.catbox.moe/q9acel.jpeg",
+                  "caption": (
+                      '<b>Пример Брендинга</b> <tg-emoji emoji-id="5427042798878610107">🌈</tg-emoji>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> <b>Пример:</b>\n'
+                      '\n'
+                      '#Брендинг #КейсБрендинг'
+                  ),
+                  "keyboard": [
+                      [{"text": "Задать вопрос", "url": "https://t.me/Keis_Market_bot"}]
+                  ]
+              },
+              # 4. Кейс Магазин одежды
+              {
+                  "type": "photo",
+                  "photo_url": "https://litter.catbox.moe/p63nj7.jpeg",
+                  "caption": (
+                      '<b>Магазин женской одежды</b> <tg-emoji emoji-id="5431449001532594346">⚡️</tg-emoji>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> <b>Задача:</b>\n'
+                      'Запустить рекламу на сообщения в группу ВК по продаже одежды. Ранее реклама не запускалась, главная цель — заявки.\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5350460637182993292">🎯</tg-emoji> <b>Результат:</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>58</b> лидов\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>96 ₽</b> за лид\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>5 606 ₽</b> затраты\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>35</b> покупок из 58 лидов\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Средний чек — <b>12 500 ₽</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Реклама <b>окупилась!</b>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>\n'
+                      '\n'
+                      '<blockquote><tg-emoji emoji-id="5471883477219549006">💪</tg-emoji> Лид по 96 ₽ и конверсия в покупку 60% — отличный результат для магазина одежды. Вложения вернули с прибылью.</blockquote>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5465665476971471368">❌</tg-emoji> <b>Задать вопрос</b> <tg-emoji emoji-id="5465665476971471368">❌</tg-emoji>\n'
+                      '\n'
+                      '#ТаргетВК #СообществоВК #КейсМагазинОдежды'
+                  ),
+                  "keyboard": [
+                      [{"text": "Узнатл подробнее 👈", "url": "https://t.me/Keis_Market_bot"}]
+                  ]
+              },
+              # 5. Кейс Сайт
+              {
+                  "type": "photo",
+                  "photo_url": "https://litter.catbox.moe/o6ppvz.jpeg",
+                  "caption": (
+                      '<b>Пример Сайта</b> <tg-emoji emoji-id="5235630047959727475">💎</tg-emoji>\n'
+                      '\n'
+                      '#ВебДизайн #КейсСайт'
+                  ),
+                  "keyboard": [
+                      [{"text": "Хочу такой же сайт💪", "url": "https://t.me/Keis_Market_bot"}]
+                  ]
+              },
+              # 6. Кейс Агентство недвижимости
+              {
+                  "type": "photo",
+                  "photo_url": "https://litter.catbox.moe/5ssl94.jpeg",
+                  "caption": (
+                      '<b>Агентство недвижимости</b> <tg-emoji emoji-id="5235630047959727475">💎</tg-emoji>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> <b>Задача:</b>\n'
+                      'Повысить узнаваемость агентства среди потенциальных клиентов.\n'
+                      'Привести горячие заявки.\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5213306719215577669">🧩</tg-emoji> <b>Что сделано:</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Исследована реклама конкурентов. Лид-магнит согласован с клиентом\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Созданы рекламные креативы с рекламой объектов, размещённых в каталоге\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Рекламные кампании запущены на лид-формы с возможностью скачивания каталога объектов\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5350460637182993292">🎯</tg-emoji> <b>Результат:</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>1 124</b> заявки по <b>2$</b> за лид\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Охват — <b>105 704</b> чел., кликов — <b>>12 000</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Потрачено <b>>2 200$</b>, стоимость клика <b>0,16$</b>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>\n'
+                      '\n'
+                      '<blockquote><tg-emoji emoji-id="5471883477219549006">💪</tg-emoji> Больше 1000 лидов по 2$ — отличный результат для рынка недвижимости. Кампания окупается, бренд знают.</blockquote>\n'
+                      '\n'
+                      '#Таргет #КейсАгентство #Лиды'
+                  ),
+                  "keyboard": [
+                      [{"text": "Подробнее🚀", "url": "https://t.me/Keis_Market_bot"}]
+                  ]
+              },
+              # 7. Кейс Агентство недвижимости 2
+              {
+                  "type": "photo",
+                  "photo_url": "https://litter.catbox.moe/lb46dk.jpeg",
+                  "caption": (
+                      '<b>Агентство недвижимости</b> <tg-emoji emoji-id="5235630047959727475">💎</tg-emoji>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> <b>На старте:</b>\n'
+                      'Проблема — нет заявок на покупку недвижимости.\n'
+                      'Цели: повысить узнаваемость бренда, принести заявки.\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5350460637182993292">🎯</tg-emoji> <b>По окончании:</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>1 590</b> переходов на сайт по <b>0,06$</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>564</b> лида на сайте\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>124</b> записавшихся и пришедших на показ объектов\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Период рекламы: <b>1 месяц</b>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>\n'
+                      '\n'
+                      '<blockquote><tg-emoji emoji-id="5471883477219549006">💪</tg-emoji> Переходы по 6 центов и 124 реальных показа за месяц — реклама отработала мощно.</blockquote>\n'
+                      '\n'
+                      '#ТаргетВК #КейсНедвижимость #Лиды'
+                  ),
+                  "keyboard": [
+                      [{"text": "💪 Хочу такие же лиды", "url": "https://t.me/Keis_Market_bot"}]
+                  ]
+              },
+              # 8. Кейс Трейдинг
+              {
+                  "type": "photo",
+                  "photo_url": "https://s10.iimage.su/s/16/g1ADdtgxzCjR4BHC11zqnRSKkTmZube97ChmdeNno.jpg",
+                  "caption": (
+                      '<b>ТГ-канал с обучением трейдингу</b> <tg-emoji emoji-id="5431449001532594346">⚡️</tg-emoji>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5411520005386806155">🏁</tg-emoji> <b>На старте:</b>\n'
+                      'Пустой ТГ-канал про трейдинг и инвестиции.\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5350460637182993292">🎯</tg-emoji> <b>Задача:</b>\n'
+                      'Набрать подписчиков для монетизации блога рекламой.\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5244837092042750681">📈</tg-emoji> <b>Сейчас (первая неделя):</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>475</b> переходов по <b>17,28 ₽</b>\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> <b>249</b> подписчиков\n'
+                      '<tg-emoji emoji-id="5357471466919056181">🔘</tg-emoji> Конверсия в подписку — <b>52%</b>\n'
+                      '\n'
+                      '<tg-emoji emoji-id="5427009714745517609">✅</tg-emoji> Скрин статистики <tg-emoji emoji-id="5470177992950946662">👇</tg-emoji>\n'
+                      '\n'
+                      '<blockquote><tg-emoji emoji-id="5420315771991497307">🔥</tg-emoji> 249 живых подписчиков за неделю с конверсией 52% при стоимости перехода 17₽. Клиент увеличивает бюджет — результат пошёл.</blockquote>\n'
+                      '\n'
+                      '#ТаргетИнст #Трейдинг #ПродвижениеКанала'
+                  ),
+                  "keyboard": [
+                      [{"text": "🔥 Хочу так же для своего канала", "url": "https://t.me/Keis_Market_bot"}]
+                  ]
+              }
+          ]
 
-          keyboard = {
-              "inline_keyboard": [
-                  [{
-                      "text": "🔥 Хочу так же для своего канала",
-                      "url": "https://t.me/Keis_Market_bot"
-                  }]
-              ]
-          }
-
-          payload = {
-              "chat_id": CHAT_ID,
-              "photo": photo_url,
-              "caption": caption,
-              "parse_mode": "HTML",
-              "reply_markup": keyboard
-          }
-
-          req = urllib.request.Request(
-              f"{BASE}/sendPhoto",
-              data=json.dumps(payload).encode("utf-8"),
-              headers={"Content-Type": "application/json"}
-          )
-          try:
+          def send_message(chat_id, text, keyboard):
+              payload = {
+                  "chat_id": chat_id,
+                  "text": text,
+                  "parse_mode": "HTML",
+                  "disable_web_page_preview": True,
+                  "reply_markup": {"inline_keyboard": keyboard}
+              }
+              req = urllib.request.Request(
+                  f"{BASE}/sendMessage",
+                  data=json.dumps(payload).encode("utf-8"),
+                  headers={"Content-Type": "application/json"}
+              )
               with urllib.request.urlopen(req) as resp:
-                  result = json.loads(resp.read().decode())
-          except urllib.error.HTTPError as e:
-              error_body = e.read().decode()
-              print(f"Ошибка API Telegram: {e.code} {e.reason}")
-              print("Ответ:", error_body)
-              sys.exit(1)
+                  return json.loads(resp.read().decode())
 
-          if not result.get("ok"):
-              print("Ошибка отправки:", result)
-              sys.exit(1)
+          def send_photo(chat_id, photo_url, caption, keyboard):
+              payload = {
+                  "chat_id": chat_id,
+                  "photo": photo_url,
+                  "caption": caption,
+                  "parse_mode": "HTML",
+                  "reply_markup": {"inline_keyboard": keyboard}
+              }
+              req = urllib.request.Request(
+                  f"{BASE}/sendPhoto",
+                  data=json.dumps(payload).encode("utf-8"),
+                  headers={"Content-Type": "application/json"}
+              )
+              with urllib.request.urlopen(req) as resp:
+                  return json.loads(resp.read().decode())
 
-          msg_id = result["result"]["message_id"]
-          print("✅ Фото отправлено, id:", msg_id)
+          for chat in chat_ids:
+              print(f"\n📬 Отправка в чат {chat}")
+              for i, post in enumerate(posts, 1):
+                  try:
+                      if post["type"] == "text":
+                          result = send_message(chat, post["text"], post["keyboard"])
+                      else:
+                          result = send_photo(chat, post["photo_url"], post["caption"], post["keyboard"])
+                      if result.get("ok"):
+                          print(f"  ✅ Пост {i} отправлен, id={result['result']['message_id']}")
+                      else:
+                          print(f"  ❌ Ошибка в посте {i}: {result}")
+                  except Exception as e:
+                      print(f"  ❌ Исключение в посте {i}: {e}")
+                  time.sleep(4)
+              time.sleep(2)
+          print("\n🎉 Все группы обработаны!")
           PYEOF
