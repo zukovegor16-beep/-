@@ -1,23 +1,37 @@
-name: Кейс Трейдинг (фото + кнопка)
+name: Кейс Трейдинг (массовая рассылка в 12 групп)
 
 on:
   workflow_dispatch:
 
 jobs:
-  send-photo:
+  mass-send:
     runs-on: ubuntu-latest
     steps:
-      - name: Отправка фото
+      - name: Отправка поста во все группы
         env:
           RAW_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          RAW_CHAT_ID: ${{ secrets.CHAT_ID }}
         run: |
           python3 << 'PYEOF'
-          import os, json, urllib.request, sys
+          import os, json, urllib.request, sys, time
 
           TOKEN = os.environ["RAW_TOKEN"].strip()
-          CHAT_ID = os.environ["RAW_CHAT_ID"].strip()
           BASE = f"https://api.telegram.org/bot{TOKEN}"
+
+          # Все 12 групп (вшиты прямо в код)
+          chat_ids = [
+              "-5279257345",
+              "-1003842142193",
+              "-1003999780199",
+              "-1003928237837",
+              "-1003892980689",
+              "-1003751677425",
+              "-1003934265637",
+              "-5227701268",
+              "-1004125779446",
+              "-5163008856",
+              "-1004298276638",
+              "-1003977287366"
+          ]
 
           photo_url = "https://s10.iimage.su/s/16/g1ADdtgxzCjR4BHC11zqnRSKkTmZube97ChmdeNno.jpg"
 
@@ -51,32 +65,37 @@ jobs:
               ]
           }
 
-          payload = {
-              "chat_id": CHAT_ID,
-              "photo": photo_url,
-              "caption": caption,
-              "parse_mode": "HTML",
-              "reply_markup": keyboard
-          }
+          def send_photo(chat_id):
+              payload = {
+                  "chat_id": chat_id,
+                  "photo": photo_url,
+                  "caption": caption,
+                  "parse_mode": "HTML",
+                  "reply_markup": keyboard
+              }
+              req = urllib.request.Request(
+                  f"{BASE}/sendPhoto",
+                  data=json.dumps(payload).encode("utf-8"),
+                  headers={"Content-Type": "application/json"}
+              )
+              try:
+                  with urllib.request.urlopen(req) as resp:
+                      return json.loads(resp.read().decode())
+              except urllib.error.HTTPError as e:
+                  error_body = e.read().decode()
+                  print(f"  ❌ Ошибка HTTP {e.code}: {error_body}")
+                  return None
 
-          req = urllib.request.Request(
-              f"{BASE}/sendPhoto",
-              data=json.dumps(payload).encode("utf-8"),
-              headers={"Content-Type": "application/json"}
-          )
-          try:
-              with urllib.request.urlopen(req) as resp:
-                  result = json.loads(resp.read().decode())
-          except urllib.error.HTTPError as e:
-              error_body = e.read().decode()
-              print(f"Ошибка API Telegram: {e.code} {e.reason}")
-              print("Ответ:", error_body)
-              sys.exit(1)
-
-          if not result.get("ok"):
-              print("Ошибка отправки:", result)
-              sys.exit(1)
-
-          msg_id = result["result"]["message_id"]
-          print("✅ Фото отправлено, id:", msg_id)
+          for chat in chat_ids:
+              print(f"Отправка в чат {chat}")
+              result = send_photo(chat)
+              if result and result.get("ok"):
+                  print(f"  ✅ Пост отправлен, id={result['result']['message_id']}")
+              else:
+                  if result:
+                      print(f"  ❌ Ошибка API: {result}")
+                  else:
+                      print(f"  ❌ Не удалось отправить (вероятно, чат не найден или бот не админ)")
+              time.sleep(3)
+          print("Готово!")
           PYEOF
