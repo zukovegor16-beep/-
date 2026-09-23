@@ -66,6 +66,7 @@ RULES: dict[str, list[tuple[re.Pattern[str], str, bool]]] = {
     "рассылка": [
         (re.compile(r"whatsender|whatsapp", re.I), "рассылка в WhatsApp", True),
         (re.compile(r"mailer|email-sender|massmail", re.I), "массовые письма на почту", True),
+        (re.compile(r"mass.?dm|auto.?mass.?dm", re.I), "массовые лички в мессенджере", True),
     ],
     "стилер": [
         (re.compile(r"stealer|browser-data-grabber", re.I), "забрать пароли/данные браузера", True),

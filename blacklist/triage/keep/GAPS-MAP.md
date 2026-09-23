@@ -41,7 +41,8 @@
 
 Почта, WhatsApp, Telegram, Discord, SMS, VK личка, Instagram DM, Slack, корпоративная почта.
 
-Уже есть: почта, один WhatsApp. Остальное в keep пусто.
+Уже есть: почта, один WhatsApp. Остальное в keep пусто.  
+В 1б был `Telegram-Auto-Mass-Dms` — 404. Подробно: `рассылка-дыры.md`.
 
 ## 3. Авторег / зайти пачкой
 

@@ -17,7 +17,11 @@ OUT = Path(__file__).resolve().parent / "keep"
 # Сначала узкие типы, потом общее «софт».
 KEEP_RULES: list[tuple[str, re.Pattern[str]]] = [
     ("стилер", re.compile(r"stealer|infosteal|keylog|cookie.?steal|browser-data-grabber|crypto.?clipper|grab.?cookie", re.I)),
-    ("рассылка", re.compile(r"mailer|mass.?mail|bulk.?mail|smtp|multi-email-sender|whatsender|sms.?blast|spammer|newsletter", re.I)),
+    ("рассылка", re.compile(
+        r"mailer|mass.?mail|bulk.?mail|smtp|multi-email-sender|whatsender|"
+        r"sms.?blast|spammer|newsletter|mass.?dm|auto.?mass.?dm",
+        re.I,
+    )),
     ("авторегер", re.compile(r"autoreg|auto.?reg|account.?gen|acc.?gen|joiner|follower.?bot|nacrut", re.I)),
     ("парсер", re.compile(r"pars|scrap|crawler|crawl|osint|grabber|harvester|extractor", re.I)),
     ("скил_mcp", re.compile(r"\bmcp\b|mcp-|skill|openclaw|claude-|claude_code|agent-skill|composio", re.I)),
