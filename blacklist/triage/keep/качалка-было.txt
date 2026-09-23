@@ -1,16 +1,22 @@
+https://github.com/3aboody/vscode-extension-downloader
 https://github.com/Ali5onbol/dab-downloader
 https://github.com/Asfand-Khann/YoutubeDownloader
 https://github.com/Dororecessed36/telegram-auto-clone-download
 https://github.com/EngerING/RemoteDownloaderPHP
+https://github.com/Fardin187/pixiv-downloader
 https://github.com/GRIOK64/YouTube-Music-Download
+https://github.com/IBRAHIM832023/AdoptME-Script-Download
 https://github.com/Juraiyah/smugmug-bulk-downloader
 https://github.com/KUpals001/youtube-downloader
 https://github.com/Kalainilavann/takeout_downloader_script
 https://github.com/Shaikhershad/Bulk-Image-Downloader-Free
 https://github.com/abdelfattahfekei/mangabuddy_downloader
 https://github.com/baleyroy88/unlimited-kodi-downloader-download-audio-video-image-easily
+https://github.com/bkarwan/Remote-Desktop-Manager-Enterprise-Download
 https://github.com/carlos0023/gallery-dl-multi-instance-downloader
 https://github.com/emann0/YouTube-MP3-MP4-Downloader
+https://github.com/gamer615/ACDSee-Photo-Studio-Professional-Download
+https://github.com/halim2023/Ninja-Ripper-2.13-Full-Download
 https://github.com/hehehehehehehh123123213213213/Youtube-Downloadify-app
 https://github.com/hitesh9624/YouTube-Playlist-Downloader
 https://github.com/holasisisi23/telegram-media-downloader
@@ -19,3 +25,4 @@ https://github.com/junctiontransistorselffertilisation783/phoenix-downloader
 https://github.com/neo63900/pesu-slide-download-automator
 https://github.com/thaunghtikeyangon/Bulk-Image-Downloader-Update
 https://github.com/vanguarddesign/rekordbox-spotify-downloader
+youtube-video-downloader

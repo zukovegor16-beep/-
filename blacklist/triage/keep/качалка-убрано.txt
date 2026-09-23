@@ -1,0 +1,7 @@
+https://github.com/3aboody/vscode-extension-downloader	скачать программу, не контент с сайта
+https://github.com/IBRAHIM832023/AdoptME-Script-Download	скачать скрипт к игре, не качалка веба
+https://github.com/bkarwan/Remote-Desktop-Manager-Enterprise-Download	скачать программу, не контент с сайта
+https://github.com/gamer615/ACDSee-Photo-Studio-Professional-Download	скачать программу, не контент с сайта
+https://github.com/halim2023/Ninja-Ripper-2.13-Full-Download	скачать программу, не контент с сайта
+youtube-video-downloader	голое имя без ссылки, открыть некуда
+https://github.com/Fardin187/pixiv-downloader	скачать картинки/мангу пачкой

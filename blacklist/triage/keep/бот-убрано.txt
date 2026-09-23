@@ -1,0 +1,32 @@
+https://github.com/ArtLife-bot/LibString	слово bot в нике или не тот смысл
+https://github.com/BoogyMan-bot/sentinel-1-soil-moisture	слово bot в нике или не тот смысл
+https://github.com/Charles2000-15/awesome-telegram-bots	список или картинка, не рабочий бот
+https://github.com/DlC-bot/dizhi	слово bot в нике или не тот смысл
+https://github.com/Websyze/Bot-n-animado-con-HTML-y-CSS	список или картинка, не рабочий бот
+https://github.com/brandaobe8314/Condi-Botnet-V9.2	антибот / ботнет-симулятор, не бот-помощник
+https://github.com/cristiancctlv/recaptcha-botguard	антибот / ботнет-симулятор, не бот-помощник
+https://github.com/elmamlaka/shopify-traffic-filter-block-bots	антибот / ботнет-симулятор, не бот-помощник
+https://github.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation	антибот / ботнет-симулятор, не бот-помощник
+https://github.com/nickiirregular671/mastodon-bots	список или картинка, не рабочий бот
+https://github.com/omz-bot/gonopbx	слово bot в нике или не тот смысл
+https://github.com/umarqadri345/awesome-lark-bots	список или картинка, не рабочий бот
+https://github.com/vhicx/Fire-Fighting-Bot	слово bot в нике или не тот смысл
+https://github.com/yonghengdiao/Merge-bot-Gui	слово bot в нике или не тот смысл
+https://github.com/Crayz916/prediction-market-arbitrage-bot	торговля и крипта: сам ставит сделки
+https://github.com/DjordjeDacovic/TikTok-Report-Bot	накрутка / автодействия в соцсетях
+https://github.com/HRZht/Bitquant-Auto-Bot	торговля и крипта: сам ставит сделки
+https://github.com/KADOCHIMO/Embeddable-RAG-Chatbot-Widget--JavaScript-Cloudflare-Workers-FullStack	чат-бот / отвечает на вопросы
+https://github.com/Mikelzlll/migraine-solana-pumpfun-aio-bot	торговля и крипта: сам ставит сделки
+https://github.com/NC-Paul/polymarket-bot	торговля и крипта: сам ставит сделки
+https://github.com/Roop81/Interlink-Multi-Bot	по имени из коробки, цель узкая или неясна
+https://github.com/S2D0N/bnb-copy-trading-bot-go	торговля и крипта: сам ставит сделки
+https://github.com/SYS123232/helper-for-fortnite-xp-bot	бот в игре: фарм, кликер, AFK
+https://github.com/aned-300/Huddle01-Testnet-Airdrop-bot	торговля и крипта: сам ставит сделки
+https://github.com/giaaaa0121/Fourmeme-bot	торговля и крипта: сам ставит сделки
+https://github.com/kalbou/BMO-AI-Chatbot	чат-бот / отвечает на вопросы
+https://github.com/light-077/chatbot-gaming-assistant	чат-бот / отвечает на вопросы
+https://github.com/oleg951/pumpfun-mayhem-volume-bot	торговля и крипта: сам ставит сделки
+https://github.com/sd02383/kiyofm-bot	по имени из коробки, цель узкая или неясна
+https://github.com/thunde5061/Discord-Twitch-Bot	бот в мессенджере (Telegram/WhatsApp/Discord)
+https://github.com/vrishank-cmd/Whatsapp-Bot	бот в мессенджере (Telegram/WhatsApp/Discord)
+https://github.com/yasirnotezai/mt4-python-ml-trading-bot-deployment	торговля и крипта: сам ставит сделки
