@@ -1,0 +1,10 @@
+method=heuristic-by-source-and-brand
+visited_each_url=no
+banned_by_all_governments=false_almost_nothing_meets_that
+illegal_but_functional=175409
+pure_scam=285103
+overlap_both=2
+csam_hints_omitted=14
+rkn_mirrors_total=1687056
+rkn_not_in_either=mostly_unclassified
+functional_brands_used=39
