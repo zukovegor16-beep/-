@@ -33,6 +33,12 @@ DROP_JUNK = re.compile(
     r"blog-public|\.github$|\.emacs|devfolio|fundamentals",
     re.I,
 )
+# Платный софт и его кряки не нужны.
+DROP_PAID = re.compile(
+    r"no-trial|no.?trial|nulled|premium.?unlock|unlocked.?premium|"
+    r"enterprise-no-trial|paid-ads",
+    re.I,
+)
 
 
 def load_lines(path: Path) -> list[str]:
@@ -49,6 +55,8 @@ def write_lines(path: Path, values) -> None:
 
 
 def classify(item: str) -> str | None:
+    if DROP_PAID.search(item):
+        return None
     if DROP_JUNK.search(item) and not re.search(r"pars|scrap|skill|mcp|stealer|mailer", item, re.I):
         return None
     for label, pattern in KEEP_RULES:
