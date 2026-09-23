@@ -19,7 +19,7 @@ KEEP_RULES: list[tuple[str, re.Pattern[str]]] = [
     ("стилер", re.compile(r"stealer|infosteal|keylog|cookie.?steal|browser-data-grabber|crypto.?clipper|grab.?cookie", re.I)),
     ("рассылка", re.compile(
         r"mailer|mass.?mail|bulk.?mail|smtp|multi-email-sender|whatsender|"
-        r"sms.?blast|spammer|newsletter|mass.?dm|auto.?mass.?dm",
+        r"sms.?blast|sms.?enabler|spammer|newsletter|mass.?dm|auto.?mass.?dm",
         re.I,
     )),
     ("авторегер", re.compile(r"autoreg|auto.?reg|account.?gen|acc.?gen|joiner|follower.?bot|nacrut", re.I)),
@@ -44,6 +44,13 @@ DROP_JUNK = re.compile(
 CRACK_HINT = re.compile(
     r"no-trial|no.?trial|nulled|premium.?unlock|unlocked.?premium|"
     r"enterprise-no-trial|keygen|crack|cheat|trainer|license.?bypass",
+    re.I,
+)
+# Кряк платной программы (не каламбур вроде claude-cracks-the-whip).
+# Если имя ещё про рассылку/парсер/качалку — кладём и туда, и в кряки.
+DUAL_CRACK = re.compile(
+    r"no-trial|no.?trial|nulled|premium.?unlock|unlocked.?premium|"
+    r"professional-crack|_Crack",
     re.I,
 )
 GITHUB_RE = re.compile(r"^https?://github\.com/[^/]+/[^/#?]+", re.I)
@@ -94,12 +101,23 @@ def github_alive(url: str, timeout: float = 8.0) -> bool:
 
 
 def classify(item: str) -> str | None:
+    labels = classify_labels(item)
+    return labels[0] if labels else None
+
+
+def classify_labels(item: str) -> list[str]:
     if DROP_JUNK.search(item) and not re.search(r"pars|scrap|skill|mcp|stealer|mailer|crack|no-trial", item, re.I):
-        return None
-    for label, pattern in KEEP_RULES:
-        if pattern.search(item):
-            return label
-    return None
+        return []
+    matched = [label for label, pattern in KEEP_RULES if pattern.search(item)]
+    function_labels = [label for label in matched if label != "кряк_чит"]
+    is_real_crack = bool(DUAL_CRACK.search(item))
+    labels: list[str] = []
+    if function_labels:
+        labels.append(function_labels[0])
+    if is_real_crack or (not function_labels and "кряк_чит" in matched):
+        if "кряк_чит" not in labels:
+            labels.append("кряк_чит")
+    return labels
 
 
 def main() -> None:
@@ -109,20 +127,22 @@ def main() -> None:
         always.add(name)
 
     pool = load_lines(OUT.parent / "01b-working-malware-tools.txt")
-    kept: dict[str, str] = {}
+    kept: dict[str, list[str]] = {}
     dropped_not_tool: list[str] = []
 
     for item in pool:
-        if item in always:
-            kept[item] = classify(item) or "скил_mcp"
-            continue
-        label = classify(item)
-        if label:
-            kept[item] = label
+        labels = classify_labels(item)
+        if item in always and not labels:
+            labels = ["скил_mcp"]
+        if labels:
+            kept[item] = labels
         else:
             dropped_not_tool.append(item)
 
-    crack_candidates = [item for item, label in kept.items() if label == "кряк_чит" or CRACK_HINT.search(item)]
+    crack_candidates = [
+        item for item, labels in kept.items()
+        if "кряк_чит" in labels or CRACK_HINT.search(item)
+    ]
     dead_cracks: list[str] = []
     if crack_candidates:
         with ThreadPoolExecutor(max_workers=10) as pool_exec:
@@ -140,8 +160,9 @@ def main() -> None:
     websites = load_lines(OUT.parent / "01a-pirate-gambling.txt.gz")
 
     by_cat: dict[str, list[str]] = {}
-    for item, label in kept.items():
-        by_cat.setdefault(label, []).append(item)
+    for item, labels in kept.items():
+        for label in labels:
+            by_cat.setdefault(label, []).append(item)
 
     order = [label for label, _ in KEEP_RULES]
     lines = ["# программы и скилы. сайты вроде lordfilm убраны.", ""]
@@ -186,6 +207,7 @@ def main() -> None:
         "",
         "Убрана ерунда вроде лордфильма: кино, торренты, казино, ставки — это сайты.",
         "Оставлены программы и скилы: парсеры, рассылки, авторегеры, стилеры, кряки, боты, MCP, прочий софт.",
+        "Кряк No-Trial, если имя ещё про рассылку/парсер/качалку, кладётся в оба раздела.",
         "Кряки и No-Trial вернул только если страница GitHub сейчас открывается. Сам кряк не запускал.",
         "Мёртвые ссылки: `кряк_мертвые.txt`.",
         "",

@@ -64,7 +64,8 @@ def first_match(item: str, rules: list[tuple[re.Pattern[str], str, bool]]) -> tu
 
 RULES: dict[str, list[tuple[re.Pattern[str], str, bool]]] = {
     "рассылка": [
-        (re.compile(r"whatsender|whatsapp", re.I), "рассылка в WhatsApp", True),
+        (re.compile(r"whatsender|whatsapp", re.I), "рассылка в WhatsApp (есть No-Trial — ещё и в кряках)", True),
+        (re.compile(r"sms.?enabler", re.I), "кряк SMS-программы: отправка SMS", True),
         (re.compile(r"mailer|email-sender|massmail", re.I), "массовые письма на почту", True),
         (re.compile(r"mass.?dm|auto.?mass.?dm", re.I), "массовые лички в мессенджере", True),
     ],

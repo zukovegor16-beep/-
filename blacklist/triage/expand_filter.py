@@ -42,7 +42,7 @@ EXPAND = {
     ),
     "рассылка": re.compile(
         r"mailer|mass.?mail|bulk.?mail|smtp.?sender|multi-email-sender|"
-        r"whatsender|sms.?blast|mass.?dm|telegram.?sender|email-bomber",
+        r"whatsender|sms.?blast|sms.?enabler|mass.?dm|telegram.?sender|email-bomber",
         re.I,
     ),
     "авторегер": re.compile(
