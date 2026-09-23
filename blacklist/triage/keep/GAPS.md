@@ -9,9 +9,10 @@
 ## Что сейчас закрыто, что нет
 
 ### Рассылки
-Есть: почта (2), WhatsApp-кряк (1), SMS-кряк (1). Оба кряка ещё в `кряк_чит.txt`.  
-Дыры: Telegram, Discord, Instagram, VK, email-бомбер. SMS есть только как кряк Enabler, не бласт.  
-В 1б был `Telegram-Auto-Mass-Dms` — страница 404. Разбор клеток: `рассылка-дыры.md`.
+Есть: почта (2), WhatsApp-кряк (1), SMS-кряк (1).  
+Пусто и расписано по клеткам: VK личка и сообщества, TikTok inbox и комменты, Instagram DM, OK, Telegram (живой), Discord, Facebook, LinkedIn InMail, Avito/Юла/WB, Viber/MAX, Slack/Teams.  
+В 1б был `Telegram-Auto-Mass-Dms` — 404. TikTok у нас только live-API, не рассылка.  
+Полная таблица: `рассылка-дыры.md`.
 
 ### Стилеры
 Есть: Hades и Browser-Data-Grabber (2).  
