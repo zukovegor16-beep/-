@@ -1,0 +1,46 @@
+generated=2026-09-23
+unique_domains=4660757
+unique_core_domains=270965
+unique_urls=147509
+unique_github_repos=7654
+unique_github_owners=7219
+unique_ips=5
+
+per_source_added_domains_or_repos:
+campaign-hand-curated	63
+island-github	7600
+hexastrike-article-github	54
+urlhaus-filter-domains-online.txt	488
+urlhaus-filter-domains-full.txt	3028
+malware-filter-dnscrypt.txt	0
+urlhaus-filter-online.txt	0
+urlhaus-text.txt	205
+openphish-feed.txt	276
+phishunt.txt	817
+phishing-filter-domains.txt	39758
+phishing-filter-urls.txt	0
+phishing-army.txt	128184
+phishing-army-extended.txt	938
+certpl-domains.txt	2137
+blocklistproject-malware.txt	2551558
+blocklistproject-phishing.txt	180949
+blocklistproject-scam.txt	1890
+blocklistproject-crypto.txt	1165
+blocklistproject-ransomware.txt	3
+hagezi-tif-onlydomains.txt	1221798
+hagezi-tif-mini-onlydomains.txt	3296
+hagezi-fake-onlydomains.txt	2
+mitchellkrog-phishing-active.txt	336377
+threatfox-hostfile.txt	25114
+cbr-sites.csv	4622
+c2intel-domains.csv	26
+c2intel-domains-30d.csv	3
+tweetfeed-month.csv	271
+tweetfeed-year.csv	26249
+urlhaus-recent.csv	2
+threatfox-urls-recent.csv	118
+unit42-smartloader.txt	1
+cbr-warning-list.json	50588
+discord-antiscams.json	32548
+polkadot-phishing.json	48283
+
