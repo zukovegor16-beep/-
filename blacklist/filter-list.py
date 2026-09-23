@@ -195,6 +195,8 @@ def load_blacklist(mode: str) -> dict[str, set[str]]:
             names.add(item)
             owners.add(item)
 
+    handles = {h.lower().lstrip("@") for h in load_lines(HERE / "worldwide" / "telegram-handles.txt")}
+    brands = {b.lower() for b in load_lines(HERE / "worldwide" / "mirror-brands.txt") if len(b) >= 6}
     return {
         "urls": urls,
         "slugs": slugs,
@@ -203,6 +205,8 @@ def load_blacklist(mode: str) -> dict[str, set[str]]:
         "exact_urls": exact_urls,
         "names": names,
         "ips": ips,
+        "handles": handles,
+        "brands": brands,
     }
 
 
@@ -259,6 +263,10 @@ def match_reason(text: str, bl: dict[str, set[str]]) -> str | None:
         if ip in bl["ips"]:
             return f"ip:{ip}"
 
+    for match in re.findall(r"(?:t\.me/|@)([a-z0-9_]{5,32})", lowered):
+        if match in bl.get("handles", set()):
+            return f"telegram:@{match}"
+
     for host in HOST_RE.findall(lowered):
         host = host.strip(".")
         if host in APEX_ALLOW:
@@ -266,6 +274,9 @@ def match_reason(text: str, bl: dict[str, set[str]]) -> str | None:
         for candidate in parents(host):
             if candidate in bl["domains"]:
                 return f"domain:{candidate}"
+        for brand in bl.get("brands", set()):
+            if brand in host:
+                return f"mirror-brand:{brand}"
 
     tokens = re.findall(r"[a-z0-9._/-]{8,}", lowered)
     for token in tokens:

@@ -1,49 +1,29 @@
-# Чёрный список для вычистки каталога
+# Чёрный список
 
-Снимок **23 сентября 2026**. Это не «все ссылки интернета». Это максимум, который сейчас можно честно собрать из открытых фидов.
+Снимок **23 сентября 2026**. Ниже — что реально открылось из тех четырёх пунктов, которые раньше были закрыты.
 
-## Цифры без прикрас
+## Что удалось достать
 
-| Слой | Файл | Записей |
-| --- | --- | ---: |
-| Skills / MCP / парсеры | `agentbaiting-skills-mcp-parsers.txt` | 613 |
-| FakeGit репозитории | `worldwide/github-repos.txt` | 7 654 |
-| Ядро IOC | `worldwide/domains-core.txt.gz` | 270 965 |
-| Запрещённые + зеркала (РКН/antifilter) | `worldwide/banned-rkn-mirrors.txt.gz` | **1 687 056** |
-| Все уникальные домены | `worldwide/domains.txt.gz` | **7 030 450** |
-| URL | `worldwide/urls.txt.gz` | 950 606 |
+| Пункт | Было | Сейчас |
+| --- | --- | --- |
+| 1. Официальный дамп РКН | закрыт | **по-прежнему закрыт**. `vigruzki.rkn.gov.ru` без сертификата оператора не отдаёт dump. Публичные API РосКомСвободы (`reestr.rublacklist.net`) сегодня отвечают **HTTP 500**. AntiZapret API — **HTTP 502**. Ближайшая полная копия всё ещё zapret-info от **2025-10-01**. |
+| 2. Зеркала вне дампов | нельзя предугадать все | Нельзя перечислить будущие домены. Добавлены **1143 бренда-зеркала** (`lordfilm`, `kinogo`, `hdrezka`, `piratbit`…). Фильтр режет даже несуществующий `totally-new-lordfilm-mirror-zzzz.xyz`. |
+| 3. Закрытые Telegram / Docs / Discord | нет публичного IOC | Приватные чаты, Google Docs и invite-only Discord **недоступны**. Из открытого: **6415** Telegram-логинов из публичных разборов PhishDestroy/ScamIntelLogs + Discord/Dogino фишинг-списки. |
+| 4. ThreatFox / PhishTank без ключа | казалось платным | **PhishTank hourly `online-valid.csv.gz` скачался без ключа** (проверенный фишинг на сегодня). Полный ThreatFox `full.csv` по-прежнему просит Auth-Key. Взяты бесплатные `recent` выгрузки. |
 
-Новых доменов после прошлого прохода: **+2 369 693**.
+## Текущие числа
 
-## Как прогнать ваш большой список
+| Слой | Записей |
+| --- | ---: |
+| Все домены | **7 345 117** |
+| URL | **1 028 318** |
+| Запрещённые/зеркала РКН | 1 687 056 |
+| Telegram-хендлы скамов | 6 415 |
+| Бренды зеркал | 1 143 |
+| Ядро IOC | 270 965 |
 
 ```bash
-# максимум
 python3 blacklist/filter-list.py my-list.txt --mode full --kept kept.txt --removed removed.txt
-
-# только запрещённые/зеркала + ядро IOC
-python3 blacklist/filter-list.py my-list.txt --mode banned --kept kept.txt --removed removed.txt
-
-# только malware/phishing/ЦБ, без lordfilm/казино
-python3 blacklist/filter-list.py my-list.txt --mode core --kept kept.txt --removed removed.txt
 ```
 
-## Что добавлено сейчас
-
-- Публичный дамп **zapret-info/z-i** (реестр блокировок РФ, дата дампа **2025-10-01**)
-- **antifilter.download** — 1.66M строк, зеркала lordfilm, казино, пиратские площадки
-- **re:filter** `domains_all.lst`
-- nxdomain-записи (уже закрытые/мёртвые запрещённые домены)
-- Blocklist Project: piracy, abuse, fraud, gambling, redirect
-- StevenBlack hosts (gambling/porn/fakenews)
-- HaGeZi badware hoster
-
-## Чего нет и не будет из открытого доступа
-
-- Официальный операторский дамп РКН с vigruzki.rkn.gov.ru — нужен сертификат оператора связи. Его нет.
-- Живые зеркала, которых ещё нет ни в одном дампе. Их нельзя «предугадать».
-- Закрытые Telegram-витрины, личные Google Docs, Discord-сервера без публичного IOC.
-- Платные полные выгрузки ThreatFox / PhishTank без ключа.
-- Списки обхода блокировок уровня «разблокировать Instagram/Twitter/JetBrains» — это обычные сервисы, не malware. Их сознательно не клал в чёрный список.
-
-Если в вашем файле есть зеркало, которого нет в этих 7 млн доменов, его нет в публичных реестрах на дату снимка. Тогда пришлите сам файл — отфильтрую точечно и по паттернам (`lordfilm*`, `*-mirror*`, и т.д.).
+Официальный кабинет РКН я взламывать не буду. Приватные Telegram/Docs/Discord без публичной выгрузки тоже. Если пришлёте свой файл — прогоню его по этим 7.3 млн и по брендам зеркал.
