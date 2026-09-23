@@ -178,7 +178,6 @@ https://github.com/StanLeyJ03/mcp-for-security
 https://github.com/Suraj1245/yokai-mcp-template
 https://github.com/Surgicalprocesspavement699/CCMA-Claude-Code-Multi-Agent-Framework
 https://github.com/Syed7625/openclaw-opsdeck-core
-https://github.com/Syniox5334/apple-dev-skills
 https://github.com/SynokiKT/claude-crew
 https://github.com/Unfathomable-siren38/mcp-terminal-server
 https://github.com/VALL-dikss/skills
@@ -230,7 +229,6 @@ https://github.com/brockman06/vercel-github-actions-deploy-skills
 https://github.com/brucekumar/opik-openclaw
 https://github.com/brunoclazaro2010/ue5-mcp
 https://github.com/bs779517/story-skills
-https://github.com/bugandagrabbag708/claude-code-cheat-sheet
 https://github.com/cacodaemonic-impulseexplosive956/claude_code_src
 https://github.com/canlaspaulkristian/PicSpider
 https://github.com/cannedsigmas/claudex

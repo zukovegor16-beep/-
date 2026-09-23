@@ -3,7 +3,6 @@ https://github.com/123affano1/claudetrack
 https://github.com/1711-liv/Disk-Pulse-Ultimate-Enterprise-No-Trial
 https://github.com/1sustgmboab/nexonco-mcp
 https://github.com/2josEx/claude-brain
-https://github.com/360cuenta/ARKSurvivalEvolved-TribemasterToolkit
 https://github.com/3mitra5814/nexus-trade-bot
 https://github.com/428alexander9/claude-skills-marketplace
 https://github.com/45d5r/databricks-mcp-server
@@ -35,13 +34,11 @@ https://github.com/Arthur-devrole/Khazix-Skills
 https://github.com/Asfand-Khann/YoutubeDownloader
 https://github.com/Ashikparvez89/larouex-fullstack-plugin
 https://github.com/Atharva907/claude-token-efficient
-https://github.com/AttriKartik123/AceServe-Trainer-TennisManager25
 https://github.com/Axolotl1622/Eth-Miner
 https://github.com/Ayushmaheshwari1/how-to-scrape-google-images-with-python
 https://github.com/BENJAMINGLAI/anki-card-skill
 https://github.com/BKR-57/symfony-ux-skills
 https://github.com/Baileybasic68/opencli-skill
-https://github.com/BalsacTheJew666/mir4-bot-draco-farming
 https://github.com/BashSpiceRB/QuasarRAT-Remote-Access-Tool
 https://github.com/Bbk-man/claude-code-owasp
 https://github.com/Bboyfarouk/skills
@@ -53,7 +50,6 @@ https://github.com/Blairastragalar633/SkillStar
 https://github.com/Blaynelargish66/knx-skills
 https://github.com/BobiTenta/website-design-systems-mcp
 https://github.com/Borjani1577/claude-office-skills
-https://github.com/Bruh-2009/royale-high-scripting-toolkit
 https://github.com/Businesseditorexternalorgan481/claude-peers-mcp
 https://github.com/CYRIKT/editorial-card-generator-skill
 https://github.com/Camille7585/polybridge-mcp
@@ -65,9 +61,7 @@ https://github.com/CenMeow/markdown-new-skill
 https://github.com/Cesarin999/claude-code-agents-wizard-v2
 https://github.com/Chance6969-hue/__2025_07_08_tvdi_crawler__
 https://github.com/ChicaVirus69/Pool-Mev-BOT-contracts
-https://github.com/Chrislovlin/dune-awakening-toolkit
 https://github.com/Cingulumsloppyjoe432/bnb-trading-bot
-https://github.com/Civ6-EnhancementToolkit/Chibi-Clash-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Token-Hack-Api
 https://github.com/ClickBoom-dev/dotskills
 https://github.com/Cliftonnonexplosive880/BurpInjector
 https://github.com/CoDiGet/agent-skill-git-checkpoint
@@ -90,7 +84,6 @@ https://github.com/Divine-myositistrichinosa310/blog-writer_mcp
 https://github.com/Dominotypist3077/fluent-mcp-servers
 https://github.com/Donmandela/gsc-mcp
 https://github.com/Dororecessed36/telegram-auto-clone-download
-https://github.com/DraksSounds/AI-LEGO-Pinball-Bot
 https://github.com/DuyDan1305/claude-code-memory-setup
 https://github.com/Dylan-Emanuel/cloudflare-bypass-2026
 https://github.com/E41240390-SaifulRizal-A/claude-interactive-documentation-workflow
@@ -103,7 +96,6 @@ https://github.com/Eleusio705/claude-jobs
 https://github.com/Eliott0557/openclaw
 https://github.com/Emagi6395/skills
 https://github.com/EngerING/RemoteDownloaderPHP
-https://github.com/EntityBlood/Minecraft-AFK-Bot
 https://github.com/Euamobi4582/gemini-bridge-mcp
 https://github.com/Euphonic-treesparrow658/how-claude-code-works
 https://github.com/FLORCRIOLLO/blueosint
@@ -142,7 +134,6 @@ https://github.com/Immunogenic-prismspectroscope589/Blender_mcp
 https://github.com/Intragroup-pottle634/claude-code-analysis
 https://github.com/Iski08/dotclaude
 https://github.com/Isometrical-selection572/claude_code_cli
-https://github.com/ItzNaviYa/Hamster-Kombat-Bot
 https://github.com/Itzzs6571/teacher-skill
 https://github.com/Iyanyourbae/Updater-Releases
 https://github.com/Izangi2714/claude-code-python-stack
@@ -168,7 +159,6 @@ https://github.com/Justkokosixnine/polymarket-mcp-server
 https://github.com/Jxx1234567890jxx/DataTransformationChecker
 https://github.com/KUpals001/youtube-downloader
 https://github.com/KVNKEVINN/claude-music-studio
-https://github.com/Kaiga-kun/climb-jump-tower-roblox-toolkit
 https://github.com/Kalainilavann/takeout_downloader_script
 https://github.com/Kartikpanel2008/best-skills
 https://github.com/Kasun2006/blueprint-mcp
@@ -198,12 +188,9 @@ https://github.com/Loune3213/Wazuh-Openclaw-Autopilot
 https://github.com/LucasGarrote/claude-cowork-guide
 https://github.com/LuizinTheHeroSalyer/facebook-events-scraper
 https://github.com/Luminex99/immobiliare-it-listing-page-scraper-by-search-url
-https://github.com/Lyam2147/Slay-The-Spire-2-Trainer
-https://github.com/M949939/rainbow-six-siege-x-enhanced-toolkit
 https://github.com/MAKEITFREE/MCP-X-web
 https://github.com/MAXZL1/hackingtool-plugin
 https://github.com/MOHITGITAI/postgrest-mcp
-https://github.com/MahmoudWagih1/ant-man-simulator-toolkit
 https://github.com/Mann1988/awesome-claude-skills
 https://github.com/Marine-softdrink524/claude-skills
 https://github.com/Marshanda14816/agent-skills
@@ -213,7 +200,6 @@ https://github.com/Maxivisual883/awesome-skills
 https://github.com/MeadowCoded-ma1n/Suhaily-Whatsapp-Bot
 https://github.com/MechanicDusk/solana-bot
 https://github.com/Meh3met/VMware-Workstation-Pro-No-Trial
-https://github.com/Mewing2/Omega-Life-loot-drop-trainer
 https://github.com/Miguel974-BIT/Stork-Auto-Bot
 https://github.com/MihirLathigara012/AI-Chatbot
 https://github.com/Mikacr1138/claude-bug-bounty
@@ -261,7 +247,6 @@ https://github.com/Quick-irritablebowelsyndrome2047/ats-optimized-resume-agent-s
 https://github.com/RIOSMAgr/openclaw-eval
 https://github.com/Rambo-535/obsidian-plugins
 https://github.com/Ramosagustinaolivia23/mcp-upgrade
-https://github.com/RazvaN777/Atlyss-Cheats
 https://github.com/Reddinton95/custom-plugin-backend
 https://github.com/Ricarddefensive803/caveman-skill
 https://github.com/Rippledirham767/LongParser
@@ -287,7 +272,7 @@ https://github.com/Simplex-june29108/saas-api-skills
 https://github.com/Simplex-publicspeaking797/claude-code-2.1.88
 https://github.com/Sindhujaa1298/zulip-ai-bot
 https://github.com/Singhalesebradycardia99/Polymarket-Copy-Trade-Bot
-https://github.com/Skippermain626/Rust-Cheat-2026-Best-Aim-Esp-No-Recoil-Misc-Visuals-for-PC
+https://github.com/Skyscraperfoxhound619/markdown-ui-dsl
 https://github.com/Sleeknessbounder869/miniClaudeCode
 https://github.com/Smallfortunewait713/skills
 https://github.com/Smart-barley681/skills
@@ -299,7 +284,6 @@ https://github.com/Suraj1245/yokai-mcp-template
 https://github.com/Surgicalprocesspavement699/CCMA-Claude-Code-Multi-Agent-Framework
 https://github.com/Suvo622/Solana-Copy-trading-bot
 https://github.com/Syed7625/openclaw-opsdeck-core
-https://github.com/Syniox5334/apple-dev-skills
 https://github.com/SynokiKT/claude-crew
 https://github.com/Tandey209/MassMailer2026
 https://github.com/Tarix818/ru-chat-bot
@@ -325,7 +309,6 @@ https://github.com/Vleickzs/claude-conf
 https://github.com/Wackodacko/agent-skills-mcp
 https://github.com/Waterinsoluble-orderplatyctenea746/book2skills
 https://github.com/Wemode-Whisper-Unlock/auto-cad-2025
-https://github.com/WutheringWavesToolkit/WarzoneExternalCheat
 https://github.com/XAKLESK/cre-agent-skills
 https://github.com/Xhtira20/scraped
 https://github.com/Xswexx/flock-alpr-toolkit
@@ -340,7 +323,6 @@ https://github.com/aandre2011/SMS-Enabler-No-Trial
 https://github.com/abdelfattahfekei/mangabuddy_downloader
 https://github.com/above-politics628/dns.api.airat.top
 https://github.com/abraham321/divessi-padi-divesite-catalog-scraper
-https://github.com/abrar699979/Fortnite-Mobile-SSL-Bypass
 https://github.com/acma961/Serializd-Discord-Bot
 https://github.com/adam0360/Web-Scraper-for-E-commerce
 https://github.com/adammtn/WinCam-No-Trial
@@ -350,7 +332,6 @@ https://github.com/agustedire542/unityxclaude
 https://github.com/ahmedmelsayed74/opennews-mcp
 https://github.com/ahmedxx99/claude-code-elixir
 https://github.com/ajaysharmaas/mcp-datadog
-https://github.com/aldenpogznet22/Hamster-Bot
 https://github.com/alennani/Trading-Bot_Mev_Local_PC
 https://github.com/aleprieto790-alt/gtm-mcp
 https://github.com/alfonsosagacious5877/awesome-claude-design
@@ -377,11 +358,9 @@ https://github.com/arslan53/outlook-selenium-mail-forwarding-bot
 https://github.com/ary44892/mcp-config-guard
 https://github.com/ashu1436/amazon-scraper
 https://github.com/asiNgjela/claude-codex-mcp-starter
-https://github.com/asikur2745/HurtWorldToolkit
 https://github.com/astrodragonv/claudecode-rule2hook
 https://github.com/augustcraigmusic/linkedin-easyapply-antidetection-bot
 https://github.com/aurearobotic610/Claude-free-api-bot
-https://github.com/babtou34/Common-Ground-World-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Api
 https://github.com/badressalemmouffek-coder/frank-bot
 https://github.com/bahooo13/partnershipparser
 https://github.com/balazhaa/tavily-mcp-loadbalancer
@@ -395,10 +374,8 @@ https://github.com/bezudo19/WebSocketChecker
 https://github.com/bigboskuai-prog/mece-skill
 https://github.com/bigcola2020/openclaw-jarvis-memory
 https://github.com/bklamheem/chrome-devtools-mcp
-https://github.com/blackwall0220/roblox-discord-status-bot
 https://github.com/blindlove200/sub-agents-skills
 https://github.com/blinnieinfertile577/skill-harness
-https://github.com/bluecheatah123/APEX
 https://github.com/bore8433/Extreme-Injector-v3.7.3-Desktop
 https://github.com/bossxz238/Wordpress-Bruter-And-Upload-Shell
 https://github.com/braaahyym/MOBILedit_Forensic_Express_Pro_Crack
@@ -409,7 +386,6 @@ https://github.com/brunoclazaro2010/ue5-mcp
 https://github.com/bryanppa5478/-Discord-OSINT-Transform-for-Maltego
 https://github.com/bs779517/story-skills
 https://github.com/btcgetpro/oci-plugin-example
-https://github.com/bugandagrabbag708/claude-code-cheat-sheet
 https://github.com/cacodaemonic-impulseexplosive956/claude_code_src
 https://github.com/canlaspaulkristian/PicSpider
 https://github.com/cannedsigmas/claudex
@@ -493,7 +469,6 @@ https://github.com/habibbedawi/claude-code-tips
 https://github.com/hackermanishackerman/claude-skills-vault
 https://github.com/hahaha-saygex/gmail-mcp
 https://github.com/haoo99/Polymarket-Kalshi-Arbitrage-Bot
-https://github.com/harshad71/Pig-Card-Game-Bot
 https://github.com/harshdeepk585/twitter-bridge-mcp
 https://github.com/hassan0777/Radiosonde-Telegram-Bot
 https://github.com/haytam111234/trainingpeaks-mcp
@@ -507,7 +482,6 @@ https://github.com/hoang2010-jnp/ask-human-mcp
 https://github.com/holasisisi23/telegram-media-downloader
 https://github.com/hominal-newdeal930/weixin-bot
 https://github.com/howar2113/claude-code-prompt-engineering-patterns
-https://github.com/huh117/Hamster-Kombat-Bot
 https://github.com/humair832/GeminiBusiness_CookieExtractor
 https://github.com/hungnguyen1509asd/raydium-trading-bot
 https://github.com/hunteryeet/linkedin-jobs-scraper-incredibly-fast
@@ -570,7 +544,6 @@ https://github.com/led-sol/Mental-Health-Chatbot
 https://github.com/lemurhacep/awesome-openclaw
 https://github.com/lethilu4796/claude-code-blueprint
 https://github.com/levVan2/remotion-video-skill
-https://github.com/linapatel518/rbxfpsunlocker
 https://github.com/ljkormo/Octra-Labs-Client-Installation-bot
 https://github.com/llinmori09/umbraco-chatbot
 https://github.com/lockadi8/rsazure-openai-toolkit
@@ -598,7 +571,6 @@ https://github.com/mazenyassergithub/oh-my-claudecode
 https://github.com/megana05082003/review-analyzer-skill
 https://github.com/megana05082003/rewasd-7-3-0-9137-activation-unlocked
 https://github.com/mehedihasanfarabi10/Solana-Trading-Bot
-https://github.com/metaphysical-cosmolatry746/R6-Recoil-Control-Aim-bot-Assist-Research-2026-
 https://github.com/micrometeoric-eye978/academic-research-skills
 https://github.com/mightyhuman101/seedance2-skill
 https://github.com/mishasuperficial646/claude-power-setup
@@ -611,7 +583,6 @@ https://github.com/moksharth77/mcp-remnawave
 https://github.com/moussa504/linktree-profile-listing-scraper
 https://github.com/mr-mrs-xx1/claude-watch
 https://github.com/mrshrey007/skills
-https://github.com/mtreuque/obby-creator-toolkit-roblox
 https://github.com/muertoperro48/ai-sdk-chatbot
 https://github.com/muhammad-bu/claude-code-unified-agents
 https://github.com/muhammadfachryy/mcp-studio
@@ -626,7 +597,6 @@ https://github.com/nathaliaju/grammarly-mcp
 https://github.com/navelphotochemistry3605/VRCUdonSkills-for-Codex
 https://github.com/nealsafetyrelated641/News-Data-Scrapper-for-Indian-Express-News
 https://github.com/neo63900/pesu-slide-download-automator
-https://github.com/ngotrunganhh/PiggyPiggy-Hack-Game-Bot-Auto-Farm-Clicker-Crypto-Api-Cheat
 https://github.com/nicosmall503/merx-mcp
 https://github.com/nidashaikh18/Eth-Telegram-Verse-Bot
 https://github.com/nikeshRajbanshi231/solana-defi-toolkit
@@ -665,7 +635,6 @@ https://github.com/reall8164/wechat-openclaw-plugin
 https://github.com/recollective-genuseptatretus377/askproof-skill
 https://github.com/reenahot496/claude-code
 https://github.com/remylukunda/Interactive-Chatbot
-https://github.com/reol9/hoi4-dlc-unlocker-suite
 https://github.com/replica0909xx/oh-my-claude
 https://github.com/retardingforcerightbank635/dm-gateway-bot
 https://github.com/reviewtaipei284/awesome-claudecode-paper-proofreading
@@ -677,7 +646,6 @@ https://github.com/riccardoglacial391/supermeskill
 https://github.com/riqxa/skills-best-practices
 https://github.com/rising-armoire4069/dan-koe-skill
 https://github.com/rockanalex-dev/MIDIToolkit
-https://github.com/rohith244/long-bio-free-fire-bot
 https://github.com/romualdtats/claude-code-best-practices
 https://github.com/romulusharish/Discord-Joiner-Token-Scraper
 https://github.com/ronaldslins2/hyperliquid-trading-bot
@@ -744,7 +712,6 @@ https://github.com/theyenvychada/agent-skills
 https://github.com/thiagocavalheiro/polymarket-sports-trading-bot
 https://github.com/thien1324/TraversalNavigationDataPlugin
 https://github.com/thisisi3846/openclaw-worker
-https://github.com/thsmanasastomouni/Elder-Scrolls-Online-DLC-Unlocker-Mod-Integration-PTS-Support
 https://github.com/tiffanygrand729/claude-code-sound-notification
 https://github.com/timlfg/NEWS-Chatbot
 https://github.com/tode77/node-red-contrib-mcp
@@ -766,7 +733,6 @@ https://github.com/vaskesvo5321/Claude-Zeroclaw
 https://github.com/vestackayun/TunesKit-Audio-Capture-No-Trial
 https://github.com/vikto2953/matlab-agentic-toolkit
 https://github.com/vinzyy1/docker-mcp
-https://github.com/vkxxxii99/The-Witcher-3-DLC-Unlocker-Cross-Platform-Koalageddon-ScreamAPI-
 https://github.com/wagawgaw/Pumpfun-Sniper-Bot
 https://github.com/wahmoh/claude-react-kit
 https://github.com/waleedkhanbaloch/claude-code-safety-net
@@ -800,7 +766,6 @@ https://github.com/zainow000/claudecodeui
 https://github.com/zaltrap/Renee-iPhone-Recovery-No-Trial
 https://github.com/zenialeaky136/live-to-100-skills
 https://github.com/zenyrae123/claude-data-analysis-ultra-main
-https://github.com/zergcheater/glyphx
 https://github.com/zerotohero99/smart-pole-skill
 https://github.com/zioerenkl/Polymarket-Copytrading-Bot
 https://github.com/zt8812/lightning-image-scraper

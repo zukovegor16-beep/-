@@ -16,6 +16,7 @@ https://github.com/PedrokaX/webscraper-to-identify-which-girls-and-how-many-of-t
 https://github.com/Prajwalgrathish/TotalOSINT
 https://github.com/Prestonbalconied467/CoSINT
 https://github.com/Rippledirham767/LongParser
+https://github.com/Skyscraperfoxhound619/markdown-ui-dsl
 https://github.com/TedPython78844909i99/video-scraping-apis
 https://github.com/Truta09/Savills-Auction-Data-Scraper
 https://github.com/Uj005/autoscout24-germany-deutschland-scraper
