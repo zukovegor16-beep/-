@@ -1,9 +1,10 @@
 snapshot=2026-09-23
 agentbaiting_skills_mcp_parsers=613
 fakegit_github_repos=7654
-fakegit_github_owners=7219
 campaign_domains=63
 core_domains=270965
-worldwide_domains=4660757
-worldwide_urls=147509
-campaign_ips=5
+banned_rkn_mirror_domains=1687056
+worldwide_domains=7030450
+worldwide_urls=950606
+honesty_official_rkn_dump=not_public
+honesty_zapret_info_dump_date=2025-10-01

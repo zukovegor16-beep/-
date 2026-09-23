@@ -166,7 +166,8 @@ def load_blacklist(mode: str) -> dict[str, set[str]]:
     for path in (
         HERE / "extra-malware-domains-2026.txt",
         HERE / "worldwide" / "campaign-domains.txt",
-        HERE / "worldwide" / "domains-core.txt.gz" if mode in {"core", "full"} else None,
+        HERE / "worldwide" / "domains-core.txt.gz" if mode in {"core", "banned", "full"} else None,
+        HERE / "worldwide" / "banned-rkn-mirrors.txt.gz" if mode == "banned" else None,
         HERE / "worldwide" / "domains.txt.gz" if mode == "full" else None,
     ):
         if path is None:
@@ -282,9 +283,9 @@ def main() -> int:
     parser.add_argument("--removed", type=Path, default=Path("removed.txt"))
     parser.add_argument(
         "--mode",
-        choices=("core", "full"),
+        choices=("core", "banned", "full"),
         default="full",
-        help="core = high-signal feeds only; full = maximum worldwide merge (default)",
+        help="core=IOC only; banned=core+RKN/mirrors; full=maximum merge (default)",
     )
     args = parser.parse_args()
     if not args.input.exists():

@@ -34,6 +34,15 @@ Phishunt: https://phishunt.io/feed.txt
 # Russia financial scams
 Bank of Russia warning list: https://www.cbr.ru/inside/warning-list/black-list-json
 
+# Banned / mirrors / closed domains (community dumps, not official operator feed)
+zapret-info/z-i dump.csv.gz (last public update 2025-10-01):
+https://github.com/zapret-info/z-i
+antifilter.download domains.lst:
+https://antifilter.download/list/domains.lst
+re:filter domains_all.lst:
+https://github.com/1andrevich/Re-filter-lists
+Official RKN operator dump is NOT public: https://vigruzki.rkn.gov.ru/
+
 # Fake installer / TDS campaigns
 Check Point 2026 impersonation/TDS:
 https://research.checkpoint.com/2026/impersonation-click-hijacking-and-tds-inside-a-malware-distribution-ecosystem/
