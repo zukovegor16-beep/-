@@ -7,3 +7,4 @@
 
 Главный список ссылок: `programs-and-skills-urls.txt`
 Числа: `STATS.txt`
+Дыры, что искать дальше: `GAPS.md`
