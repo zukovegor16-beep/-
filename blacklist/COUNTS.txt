@@ -1,0 +1,10 @@
+source=Island Security Research AgentBaiting CSV 2026-07
+source_url=https://github.com/island-io/island-security-research-artifacts/blob/main/agentbaiting/malicious-repositories-and-zip-hashes-2026-07.csv
+full_campaign_repos=7854
+filtered_unique=613
+skill=223
+mcp=120
+parser=73
+openclaw=42
+plugin=29
+claude=168

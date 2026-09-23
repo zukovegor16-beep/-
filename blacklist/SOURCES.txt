@@ -1,0 +1,24 @@
+Island AgentBaiting report (2026-07-20)
+https://www.island.io/blog/agentbaiting-how-800-fake-ai-skills-and-mcp-servers-delivered-malware
+
+Island IOC CSV (7854 malicious GitHub repositories)
+https://github.com/island-io/island-security-research-artifacts/blob/main/agentbaiting/malicious-repositories-and-zip-hashes-2026-07.csv
+
+Koi ClawHavoc (341, later 824 malicious OpenClaw skills)
+https://www.koi.ai/blog/clawhavoc-341-malicious-clawedbot-skills-found-by-the-bot-they-were-targeting
+
+Clawdex skill verdict API
+https://clawdex.koi.security/
+
+Trend Micro OpenClaw / Atomic Stealer IOC
+https://www.trendmicro.com/content/dam/trendmicro/global/en/research/26/b/amos-stealer-openclaw/ioc-malicious-openclaw-skills-used-to-distribute-atomic-macos-stealer.txt
+
+Bank of Russia warning list (financial scams)
+https://www.cbr.ru/inside/warning-list/
+
+URLhaus malware URL feed
+https://urlhaus.abuse.ch/browse/
+
+To refresh the full Island dump:
+curl -fsSL -o island-all-repos.csv \
+  https://raw.githubusercontent.com/island-io/island-security-research-artifacts/main/agentbaiting/malicious-repositories-and-zip-hashes-2026-07.csv
