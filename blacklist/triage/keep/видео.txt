@@ -1,0 +1,3 @@
+https://github.com/Indraparama940/ai-ffmpeg-cli
+https://github.com/NileshKavindaNaka/ffmpeg-video-bot
+https://github.com/hussabd/vue-video-editor

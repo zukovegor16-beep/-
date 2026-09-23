@@ -77,6 +77,7 @@ https://github.com/David-Li0406/meta-skill-evloving
 https://github.com/Deedass/Werewolf-Whatsapp-Bot
 https://github.com/Deracz/RyExploit
 https://github.com/Didiye/mcp-dadosbr
+https://github.com/Diminishing-scree890/tiktok-live-python
 https://github.com/Dinesh3184/claude-session-sync
 https://github.com/Dioren03/WHATSENDER-Pro-No-Trial
 https://github.com/Diuli4587/vulk-mcp-server
@@ -131,6 +132,7 @@ https://github.com/Icy-Senpal/bypass-all
 https://github.com/Ikramahmadmemon13/grant-thinking-skill
 https://github.com/Immoderate-humulin783/odoo-skills
 https://github.com/Immunogenic-prismspectroscope589/Blender_mcp
+https://github.com/Indraparama940/ai-ffmpeg-cli
 https://github.com/Intragroup-pottle634/claude-code-analysis
 https://github.com/Iski08/dotclaude
 https://github.com/Isometrical-selection572/claude_code_cli
@@ -182,6 +184,8 @@ https://github.com/Livercolored-dashtelut122/notebooklm-toolkit
 https://github.com/Lo9manjpeg/claude-design-engineer
 https://github.com/Logarithmic-blackafrican589/LLMInjector
 https://github.com/Logiiiii/unity-agent-skills
+https://github.com/Lokmandev/codenex-ai-api-proxy
+https://github.com/Lorenzaformic944/tiktok-live-api
 https://github.com/LouisPROgramm/ECU-Bypass-Framework-XRS9000
 https://github.com/Louishin/claude-api-cost-optimization
 https://github.com/Loune3213/Wazuh-Openclaw-Autopilot
@@ -213,6 +217,7 @@ https://github.com/NaghamYehya/claude-recall
 https://github.com/Naveenkm007/spaceship-mcp
 https://github.com/NikosDevMC/claude-svelte5-skill
 https://github.com/NileshKavindaNaka/ffmpeg-video-bot
+https://github.com/Ninju153311/soundcloud-api-ts-next
 https://github.com/Niranjanprasad1/Solana-Memecoin-Trading-Bot
 https://github.com/Nobeliummolestation149/claude-code-doc
 https://github.com/Noellaepisodic575/spoofsip
@@ -420,6 +425,7 @@ https://github.com/dali-raki/skills
 https://github.com/danielsod12/claude-compaction-viewer
 https://github.com/danya120o3/processhacker-mcp
 https://github.com/dappled-roadagent484/claude-mob-programming-skill
+https://github.com/despiteportablecomputer411/proxy-ipv6-generator
 https://github.com/discordnoliesg/PDF-Replacer-Pro-No-Trial
 https://github.com/dmvait8534/claude2api-deploy
 https://github.com/droftgamer-wq/researcher-skill
@@ -485,6 +491,7 @@ https://github.com/howar2113/claude-code-prompt-engineering-patterns
 https://github.com/humair832/GeminiBusiness_CookieExtractor
 https://github.com/hungnguyen1509asd/raydium-trading-bot
 https://github.com/hunteryeet/linkedin-jobs-scraper-incredibly-fast
+https://github.com/hussabd/vue-video-editor
 https://github.com/hydery-debug/Telegram-Gift-Parser
 https://github.com/iWz3r/KATANA-Klipper-Installer
 https://github.com/iamlopez2512/MajouBoureiVolontes-ArcaneToolkit
@@ -537,6 +544,7 @@ https://github.com/kmjjjj/polymarket-arbitrage-bot-btc-sol-15m
 https://github.com/komafon/trust-openclaw
 https://github.com/kongma1891/microsoft-style-skill
 https://github.com/kriid08/SkillForge
+https://github.com/kushal0451/instagram-analytics-software
 https://github.com/kyle122497/llamator-mcp-server
 https://github.com/kyllian330/claude-statusline
 https://github.com/laien69/amazon-reviews-scraper-with-advanced-filters
@@ -684,6 +692,7 @@ https://github.com/smartpul/claude-code-config
 https://github.com/softineerdanish/faahhh-notifier-plugin-intellij
 https://github.com/sonchimto111/SQLVulnInjector
 https://github.com/sorbussitchensisdonorcard867/claude-code
+https://github.com/sotho-genuspseudobombax504/tiktok-live-nuxt
 https://github.com/srpipoca504/git-mcp-rs
 https://github.com/star-q-gamer/Open-ClaudeCode
 https://github.com/starlincxv177/Brute-Force-Exploitation-and-Defense-Lab
