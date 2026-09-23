@@ -54,7 +54,7 @@
 4. Скил «поднять прокси / ротацию» — в 1б пачка `*-proxy`.  
 5. Авторег ChatGPT / Claude / Google — в 1б `chatgpt-account-creator`.  
 6. Качалка TikTok / Instagram / VK / RuTube — в keep нет.  
-7. Рассылка Telegram / Discord — в keep нет. SMS есть только как кряк Enabler. Telegram-Auto-Mass-Dms в 1б уже 404.  
+7. Рассылка VK / TikTok / Instagram / Telegram / Discord / OK / Avito — в keep нет. SMS только как кряк Enabler. Telegram-Auto-Mass-Dms в 1б уже 404. Таблица: `рассылка-дыры.md`.  
 8. Стилер с именем Lumma / StealC / RedLine — в 1б нет.  
 9. Массовый DM в Instagram / Telegram — в keep нет.  
 10. MCP «вместо парсера»: хожу на сайт и тащу таблицу — часть MCP уже в скилах, узких под кино/маркетплейс нет.
