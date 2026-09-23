@@ -1,69 +1,50 @@
-# Чёрный список вредоносных Skills / MCP / «парсеров» (сентябрь 2026)
+# Чёрный список вредоносных сервисов (сентябрь 2026)
 
-Это не выдуманный каталог на 600 случайных сайтов. Это **официальный срез** кампании **FakeGit / AgentBaiting** плюс подтверждённые IOC соседних кампаний. Island зафиксировала **более 600** вредоносных карточек Skills и MCP в публичных каталогах — ровно тот порядок чисел, который вы описали.
+Сначала здесь были **613** фейковых Skills/MCP/парсеров. Теперь добавлен мировой слой: фишинг, стилеры, фейковые установщики, финансовые пирамиды ЦБ, Discord/crypto-скамы и все репозитории FakeGit.
 
-Если другой ИИ выдал вам «базу из 1000+ сервисов», с высокой вероятностью туда попали эти репозитории. Их нужно **удалить и не открывать**.
+Это список **для удаления**. Ссылки из него не открывать и не устанавливать.
 
-## Что удалять в первую очередь
+## Сколько записей сейчас
 
-| Файл | Сколько | Что это |
-| --- | ---: | --- |
-| `agentbaiting-skills-mcp-parsers.txt` | **613** | GitHub URL фейковых Skills, MCP, парсеров, Claude/OpenClaw-приманок |
-| `agentbaiting-owner-repo.txt` | 613 | Тот же список в виде `owner/repo` |
-| `agentbaiting-skills-mcp-parsers.csv` | 613 | URL + теги + SHA-256 вредоносного ZIP |
-| `clawhavoc-skill-names.txt` | ~80 | Имена вредоносных OpenClaw/ClawHub skills и авторов |
-| `extra-malware-domains-2026.txt` | ~20 | Домены фейковых установщиков ChatGPT/Claude и C2 |
+| Слой | Файл | Записей | Смысл |
+| --- | --- | ---: | --- |
+| Skills / MCP / парсеры | `agentbaiting-skills-mcp-parsers.txt` | **613** | точный срез Island под ИИ-скилы |
+| Все FakeGit репозитории | `worldwide/github-repos.txt` | **7 654** | SmartLoader/StealC на GitHub |
+| Ядро (высокое качество) | `worldwide/domains-core.txt.gz` | **270 965** | URLhaus, ThreatFox, ЦБ РФ, CERT.PL, Phishing Army, C2 |
+| Максимум по миру | `worldwide/domains.txt.gz` | **4 660 757** | ядро + HaGeZi TIF + Blocklist Project + Phishing.Database + Discord/Polkadot scams |
+| Свежие вредоносные URL | `worldwide/urls.txt.gz` | **147 509** | OpenPhish, URLhaus, phishing-filter |
+| Кампании 2026 | `worldwide/campaign-domains.txt` | **60+** | фейковые ChatGPT/Claude/Ghidra/dnSpy установщики |
 
-Полный список Island — **7854** вредоносных репозитория (не только AI):  
-https://github.com/island-io/island-security-research-artifacts/blob/main/agentbaiting/malicious-repositories-and-zip-hashes-2026-07.csv
+Снимок собран **23 сентября 2026**.
 
-## Как прогнать свою базу
-
-Положите свой список в `my-list.txt` (по одной ссылке или строке) и выполните:
+## Как прогнать большой список
 
 ```bash
-python3 blacklist/filter-list.py my-list.txt --kept kept.txt --removed removed.txt
+# максимум совпадений по миру
+python3 blacklist/filter-list.py my-list.txt --mode full --kept kept.txt --removed removed.txt
+
+# только более чистые официальные фиды (меньше ложных срабатываний)
+python3 blacklist/filter-list.py my-list.txt --mode core --kept kept.txt --removed removed.txt
 ```
 
-Скрипт только сравнивает строки с чёрным списком. Он ничего не скачивает и не запускает.
+Скрипт ничего не скачивает. Он только сравнивает хосты, GitHub `owner/repo` и известные URL.
 
-## Почему эти ссылки опасны
+## Что здесь закрыто сверх прошлого списка
 
-Кампания подсовывает репозиторий, который выглядит как Skill, MCP-сервер или парсер. README просит скачать ZIP/EXE и «просто запустить». Внутри — **SmartLoader → StealC** (или Atomic Stealer для OpenClaw). Цель — украсть сессии браузера, пароли, API-ключи, кошельки.
+- Весь Island FakeGit, не только AI: **7 654** репозитория
+- Реестр ЦБ РФ по финансовым пирамидам и нелегальным участникам рынка
+- Активный фишинг: OpenPhish, Phishing Army, CERT.PL, mitchellkrog Phishing.Database
+- Malware URL/C2: URLhaus, ThreatFox, C2IntelFeeds
+- HaGeZi Threat Intelligence Feeds + Fake sites
+- Discord AntiScam и Polkadot phishing deny-list
+- Фейковые загрузчики инструментов: `ghidralite.com`, `dnspy.org`, `ilspy.org`, `openew.app`, `download-version.1-5-8.com`
 
-Типичные признаки, по которым строку надо удалять сразу:
+## Осторожно
 
-- просят скачать `.zip` / `.exe` и нажать «Run anyway»;
-- пароль на архив «для распаковки»;
-- внутри `application.cmd` + `luau.exe` / `lua51.dll` + `.txt`;
-- аккаунт GitHub отличается на одну букву от известного автора;
-- карточка живёт на LobeHub / Glama / MCP.so / MCP Market / ClawHub, а исходник — свежий GitHub с чужим README.
+`full` специально максимальный. В Blocklist Project и похожих фидах бывают ложные срабатывания. Если вычистится слишком много легитимных сервисов — перезапустите с `--mode core`.
 
-Каталоги выше **не являются вредоносным ПО сами по себе**, но они уже индексировали сотни заражённых карточек. Наличие записи в каталоге — не доказательство безопасности.
+Каталоги LobeHub / Glama / MCP.so / MCP Market / ClawHub сами по себе не malware, но они уже индексировали сотни заражённых карточек. Не считайте запись в каталоге доказательством безопасности.
 
-## Что нельзя принимать за «безопасный сервис»
+Перед OpenClaw-скилом проверяйте имя в Clawdex: https://clawdex.koi.security/
 
-- Любой «бесплатный Walmart/Gmail/WhatsApp/Databricks MCP».
-- Любой «awesome-claude-skills» не от официального издателя. Настоящий каталог: `ComposioHQ/awesome-claude-skills`. Подделка: `Mann1988/awesome-claude-skills`.
-- Любой «parser / scraper / OSINT toolkit» с готовым Windows-инсталлятором.
-- Фейковые загрузчики ChatGPT/Claude: `openew.app`, `download-version.1-5-8.com`.
-- Typosquat-скилы ClawHub: `clawhubb`, `clawhubcli`, `cllawhub` и т.п.
-
-Перед установкой OpenClaw-скила проверяйте имя в Clawdex: https://clawdex.koi.security/
-
-## Если вы уже открывали такие ссылки
-
-1. Не запускайте скачанные ZIP/EXE.
-2. Если уже запускали — отключите машину от сети, смените пароли **после** очистки, отзовите сессии браузера, OAuth, API-токены и облачные ключи. Смены пароля недостаточно: StealC забирает живые сессии.
-3. Проверьте GitHub/npm/Telegram-сессии и криптокошельки.
-
-## Источники (актуальность: 2026)
-
-- Island, 20 июля 2026: [AgentBaiting](https://www.island.io/blog/agentbaiting-how-800-fake-ai-skills-and-mcp-servers-delivered-malware)
-- Island IOC CSV: [malicious-repositories-and-zip-hashes-2026-07.csv](https://github.com/island-io/island-security-research-artifacts/blob/main/agentbaiting/malicious-repositories-and-zip-hashes-2026-07.csv)
-- Koi, февраль 2026: [ClawHavoc, 341 → 824 вредоносных skills](https://www.koi.ai/blog/clawhavoc-341-malicious-clawedbot-skills-found-by-the-bot-they-were-targeting)
-- Trend Micro: [OpenClaw / Atomic Stealer IOC](https://www.trendmicro.com/content/dam/trendmicro/global/en/research/26/b/amos-stealer-openclaw/ioc-malicious-openclaw-skills-used-to-distribute-atomic-macos-stealer.txt)
-- Push Security / Evalian: фейковый установщик ChatGPT `openew.app`
-- Rapid7: фейковый установщик Claude `download-version.1-5-8.com`
-
-Пришлите свой файл со 1000+ ссылками — можно прогнать его против этого списка точечно.
+Источники: `SOURCES.txt` и `worldwide/STATS.txt`.
