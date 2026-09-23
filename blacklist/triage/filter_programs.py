@@ -5,6 +5,10 @@ from __future__ import annotations
 
 import gzip
 import re
+import ssl
+import urllib.error
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,12 +37,12 @@ DROP_JUNK = re.compile(
     r"blog-public|\.github$|\.emacs|devfolio|fundamentals",
     re.I,
 )
-# Платный софт и его кряки не нужны.
-DROP_PAID = re.compile(
+CRACK_HINT = re.compile(
     r"no-trial|no.?trial|nulled|premium.?unlock|unlocked.?premium|"
-    r"enterprise-no-trial|paid-ads",
+    r"enterprise-no-trial|keygen|crack|cheat|trainer|license.?bypass",
     re.I,
 )
+GITHUB_RE = re.compile(r"^https?://github\.com/[^/]+/[^/#?]+", re.I)
 
 
 def load_lines(path: Path) -> list[str]:
@@ -54,10 +58,39 @@ def write_lines(path: Path, values) -> None:
     path.write_text("\n".join(values) + ("\n" if values else ""), encoding="utf-8")
 
 
+def github_alive(url: str, timeout: float = 8.0) -> bool:
+    """Страница репозитория открывается. Тело и релизы не качаем."""
+    match = GITHUB_RE.match(url.strip())
+    if not match:
+        return False
+    page = match.group(0)
+    request = urllib.request.Request(
+        page,
+        method="HEAD",
+        headers={"User-Agent": "catalog-liveness-check"},
+    )
+    context = ssl.create_default_context()
+    try:
+        with urllib.request.urlopen(request, timeout=timeout, context=context) as response:
+            return 200 <= response.status < 400
+    except urllib.error.HTTPError as error:
+        if error.code in {403, 405}:
+            request.method = "GET"
+            request.add_header("Range", "bytes=0-0")
+            try:
+                with urllib.request.urlopen(request, timeout=timeout, context=context) as response:
+                    return 200 <= response.status < 400
+            except urllib.error.HTTPError as again:
+                return again.code in {200, 206, 304}
+            except OSError:
+                return False
+        return False
+    except OSError:
+        return False
+
+
 def classify(item: str) -> str | None:
-    if DROP_PAID.search(item):
-        return None
-    if DROP_JUNK.search(item) and not re.search(r"pars|scrap|skill|mcp|stealer|mailer", item, re.I):
+    if DROP_JUNK.search(item) and not re.search(r"pars|scrap|skill|mcp|stealer|mailer|crack|no-trial", item, re.I):
         return None
     for label, pattern in KEEP_RULES:
         if pattern.search(item):
@@ -85,6 +118,21 @@ def main() -> None:
         else:
             dropped_not_tool.append(item)
 
+    crack_candidates = [item for item, label in kept.items() if label == "кряк_чит" or CRACK_HINT.search(item)]
+    dead_cracks: list[str] = []
+    if crack_candidates:
+        with ThreadPoolExecutor(max_workers=10) as pool_exec:
+            future_map = {
+                pool_exec.submit(github_alive, item): item
+                for item in crack_candidates
+                if item.startswith("http")
+            }
+            alive_map = {future_map[future]: future.result() for future in as_completed(future_map)}
+        for item in crack_candidates:
+            if item.startswith("http") and not alive_map.get(item, False):
+                kept.pop(item, None)
+                dead_cracks.append(item)
+
     websites = load_lines(OUT.parent / "01a-pirate-gambling.txt.gz")
 
     by_cat: dict[str, list[str]] = {}
@@ -106,6 +154,7 @@ def main() -> None:
     # чистый список без заголовков для прогона
     write_lines(OUT / "programs-and-skills-urls.txt", sorted(kept))
     write_lines(OUT / "dropped-not-a-tool.sample.txt", sorted(dropped_not_tool)[:300])
+    write_lines(OUT / "кряк_мертвые.txt", sorted(dead_cracks))
     write_lines(OUT / "dropped-websites-1a.note.txt", [
         "1а целиком убрана из рабочего набора: это сайты, не программы.",
         f"кино_торренты_казино_адресов={len(websites)}",
@@ -119,6 +168,10 @@ def main() -> None:
         f"сайтов_убрано={len(websites)}",
         f"программ_скилов_осталось={len(kept)}",
         f"1б_не_похоже_на_инструмент={len(dropped_not_tool)}",
+        f"кряки_проверены={len(crack_candidates)}",
+        f"кряки_ссылка_жива={len(crack_candidates) - len(dead_cracks)}",
+        f"кряки_ссылка_мертва={len(dead_cracks)}",
+        "кряки_запуск_не_проверялся=да",
     ]
     for label in order:
         stats.append(f"{label}={len(by_cat.get(label, []))}")
@@ -129,7 +182,8 @@ def main() -> None:
         "",
         "Убрана ерунда вроде лордфильма: кино, торренты, казино, ставки — это сайты.",
         "Оставлены программы и скилы: парсеры, рассылки, авторегеры, стилеры, кряки, боты, MCP, прочий софт.",
-        "Закон и мораль не смотрел. Стилеры и рассылки на месте.",
+        "Кряки и No-Trial вернул только если страница GitHub сейчас открывается. Сам кряк не запускал.",
+        "Мёртвые ссылки: `кряк_мертвые.txt`.",
         "",
         "Главный список: `programs-and-skills-urls.txt`",
         "По коробкам: `парсер.txt`, `рассылка.txt`, `авторегер.txt`, `стилер.txt`, …",

@@ -1,12 +1,12 @@
 # программы и скилы. сайты вроде lordfilm убраны.
 
-# --- стилер (4) ---
+# --- стилер (3) ---
 https://github.com/aissredx/Hades-Stealer-Bot
 https://github.com/ciacou001/Browser-Data-Grabber
-https://github.com/icecrackoff/VigilByteStealer-Grabber-Discord-Fud
 https://github.com/silent-whisper/Hades-Stealer
 
-# --- рассылка (3) ---
+# --- рассылка (4) ---
+https://github.com/Dioren03/WHATSENDER-Pro-No-Trial
 https://github.com/JAKOBGTAG/multi-email-sender
 https://github.com/Tandey209/MassMailer2026
 https://github.com/obadamafalha/Mailer_Class
@@ -96,7 +96,7 @@ https://github.com/yunitaanggraini/deutsches-krankenhaus-verzeichnis-hospitals-s
 https://github.com/zt8812/lightning-image-scraper
 youtube-thumbnail-grabber
 
-# --- скил_mcp (589) ---
+# --- скил_mcp (588) ---
 Demerzels-lab
 YPYT1/All-skills
 aztr0nutzs
@@ -366,7 +366,6 @@ https://github.com/astrodragonv/claudecode-rule2hook
 https://github.com/aurearobotic610/Claude-free-api-bot
 https://github.com/balazhaa/tavily-mcp-loadbalancer
 https://github.com/bautiroalt/MCP-Server
-https://github.com/beamstar/cheatengine-mcp-bridge
 https://github.com/beardedwheatgrasswalkupapartment951/solana-skills
 https://github.com/beggarticksarthurtatum121/reddit-skills
 https://github.com/being-gojo/openclaw-agents
@@ -687,123 +686,64 @@ yahoo-finance-pro
 youtube-summarize
 youtube-summarize-pro
 
-# --- кряк_чит (116) ---
-https://github.com/13ofbeaches/plagiarism-checker-x-unlocker
-https://github.com/1nashiw2/nioh3-trainer-2026
-https://github.com/1o-s/Forgotten-Runiverse-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Api
-https://github.com/365player/cracked-save-to-microsoft-one-drive-extension
-https://github.com/AEptR67/GasHero-Finance-Game-Bot-Auto-Farm-Clicker-Crypto-Blockchain-Hack-Cheat
-https://github.com/Abbashussain5/Hacking-Cheatsheets
-https://github.com/Admv9/repo-cheat-modpack
-https://github.com/AkashAdhikari01/StomCheat
-https://github.com/Alaa-Awad0/cracked-enhancer-for-medium-extension
-https://github.com/Amuthan1808/VALORANT-EFI-DRIVVER-Cheat-Hack
-https://github.com/Anatolylimbless794/Vape-V4-Crack-Kangaroo
+# --- кряк_чит (57) ---
+https://github.com/1711-liv/Disk-Pulse-Ultimate-Enterprise-No-Trial
+https://github.com/AlexRene5/Aiseesoft-DVD-Creator-No-Trial
 https://github.com/AttriKartik123/AceServe-Trainer-TennisManager25
-https://github.com/Bond004/Mutah-Gambling-Script-Hack-Cheat-Predictor-Strategies-Keydrop-csmoney-csgoskins
-https://github.com/Caeserondijo/cracked-enhancer-for-figma-extension
 https://github.com/Civ6-EnhancementToolkit/Chibi-Clash-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Token-Hack-Api
-https://github.com/Clad-chrism998/WasmCrack
-https://github.com/Coker10/Apeiron-Nft-Bot-Crypto-Cheat-Auto-Farm-Clicker-Game-Api-Hack
-https://github.com/Emonsheikh32/sql-cheatsheet
+https://github.com/FaniRussady/M3-Bitlocker-Recovery-No-Trial
 https://github.com/FredericoAkira/CodeTrainer-v2-Assembly-Rewritten
-https://github.com/Furinini/cracked-webpage-bookmark-manager-extension
-https://github.com/GaBrieLPaRRa-Dev/cracked-save-to-podio-extension
 https://github.com/Gamevoid2366/AuthCrack-v8
-https://github.com/Golane2/GasHero-Finance-Game-Bot-Auto-Farm-Clicker-Crypto-Blockchain-Hack-Cheat
-https://github.com/Hatimad/cracked-enhancer-for-zoom-extension
-https://github.com/Hulett77/VALORANT-EFI-DRIVER-Cheat-Hack
-https://github.com/Hvc3Er/cracked-save-to-asana-extension
 https://github.com/Inayatshaikh093/Code-Quest-Python-SQL-Trainer
-https://github.com/JVNTfks/cracked-webpage-translator-extension
+https://github.com/Jasonpro13/Aiseesoft-Total-Video-Converter-No-Trial
 https://github.com/Jcalumag19/Hash_crack
-https://github.com/Jo2300/Pixel-Gun-3D-PC-Cheats
-https://github.com/Lovenain/hypervisor-crack-audit
-https://github.com/LucasRafael-S/cracked-tab-grouping-assistant-extension
-https://github.com/Luffy1402/CrackFtp-la
+https://github.com/Jj77282/aSc-Timetables-No-Trial
 https://github.com/Lyam2147/Slay-The-Spire-2-Trainer
-https://github.com/MantaJP/Fableborne-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Token-Hack-Api
-https://github.com/MasSareh/PokePath-Cheat
-https://github.com/MaybeDesxie7/cracked-webpage-annotator-extension
+https://github.com/Meh3met/VMware-Workstation-Pro-No-Trial
 https://github.com/Mewing2/Omega-Life-loot-drop-trainer
 https://github.com/Mike1-n/Enigma-Recovery-Professional-Crack
-https://github.com/MinParkwee1212/Speed-Boost-Fantasy-Waifu-cheats
-https://github.com/Niwatheking/messari-crack
-https://github.com/Nzwili/spss-statistics-30-1-pro-unlocked
-https://github.com/Pheap123/Blum-Crypto-Trading-Bot-P2P-Chain-Exchange-blumcrypto-Farm-Hack-Cheat-4l
-https://github.com/Philiplaurence123/Brilliant-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Token-Hack-Api
-https://github.com/Pollob99/cracked-tab-session-saver-extension
 https://github.com/RazvaN777/Atlyss-Cheats
-https://github.com/RepublicOfBotv109/llm-engineering-cheatsheet
 https://github.com/SALMANPPL/NoteBurner-Spotify-Music-Converter-Crack
-https://github.com/Sacapalabanda/VALORANT-EFI-DRIVVER-Cheat-Hack
-https://github.com/Sanfin/jsoncrack.com
 https://github.com/Sebasg-19/anticrack
-https://github.com/Shaktiigrover/AutoPassCrack
 https://github.com/Skippermain626/Rust-Cheat-2026-Best-Aim-Esp-No-Recoil-Misc-Visuals-for-PC
-https://github.com/SuperDev699/CheatSheet-LLM
 https://github.com/Terminiator229/WebSecurityCheatSheet
-https://github.com/Toheed2004/Bloodline-mod-set-jump-height-cheat
-https://github.com/Toroto753/Turan-Gambling-Script-Hack-Cheat-Predictor-Strategies-Keydrop-Skinbaron-hellcase
+https://github.com/VOIDeMPTY123/Audio-Amplifier-Pro-No-Trial
 https://github.com/Wemode-Whisper-Unlock/auto-cad-2025
 https://github.com/WutheringWavesToolkit/WarzoneExternalCheat
-https://github.com/Yoda6-9/2026-All-Brands-Bootloader-Unlock-Status
-https://github.com/albeiroval/Wild-Forest-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Token-Hack-Api
-https://github.com/atabey9860/Axie-Infinity-Bot-Crypto-Cheat-Auto-Farm-Clicker-Game-Api-Hack
+https://github.com/aandre2011/SMS-Enabler-No-Trial
+https://github.com/adammtn/WinCam-No-Trial
+https://github.com/alpesh0011/AnyMP4-TransMate-No-Trial
 https://github.com/babtou34/Common-Ground-World-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Api
-https://github.com/bibabiboreal/cracked-save-to-airtable-base-extension
-https://github.com/bielelmagu/Roblox-FPS-Unlocker
 https://github.com/bluecheatah123/APEX
-https://github.com/bomm010/cracked-webpage-commenter-extension
 https://github.com/braaahyym/MOBILedit_Forensic_Express_Pro_Crack
-https://github.com/chotu120/BatCrack
-https://github.com/class1k/cracked-save-to-mondaycom-extension
-https://github.com/clieez/Cracked-Price-History-Tracker-Spend-Lens-Buyhatke
+https://github.com/chandler02-ODS/Nuance-Power-PDF-Advanced-No-Trial
 https://github.com/connorssubmitter868/crackwifi
-https://github.com/cracklingscapitalofsouthdakota649/gpu_benchmark
-https://github.com/elroxu/Qorpo-World-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Token-Hack-Api
-https://github.com/even88813-hash/anticheat
+https://github.com/discordnoliesg/PDF-Replacer-Pro-No-Trial
 https://github.com/exercisedeviceforester917/ai-prompt-cheatsheet
-https://github.com/gilbertGabe/tuneskit-iphone-unlocker-2-5-0-9-premium-tools
-https://github.com/govardhan908/DBFZ-cheat-engine-mod
-https://github.com/hamzaabiadi/cracked-tab-organizer-extension
-https://github.com/husam8185/BoomLand-io-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Api-Hack
-https://github.com/iYagamiGTPS4/nginx-cheatsheet
-https://github.com/ian3P2-PCI/Areana-Breakout-Wildwave-Cheat
-https://github.com/igoralways/cracked-enhancer-for-google-meet-extension
-https://github.com/izul123/cracked-save-to-zoho-crm-extension
-https://github.com/jesusmiguelito/DungeonRampageCheat
+https://github.com/fathanghani864/supervpn-premium-unlocked-edition
+https://github.com/iddi655/NCH-PhotoPad-Image-No-Trial
 https://github.com/jward0626/pid-trainer
-https://github.com/jyng2002/cracked-enhancer-for-trello-extension
-https://github.com/kayraizm3131/cracked-webpage-tag-manager-extension
-https://github.com/kevin1108-debug/The-Chant-Infinite-Mind-Cheat
-https://github.com/lezer10/cheatcode
 https://github.com/linapatel518/rbxfpsunlocker
-https://github.com/m25s5/Chibi-Clash-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Token-Hack-Api
+https://github.com/lujinyanai/Magic-DVD-Ripper-No-Trial
+https://github.com/mandoyl/Wondershare-Fotophire-Photo-Editor-No-Trial
 https://github.com/megana05082003/rewasd-7-3-0-9137-activation-unlocked
-https://github.com/moha-create/cracked-tab-scheduler-extension
+https://github.com/muhammadkamran02/Smarter-Battery-No-Trial
+https://github.com/n3therlands/Valentina-Studio-Pro-No-Trial
 https://github.com/ngotrunganhh/PiggyPiggy-Hack-Game-Bot-Auto-Farm-Clicker-Crypto-Api-Cheat
-https://github.com/nguyetgggr5/iMazing-Crack-Repack
+https://github.com/noone6954/VMware-Workstation-Player-No-Trial
 https://github.com/oualiide/ManageEngine-Desktop-Central-Crack
-https://github.com/p4blo3d/cracked-enhancer-for-dropbox-extension
-https://github.com/ravigurjar21/PC-Fields-of-Mistria-cheats
 https://github.com/reol9/hoi4-dlc-unlocker-suite
-https://github.com/roter515stuhl/Aavegotchi-Cheat-Crypto-Bot-Auto-Farm-Clicker-Game-Api-Hack
-https://github.com/sameeronwheels/cracked-save-to-milanote-extension
+https://github.com/s1moon/Total-Uninstall-Professional-No-Trial
 https://github.com/sibbirawan/cheat-sheet
-https://github.com/sooryanaga/obscure-affairs-unlocked-edition
-https://github.com/teskkkkk/cracked-todoist-for-chrome
+https://github.com/taolacoi123hd/Paqet-X-Nulled
+https://github.com/teceduoswaldo3000/Tipard-DVD-Ripper-No-Trial
 https://github.com/thsmanasastomouni/Elder-Scrolls-Online-DLC-Unlocker-Mod-Integration-PTS-Support
-https://github.com/ulas6221/Axie-Infinity-Bot-Crypto-Cheat-Auto-Farm-Clicker-Game-Api-Hack-km
-https://github.com/vansh1772/cracked-save-to-todoist-extension
+https://github.com/vestackayun/TunesKit-Audio-Capture-No-Trial
 https://github.com/vkxxxii99/The-Witcher-3-DLC-Unlocker-Cross-Platform-Koalageddon-ScreamAPI-
-https://github.com/wiliams11h/Forgotten-Runiverse-Crypto-Bot-Crypto-Game-Auto-Farm-Clicker-Cheat-Api-1v
+https://github.com/widyngen/izotope-neutron-5-premium-unlocked
 https://github.com/wuaricoco23/WhiteBoxAesCrack
-https://github.com/xxxv-cockscomb850/Plitch-Game-Trainer-Setup
-https://github.com/y4CEENE/cracked-save-to-jira-work-management-extension
-https://github.com/yurism123/rbxfpsunlocker
+https://github.com/zaltrap/Renee-iPhone-Recovery-No-Trial
 https://github.com/zergcheater/glyphx
-https://github.com/znrril/cracked-save-to-basecamp-extension
 
 # --- качалка (28) ---
 https://github.com/3aboody/vscode-extension-downloader

@@ -21,7 +21,6 @@ https://github.com/13ofbeaches/ai-resume-screening-system
 https://github.com/149413/Asp.NetCore-Fundamentals
 https://github.com/159zhx/Pet-Simulator-99
 https://github.com/15kElixs/GitHub-Insights
-https://github.com/1711-liv/Disk-Pulse-Ultimate-Enterprise-No-Trial
 https://github.com/17Smudge/nft-basic-mint
 https://github.com/1887sagar/hybrid_template_kotlin
 https://github.com/195410211/audit-evidence-pack-assembler
@@ -218,7 +217,6 @@ https://github.com/Alerandre123/trexo-pdf-signer
 https://github.com/Alex947-blip/AAPL-GRU-Stock-Forecaster
 https://github.com/Alex999898/htb-writeups
 https://github.com/AlexHah24/Calgary-Crime-Data-Analysis-and-Neural-Network-Model
-https://github.com/AlexRene5/Aiseesoft-DVD-Creator-No-Trial
 https://github.com/AlexSilgidzhiyan/agent-commerce
 https://github.com/AlexanderFarhan/omniclaw
 https://github.com/Alexcomplementary40/ELF-pytorch
@@ -298,3 +296,5 @@ https://github.com/AniketPaul44/lextex-homelab
 https://github.com/Anil4674sdfsd/mt5-trader
 https://github.com/Aniqirfan-cyber/free-ip-stresser-booter
 https://github.com/Anjinho176/04Python-CarPricePredictor
+https://github.com/Ankit71292/Azyaa--Nextjs-E-Commerce-Fashion-Demo
+https://github.com/Anno29/web

@@ -267,7 +267,6 @@ https://github.com/astrodragonv/claudecode-rule2hook
 https://github.com/aurearobotic610/Claude-free-api-bot
 https://github.com/balazhaa/tavily-mcp-loadbalancer
 https://github.com/bautiroalt/MCP-Server
-https://github.com/beamstar/cheatengine-mcp-bridge
 https://github.com/beardedwheatgrasswalkupapartment951/solana-skills
 https://github.com/beggarticksarthurtatum121/reddit-skills
 https://github.com/being-gojo/openclaw-agents
