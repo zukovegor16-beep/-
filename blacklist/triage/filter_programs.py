@@ -25,7 +25,13 @@ KEEP_RULES: list[tuple[str, re.Pattern[str]]] = [
     ("авторегер", re.compile(r"autoreg|auto.?reg|account.?gen|acc.?gen|joiner|follower.?bot|nacrut", re.I)),
     ("парсер", re.compile(r"pars|scrap|crawler|crawl|osint|grabber|harvester|extractor", re.I)),
     ("скил_mcp", re.compile(r"\bmcp\b|mcp-|skill|openclaw|claude-|claude_code|agent-skill|composio", re.I)),
-    ("кряк_чит", re.compile(r"crack|cheat|keygen|trainer|unlock|nulled|license.?bypass|no-trial|no.?trial", re.I)),
+    ("кряк_чит", re.compile(
+        r"crack|cheat|keygen|trainer|unlock|nulled|license.?bypass|no-trial|no.?trial|"
+        r"vegas-pro-version|adobe-photoshop-version|adobe-premiere-pro-version|"
+        r"aseprite-pixel-art-editor|ableton-live-\d+-desktop|"
+        r"office-365-activator|idm-freezer-and-activator",
+        re.I,
+    )),
     ("качалка", re.compile(r"download|yt-?dl|ytdlp|youtube-video|torrent.?client|magnet", re.I)),
     ("бот", re.compile(r"userbot|telegram-bot|discord-bot|chatbot|\bbot\b|-bot", re.I)),
     ("софт", re.compile(

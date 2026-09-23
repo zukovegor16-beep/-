@@ -109,6 +109,7 @@ RULES: dict[str, list[tuple[re.Pattern[str], str, bool]]] = {
     "кряк_чит": [
         (re.compile(r"cheatsheet|cheat-sheet|CodeTrainer|SQL-Trainer|pid-trainer|anticrack|WebSecurityCheatSheet", re.I), "шпаргалка или тренажёр по коду, не кряк", False),
         (re.compile(r"Hash_crack|AuthCrack|crackwifi|WhiteBoxAesCrack", re.I), "взлом хеша/пароля/протокола, не «скачать VMware»", True),
+        (re.compile(r"vegas-pro-version|aseprite-pixel-art-editor|adobe-photoshop-version|adobe-premiere", re.I), "кряк/дамп редактора (видео, пиксель, Adobe)", True),
         (re.compile(r"no-trial|nulled|premium-unlock|activation-unlocked|DLC-Unlocker|unlocker|Professional-Crack|_Crack", re.I), "платная программа без оплаты (No-Trial / Unlock)", True),
         (re.compile(r"cheat|trainer|aim|esp|loot-drop|Auto-Farm-Clicker|Hack-Game|glyphx|APEX", re.I), "чит или трейнер к игре", True),
     ],
