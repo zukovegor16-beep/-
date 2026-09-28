@@ -1,0 +1,8 @@
+https://github.com/GTA509FX/scrappe-tout	картинки с веба
+https://github.com/KartikRawat0504/crawlbase-cyberweek-deals-2025	универсальный краулер без узкой цели
+https://github.com/Matteuzzz/correos-cl-postal-code-scraper	почтовые индексы
+https://github.com/SadikinAraf/imperium-crawl	универсальный краулер без узкой цели
+https://github.com/navd-ctrl/facebook-marketplace-scraper	Facebook: события, подписки, маркет, хештеги
+https://github.com/palakchoudhary062/MrandmrssmithScrapping	сборщик по имени, цель неясна
+https://github.com/yunitaanggraini/deutsches-krankenhaus-verzeichnis-hospitals-scraper	справочник больниц
+youtube-thumbnail-grabber	YouTube / видео

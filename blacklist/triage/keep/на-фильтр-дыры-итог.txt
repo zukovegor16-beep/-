@@ -1,0 +1,19 @@
+# очередь B закрыта. живые взяли, 404 не брали.
+
+взял	видео	https://github.com/hussabd/vue-video-editor
+взял	видео	https://github.com/Indraparama940/ai-ffmpeg-cli
+взял	видео	https://github.com/NileshKavindaNaka/ffmpeg-video-bot
+взял	прокси	https://github.com/despiteportablecomputer411/proxy-ipv6-generator
+взял	прокси	https://github.com/kazhuki7/agentskills-proxy
+взял	прокси	https://github.com/Lokmandev/codenex-ai-api-proxy
+уже_в_куче_A	прокси	https://github.com/chalie56/proxy-multi-protocol-checker
+взял	instagram	https://github.com/kushal0451/instagram-analytics-software
+взял	tiktok	https://github.com/Diminishing-scree890/tiktok-live-python
+взял	tiktok	https://github.com/Lorenzaformic944/tiktok-live-api
+взял	tiktok	https://github.com/sotho-genuspseudobombax504/tiktok-live-nuxt
+взял	soundcloud	https://github.com/Ninju153311/soundcloud-api-ts-next
+404	авторег	https://github.com/Mike22223/chatgpt-account-creator
+404	прокси	https://github.com/dxdag5/gproxy-tool
+404	прокси	https://github.com/yomyoms/claude-proxy-flask
+404	прокси	https://github.com/yomyoms/oai-proxy-mod
+404	instagram	https://github.com/Jadelinda81/export-list-of-instagram-followers

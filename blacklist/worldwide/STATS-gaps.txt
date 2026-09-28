@@ -1,0 +1,27 @@
+generated=2026-09-23
+worldwide_domains=7345117
+urls=1028318
+telegram_handles=6414
+mirror_brands=1149
+
+still_unavailable:
+official_rkn_vigruzki=closed_needs_operator_certificate
+rublacklist_api=http_500_at_snapshot_time
+antizapret_api=http_502_at_snapshot_time
+threatfox_full_csv=needs_free_auth_key_not_present
+phishtank_worked_without_key=yes_hourly_online_valid
+private_google_docs_and_invite_discord=not_in_public_feeds
+unregistered_future_mirrors=covered_only_via_brand_patterns
+
+existing_domains	7030450
+phishtank	2067
+destroy-primary	56375
+destroy-community	252568
+discord-antiscams-txt	0
+dogino	3031
+threatfox-recent	515
+threatfox-domains-recent	0
+scamintel-domains	111
+scamintel-telegram-handles	6414
+mirror-brands	1149
+

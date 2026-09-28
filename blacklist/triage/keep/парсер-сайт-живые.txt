@@ -1,0 +1,57 @@
+https://github.com/Administrative-Assistance/flarecrawl	универсальный краулер без узкой цели
+https://github.com/Armaan29-09-2005/AI-OSINT-Security-Analyzer	OSINT-набор
+https://github.com/Ayushmaheshwari1/how-to-scrape-google-images-with-python	картинки с веба
+https://github.com/Chance6969-hue/__2025_07_08_tvdi_crawler__	сборщик по имени, цель неясна
+https://github.com/Dali2058/release-extractor	сборщик по имени, цель неясна
+https://github.com/FLORCRIOLLO/blueosint	OSINT-набор
+https://github.com/FarhanSaeed/YouTube-Summary-Scraper	YouTube / видео
+https://github.com/KaterineLimaE/myntra-reviews-scraper	магазины и отзывы
+https://github.com/Kazuhards/linkedin-job-scraper	LinkedIn: вакансии или Sales Navigator
+https://github.com/Kgurses52/IscrapeMDB	сборщик по имени, цель неясна
+https://github.com/KungBugFuOnYou/tubescrape	YouTube / видео
+https://github.com/LuizinTheHeroSalyer/facebook-events-scraper	Facebook: события, подписки, маркет, хештеги
+https://github.com/Luminex99/immobiliare-it-listing-page-scraper-by-search-url	объявления: жильё, авто, аукцион
+https://github.com/OTS02/facebook-followers-following-scraper-fast-cheap	Facebook: события, подписки, маркет, хештеги
+https://github.com/PedrokaX/webscraper-to-identify-which-girls-and-how-many-of-them-my-boyfriend-follows-on-GitHub	подписки на GitHub
+https://github.com/Prajwalgrathish/TotalOSINT	OSINT-набор
+https://github.com/Prestonbalconied467/CoSINT	OSINT-набор
+https://github.com/Rippledirham767/LongParser	универсальный краулер без узкой цели
+https://github.com/TedPython78844909i99/video-scraping-apis	YouTube / видео
+https://github.com/Truta09/Savills-Auction-Data-Scraper	объявления: жильё, авто, аукцион
+https://github.com/Uj005/autoscout24-germany-deutschland-scraper	объявления: жильё, авто, аукцион
+https://github.com/Xhtira20/scraped	универсальный краулер без узкой цели
+https://github.com/abraham321/divessi-padi-divesite-catalog-scraper	каталог дайв-сайтов
+https://github.com/adam0360/Web-Scraper-for-E-commerce	магазины и отзывы
+https://github.com/amineeng/scraping-browser	универсальный краулер без узкой цели
+https://github.com/arkjeetsingh/scrape-rs	универсальный краулер без узкой цели
+https://github.com/ashu1436/amazon-scraper	магазины и отзывы
+https://github.com/bahooo13/partnershipparser	универсальный краулер без узкой цели
+https://github.com/bridgettmirthful637/librecrawl-mcp	универсальный краулер без узкой цели
+https://github.com/bryanppa5478/-Discord-OSINT-Transform-for-Maltego	OSINT-набор
+https://github.com/christart3/g2-reviews-scraper	магазины и отзывы
+https://github.com/connedigital/Brahmastra_OSINT	OSINT-набор
+https://github.com/factornine/gsa-elibrary-scraper	библиотека GSA
+https://github.com/hirak123github/Rebecca-Minkoff-Scraper	магазины и отзывы
+https://github.com/humair832/GeminiBusiness_CookieExtractor	достать cookies (это уже не обычный парсер)
+https://github.com/hunteryeet/linkedin-jobs-scraper-incredibly-fast	LinkedIn: вакансии или Sales Navigator
+https://github.com/hydery-debug/Telegram-Gift-Parser	подарки в Telegram
+https://github.com/isaiasfeerreira/cna-oab-attorney-data-scraper	справочник адвокатов
+https://github.com/kabuuu999/youtube-email-scraper	YouTube / видео
+https://github.com/kiranjisonawane143/blockchain-data-crawler	данные блокчейна
+https://github.com/kiya12-lab/facebook-hashtag-scraper	Facebook: события, подписки, маркет, хештеги
+https://github.com/laien69/amazon-reviews-scraper-with-advanced-filters	магазины и отзывы
+https://github.com/mahanabee/Google-News-Scraper	новости
+https://github.com/moussa504/linktree-profile-listing-scraper	Instagram / Linktree
+https://github.com/nealsafetyrelated641/News-Data-Scrapper-for-Indian-Express-News	новости
+https://github.com/oebeledrijfhout/attorney-directory-scraper	справочник адвокатов
+https://github.com/papkvnq/on3-recruit-scraper	спортивный рекрутинг
+https://github.com/sakthimurugan123/linkedin-sales-navigator-scraper	LinkedIn: вакансии или Sales Navigator
+https://github.com/sudharshinimurugesan/D4rk_Intel-OSINT-Investigative-Toolkit	OSINT-набор
+https://github.com/tonispousta/cloudinsight-extractor	сборщик по имени, цель неясна
+https://github.com/user2897/Scrapstyle	универсальный краулер без узкой цели
+https://github.com/wasagx/Scrapy-data-extraction-pipeline	универсальный краулер без узкой цели
+https://github.com/whitakerunsaturated400/osint-feed	новости
+https://github.com/wname121/spa-crawler	универсальный краулер без узкой цели
+https://github.com/wolfie88/Whatsapp-chat-voice-Bot-with-Realtime-scraping	чат WhatsApp + скрейп
+https://github.com/youmeat6678/Instagram-Hashtag-Scraper	Instagram / Linktree
+https://github.com/zt8812/lightning-image-scraper	картинки с веба

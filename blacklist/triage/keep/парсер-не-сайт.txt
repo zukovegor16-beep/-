@@ -1,0 +1,15 @@
+https://github.com/AJfrrr/cryptoschema-extractor	разбор формата/протокола, не сайт
+https://github.com/KINGPIN707/PDF-Highlight-Extractor	разбор своего файла/документа, не чужой сайт
+https://github.com/MRX-slayer/ai-resume-parser	разбор резюме-файла, не сайт
+https://github.com/Skyscraperfoxhound619/markdown-ui-dsl	разбор кода/разметки, не сайт
+https://github.com/Tegare/sql-parser-demo	разбор кода/разметки, не сайт
+https://github.com/Zilts345890/Golang-html-parsing	разбор кода/разметки, не сайт
+https://github.com/dacianst1538/ResumeParser	разбор резюме-файла, не сайт
+https://github.com/delilahsaprophytic338/rag-ready-extractor	разбор своего файла/документа, не чужой сайт
+https://github.com/ffsdffsf/n8n-Parse-Invoices-Documents-with-Gemini-AI-OCR-and-Google-Sheets-Integration	разбор своего файла/документа, не чужой сайт
+https://github.com/gainesvillefamilyenterobacteriaceae551/dmarc-parser	разбор формата/протокола, не сайт
+https://github.com/khareemibraheem/EEWParser-Rust	разбор формата/протокола, не сайт
+https://github.com/prdo0985/07-fpga-itch-parser-v5	разбор формата/протокола, не сайт
+https://github.com/shivuu14/jsoup-html-parsing	разбор кода/разметки, не сайт
+https://github.com/syarifanur/vrscene-parser	разбор формата/протокола, не сайт
+https://github.com/tarrantwrong366/OCR-Document-parser	разбор своего файла/документа, не чужой сайт

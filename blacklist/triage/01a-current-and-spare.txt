@@ -1,0 +1,43 @@
+Один актуальный адрес на сервис и одно запасное зеркало, если оно тоже отвечает.
+Остальные копии не удалены: 01a-others-archive.txt.gz
+«Отвечает» = домен находится в DNS прямо сейчас. Страницу не открывали.
+
+сервис           актуальный                               запасное зеркало                         DNS  копии
+1xbet            1xbet.com                                1xbet.click                              да/да  39362
+1xslots          1xslots.com                              1xslots.info                             да/да  7414
+7kcasino         7k-casino.com                            7k-casino.ru                             да/да  4211
+888starz         888starz.com                             888starz.info                            да/да  561
+admiralx         admiral-x.net                            admiral-x.com                            да/да  10637
+alexfilm         alexfilm.one                             —                                        да/—   133
+allserial        allserial.info                           allserial.tv                             да/да  164
+animebesst       a.animebesst.org                         a6.animebesst.org                        да/да  356
+animedia         m1.animedia.pro                          animedia.tv                              да/да  68
+animego          animego.app                              animego.bar                              да/да  267
+animegod         animegod.org                             animegod.pro                             да/да  5
+animevost        animevost.org                            animevost.tv                             да/да  58
+arkada           arkada-casino.net                        arkada-casino.ru                         да/да  2014
+aufcasino        aufcasino.com                            aufcasino.bet                            да/да  299
+auroracasino     auroracasino.com                         auroracasino.pro                         да/да  65
+azino777         azino777.info                            azino777.net                             да/да  9709
+bandacasino      banda-casino.ru                          bandacasino.net                          да/да  720
+baskino          baskino.is                               baskino.one                              да/да  983
+filmix           filmix.net                               filmix.info                              да/да  470
+hdrezka          hdrezka.info                             hdrezka.bio                              да/да  1866
+kinogo           kinogo.wtf                               kinogo24.com                             да/да  4645
+kinokrad         kinokrad.pro                             kinokrad.su                              да/да  521
+kinozal          kinozal.tv                               —                                        да/—   389
+lordfilm         lordfilm.pro                             lord-film.tv                             да/да  89974
+lordserial       lord-serial.tv                           lord-serial1.pro                         да/да  30656
+lostfilm         lostfilm.tv                              lostfilm.ru                              да/да  837
+megapeer         megapeer.ru                              www.megapeer.ru                          да/да  204
+melbet           melbet.su                                melbet.org                               да/да  8268
+mostbet          mostbet.com                              mostbet.info                             да/да  11882
+nnmclub          nnmclub.to                               nnm-club.me                              да/да  33
+olimp            tor.24x7olimp.online                     accessmirror02.24x7olimp.online          да/да  42
+pinco            pinco.net                                pinco-644.ru                             да/да  18177
+piratbit         piratbit.org                             piratbit.fun                             да/да  3016
+rutor            rutor.info                               rutor.org                                да/да  7838
+rutracker        rutracker.org                            rutracker.ru                             да/да  132
+seasonvar        seasonvar.biz                            seasonvar.ru                             да/да  269
+vavada           vavada.com                               vavada.uk                                да/да  45427
+vulkan           play24-vulkan.com                        24-vulkan.com                            да/да  56

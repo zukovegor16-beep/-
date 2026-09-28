@@ -1,0 +1,13 @@
+snapshot=2026-09-23
+worldwide_domains=7345117
+worldwide_urls=1028318
+banned_rkn_mirror_domains=1687056
+core_domains=270965
+telegram_scam_handles=6415
+mirror_brands=1143
+fakegit_github_repos=7654
+phishtank_without_key=got_hourly_online_valid
+official_rkn_vigruzki=still_closed
+rublacklist_api=http_500
+antizapret_api=http_502
+threatfox_full_csv=still_needs_auth_key

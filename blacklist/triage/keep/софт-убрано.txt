@@ -1,0 +1,32 @@
+auto-updater-agent	голое имя без ссылки, открыть некуда
+https://github.com/Downcast-inamorata249/fact-checker	проверка/детектор, учебный софт
+https://github.com/Ethanj7750/face-anti-spoofing-dataset	датасет или заметки, не программа
+https://github.com/ManuG11/plugin-health-monitor	проверка/детектор, учебный софт
+https://github.com/Munem-1/File-Integrity-Checker-Cybersecurity-Tool	проверка/детектор, учебный софт
+https://github.com/Omar98165/Noise-Injection-Techniques	датасет или заметки, не программа
+https://github.com/Spoofix/Finetune-your-notes	датасет или заметки, не программа
+https://github.com/biruk0125/Real-Time-ARP-Spoofing-Detection-Notification-Tool	проверка/детектор, учебный софт
+https://github.com/kaustubh8888/Fake-News-Detector	проверка/детектор, учебный софт
+https://github.com/ramaritacreations/sql-injection-attack-detection	проверка/детектор, учебный софт
+https://github.com/xbxh6452/-ARP-Spoofing-Detection-Active-Injection-Technique	проверка/детектор, учебный софт
+https://github.com/57karakalkan/face-injector-v2-1	обход защиты / inject / exploit по имени
+https://github.com/AdrianNablo/neon-abyss-2-mod-toolkit	набор инструментов / плагин
+https://github.com/Dhruv171711/Vehicle-Report-CAPTCHA-Bypasser	обход защиты / inject / exploit по имени
+https://github.com/MelikaandArsham/Star-Wars-Episode-I-Phantom-Menace-PC-64bit-Installer	установщик или активатор
+https://github.com/Sbdbb/brute_it	чекер / перебор аккаунтов или карт
+https://github.com/Shiraori879/PUBG-Mobile-Bypass-Source-fixed	обход защиты / inject / exploit по имени
+https://github.com/a-ettahri/NullRAT	удалённое управление чужим ПК
+https://github.com/arnautoff1/smart-money-miner	майнер или «miner» в имени
+https://github.com/clifford-ui/Roblox-Executor-Injector-2025	обход защиты / inject / exploit по имени
+https://github.com/dxdag5/gproxy-tool	по имени из коробки, цель узкая или неясна
+https://github.com/ejfhgo/hacker-Toolkit	набор инструментов / плагин
+https://github.com/ibootdaily/WAuxiliary_Plugin	набор инструментов / плагин
+https://github.com/iugiugo/DayZ-Underground-Toolkit	набор инструментов / плагин
+https://github.com/kidkaitou121212/Roblox-Executor-Injector-2025	обход защиты / inject / exploit по имени
+https://github.com/mandour22/war-thunder-aim-assist-toolkit	набор инструментов / плагин
+https://github.com/qwetamoe/sailarr-installer	установщик или активатор
+https://github.com/rehman2052/qualcomm_gbl_exploit_poc	обход защиты / inject / exploit по имени
+https://github.com/rolando-afg/solidworks-activation-toolkit	установщик или активатор
+https://github.com/sabalearning01/bread-run-simulator-toolkit	набор инструментов / плагин
+https://github.com/sigmapoopie857-max/CryptoChecker-V3-2026	чекер / перебор аккаунтов или карт
+https://github.com/voicingboss861/Powerful-Android-RAT-2026	удалённое управление чужим ПК

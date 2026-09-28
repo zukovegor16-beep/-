@@ -1,0 +1,27 @@
+generated=2026-09-23
+worldwide_domains=7030450
+banned_rkn_mirror_domains=1687056
+urls=950606
+
+honesty:
+official_rkn_operator_dump=not_public_needs_certificate
+zapret_info_dump_date=2025-10-01
+did_not_include_community_bypass_lists=instagram_twitter_jetbrains
+did_not_include_paid_threatfox_full_or_phishtank_key_feeds
+cannot_enumerate_live_unlisted_mirrors_or_private_telegram_shops
+
+existing_domains	4660757
+existing_urls	147509
+zapret-info-z-i-dump	977982
+zapret-nxdomain-closed	1360
+antifilter-domains	705150
+refilter-domains_all	2564
+blocklistproject-piracy.txt	2154
+blocklistproject-abuse.txt	434941
+blocklistproject-fraud.txt	280356
+blocklistproject-gambling.txt	342343
+blocklistproject-redirect.txt	107228
+stevenblack-hosts	143858
+hagezi-hoster.txt	1178
+new_unique_domains_added	2369693
+

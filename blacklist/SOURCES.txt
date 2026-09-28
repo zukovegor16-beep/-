@@ -1,0 +1,58 @@
+# High-priority AI / GitHub malware
+Island AgentBaiting (2026-07-20)
+https://www.island.io/blog/agentbaiting-how-800-fake-ai-skills-and-mcp-servers-delivered-malware
+https://github.com/island-io/island-security-research-artifacts/blob/main/agentbaiting/malicious-repositories-and-zip-hashes-2026-07.csv
+
+Hexastrike SmartLoader/StealC fake GitHub repos (2026-04)
+https://hexastrike.com/resources/blog/threat-intelligence/cloned-loaded-and-stolen-how-109-fake-github-repositories-delivered-smartloader-and-stealc/
+
+Koi ClawHavoc / Clawdex
+https://www.koi.ai/blog/clawhavoc-341-malicious-clawedbot-skills-found-by-the-bot-they-were-targeting
+https://clawdex.koi.security/
+
+Trend Micro OpenClaw / Atomic Stealer
+https://www.trendmicro.com/content/dam/trendmicro/global/en/research/26/b/amos-stealer-openclaw/ioc-malicious-openclaw-skills-used-to-distribute-atomic-macos-stealer.txt
+
+# Worldwide malware / phishing / scam feeds (snapshot 2026-09-23)
+URLhaus: https://urlhaus.abuse.ch/
+ThreatFox: https://threatfox.abuse.ch/
+OpenPhish: https://openphish.com/feed.txt
+Phishing Army: https://phishing.army/download/phishing_army_blocklist_extended.txt
+CERT.PL: https://hole.cert.pl/domains/v2/domains.txt
+HaGeZi TIF: https://github.com/hagezi/dns-blocklists
+HaGeZi Fake: https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/fake-onlydomains.txt
+Blocklist Project: https://github.com/blocklistproject/Lists
+Phishing.Database: https://github.com/mitchellkrogza/Phishing.Database
+phishing-filter: https://gitlab.com/malware-filter/phishing-filter
+urlhaus-filter: https://gitlab.com/malware-filter/urlhaus-filter
+TweetFeed: https://github.com/0xDanielLopez/TweetFeed
+C2IntelFeeds: https://github.com/drb-ra/C2IntelFeeds
+Discord AntiScam: https://github.com/Discord-AntiScam/scam-links
+Polkadot phishing: https://github.com/polkadot-js/phishing
+Phishunt: https://phishunt.io/feed.txt
+
+# Russia financial scams
+Bank of Russia warning list: https://www.cbr.ru/inside/warning-list/black-list-json
+
+# Banned / mirrors / closed domains (community dumps, not official operator feed)
+zapret-info/z-i dump.csv.gz (last public update 2025-10-01):
+https://github.com/zapret-info/z-i
+antifilter.download domains.lst:
+https://antifilter.download/list/domains.lst
+re:filter domains_all.lst:
+https://github.com/1andrevich/Re-filter-lists
+Official RKN operator dump is NOT public: https://vigruzki.rkn.gov.ru/
+rublacklist API (tried 2026-09-23, HTTP 500): https://reestr.rublacklist.net/api/v3/snapshot/
+AntiZapret API (tried 2026-09-23, HTTP 502): https://api.antizapret.info/group.php?data=domain
+PhishTank hourly without key: http://data.phishtank.com/data/online-valid.csv.gz
+PhishDestroy: https://github.com/phishdestroy/destroylist
+ScamIntelLogs public IOC/domains only: https://github.com/phishdestroy/ScamIntelLogs
+Dogino Discord phishing: https://github.com/Dogino/Discord-Phishing-URLs
+ThreatFox recent (no full dump without Auth-Key): https://threatfox.abuse.ch/export/csv/recent/
+
+# Fake installer / TDS campaigns
+Check Point 2026 impersonation/TDS:
+https://research.checkpoint.com/2026/impersonation-click-hijacking-and-tds-inside-a-malware-distribution-ecosystem/
+Push/Evalian fake ChatGPT installer: openew.app
+Rapid7 fake Claude installer: download-version.1-5-8.com
+Microsoft Silver Fox counterfeit installers (2026-09)

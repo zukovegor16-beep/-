@@ -1,0 +1,48 @@
+# High-risk catalog patterns. These are not automatic proof of malware,
+# but entries matching them should be deleted unless you independently
+# verified the official publisher.
+
+# Installation / delivery red flags
+download .zip and run
+download .exe and run
+run anyway
+more info -> run anyway
+password-protected zip
+extract using pass
+luau.exe
+lua51.dll
+application.cmd
+start luau.exe
+openclaw-agent.zip
+base64 -D | bash
+base64 | bash
+curl | sh
+curl | bash
+
+# Lookalike / typosquat publishers from FakeGit
+Mann1988/awesome-claude-skills
+Naveenkm007
+hahaha-saygex/gmail-mcp
+adlaiponderous700/claude-skill-cinematic-prompt
+DomingosNgongo/walmart-mcp
+45d5r/databricks-mcp-server
+MauManto/jenkins-mcp-server
+waynestimulative605/docker-mcp-gateway
+Zilts345890/Golang-html-parsing
+MRX-slayer/ai-resume-parser
+huizuohaode/AI-Image-Generator
+
+# Poisoned public catalogs: do not treat a listing there as proof of safety
+# (the catalogs themselves are not malware)
+lobehub.com
+glama.ai
+mcp.so
+mcpmarket.com
+clawhub.ai
+
+# Official sources / scanners to prefer instead of random AI-generated catalogs
+# Island artifacts: https://github.com/island-io/island-security-research-artifacts
+# Clawdex: https://clawdex.koi.security/
+# Bank of Russia warning list: https://www.cbr.ru/inside/warning-list/
+# URLhaus: https://urlhaus.abuse.ch/
+# OpenPhish: https://openphish.com/
