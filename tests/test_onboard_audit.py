@@ -1,6 +1,8 @@
 from pathlib import Path
 
-from tiktok_publisher.email_imap import _from_matches, _imap_since_date
+from unittest.mock import patch
+
+from tiktok_publisher.email_imap import _from_matches, _imap_since_date, probe_imap_login
 from tiktok_publisher.onboard_trace import OnboardTrace
 from tiktok_publisher.config import AppSettings
 import time
@@ -14,6 +16,11 @@ def test_imap_from_filter():
 def test_imap_since_date():
     s = _imap_since_date(time.time())
     assert len(s.split("-")) == 3
+
+
+def test_probe_imap_login_empty():
+    ok, msg = probe_imap_login(AppSettings(), "", "")
+    assert not ok
 
 
 def test_onboard_trace_persist(tmp_path: Path):

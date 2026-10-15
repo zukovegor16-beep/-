@@ -16,6 +16,7 @@ from tiktok_publisher.onboarding_runner import OnboardContext, run_onboarding_st
 from tiktok_publisher.avatar_library import resolve_avatar_path
 from tiktok_publisher.outcomes import Outcome, OutcomeCode
 from tiktok_publisher.preflight import run_preflight_onboard
+from tiktok_publisher.browser_errors import is_browser_disconnect
 from tiktok_publisher.session_runner import profile_browser_session
 
 logger = logging.getLogger(__name__)
@@ -234,18 +235,27 @@ class OnboardingOrchestrator:
                 if self.current_task:
                     self.current_task.phase = name
 
-            with profile_browser_session(self.settings, profile_id, loop) as bs:
-                self.current_task.phase = "onboard_steps"
-                outcome = loop.run_until_complete(
-                    run_onboarding_steps_async(
-                        self.settings,
-                        bs.handle,
-                        ctx,
-                        pause_for_manual=pause_ev,
-                        on_phase=_phase,
-                        loop=loop,
+            outcome = Outcome.from_code(OutcomeCode.unknown_error, "no attempt")
+            for attempt in range(2):
+                with profile_browser_session(self.settings, profile_id, loop) as bs:
+                    self.current_task.phase = "onboard_steps"
+                    outcome = loop.run_until_complete(
+                        run_onboarding_steps_async(
+                            self.settings,
+                            bs.handle,
+                            ctx,
+                            pause_for_manual=pause_ev,
+                            on_phase=_phase,
+                            loop=loop,
+                        )
                     )
-                )
+                if outcome.code == OutcomeCode.onboard_ready:
+                    break
+                detail = outcome.detail or outcome.label_ru
+                if attempt == 0 and is_browser_disconnect(detail):
+                    logger.warning("onboard CDP disconnect, retry profile session")
+                    continue
+                break
 
             if outcome.code != OutcomeCode.onboard_ready:
                 self._fail_row(row, outcome.code, outcome.detail or outcome.label_ru)

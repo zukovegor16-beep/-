@@ -8,8 +8,10 @@
 4. **Пароль:** смена на `tiktok_password_new` **или** `onboard.unified_password` из `settings.yaml` (один пароль на все аккаунты).
 5. **Код из письма:** `imap` (SINCE дата + From TikTok, последнее письмо), `browser_then_imap` (webmail login + IMAP код), `webmail`, `manual` + «Продолжить».
 6. **Надёжность:** retry кликов/fill, скриншоты `logs/onboard_row{N}_*.png`, trace `data/onboard_trace.jsonl`.
-6. **Аватар:** файл из колонки `avatar_path` или каталога `onboard.avatar_library_dir` (`by_login` → `login.jpg`).
-7. Excel: `onboard_status=готов`, строка в «Аккаунты» (`active=нет`). Заполните `video_folder`, `active=да` → публикация.
+7. **Аватар:** файл из колонки `avatar_path` или каталога `onboard.avatar_library_dir` (`by_login` → `login.jpg`).
+8. Excel: `onboard_status=готов`, строка в «Аккаунты» (`active=нет`). Заполните `video_folder`, `active=да` → публикация.
+
+Прогрев после активации аккаунта — [`WARMUP.ru.md`](WARMUP.ru.md).
 
 ## Лист «Онбординг»
 

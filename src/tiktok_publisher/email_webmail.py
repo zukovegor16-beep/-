@@ -9,6 +9,7 @@ import yaml
 from tiktok_publisher.browser_session import BrowserHandle
 from tiktok_publisher.config import AppSettings
 from tiktok_publisher.email_code import extract_verification_code
+from tiktok_publisher.onboard_steps import click_xpath_retry, fill_xpath_retry, onboard_screenshot
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,8 @@ async def login_webmail_async(
     handle: BrowserHandle,
     email: str,
     email_password: str,
+    *,
+    row_index: int = 0,
 ) -> bool:
     sel = _load_webmail_sel(settings)
     nav_ms = int((sel.get("timeouts") or {}).get("navigation_ms", 60000))
@@ -51,11 +54,11 @@ async def login_webmail_async(
         if not xp:
             logger.warning("webmail selector missing: %s", key)
             return False
-        await page.locator(f"xpath={xp}").fill(val, timeout=20000)
+        await fill_xpath_retry(page, xp, val)
         nx = sel.get(next_key)
         if nx:
             try:
-                await page.locator(f"xpath={nx}").click(timeout=15000)
+                await click_xpath_retry(page, nx)
             except Exception as e:
                 logger.debug("webmail next %s: %s", next_key, e)
         await asyncio.sleep(2)
@@ -66,6 +69,7 @@ async def login_webmail_async(
             await page.locator(f"xpath={ready}").wait_for(timeout=nav_ms)
         except Exception as e:
             logger.warning("webmail inbox not ready: %s", e)
+            await onboard_screenshot(settings, page, "webmail_inbox_fail", row_index)
             return False
     return True
 

@@ -88,7 +88,7 @@ def wait_for_verification_code_imap(
     *,
     since_unix: float | None = None,
     code_extractor: Callable[[str], str | None] | None = None,
-    mark_read: bool = True,
+    mark_read: bool = False,
 ) -> ImapCodeResult | None:
     host, port, use_ssl = imap_host_for_settings(settings)
     pattern = settings.onboard.email_code_regex
@@ -133,17 +133,45 @@ def wait_for_verification_code_imap(
             if candidates:
                 candidates.sort(key=lambda x: x[0])
                 _ts, uid, code, subj = candidates[-1]
+                uid_str = uid.decode() if isinstance(uid, bytes) else str(uid)
                 if mark_read:
-                    try:
-                        conn2 = imaplib.IMAP4_SSL(host, port) if use_ssl else imaplib.IMAP4(host, port)
-                        conn2.login(email, email_password)
-                        conn2.select("INBOX")
-                        conn2.store(uid, "+FLAGS", "\\Seen")
-                        conn2.logout()
-                    except Exception as e:
-                        logger.debug("mark read: %s", e)
-                return ImapCodeResult(code=code, uid=uid.decode() if isinstance(uid, bytes) else str(uid), subject=subj)
+                    mark_imap_message_seen(settings, email, email_password, uid_str)
+                return ImapCodeResult(code=code, uid=uid_str, subject=subj)
         except Exception as e:
             logger.warning("IMAP poll: %s", e)
         time.sleep(8)
     return None
+
+
+def probe_imap_login(settings: AppSettings, email: str, email_password: str) -> tuple[bool, str]:
+    """Quick IMAP login check for preflight."""
+    if not email.strip() or not email_password.strip():
+        return False, "email or password empty"
+    host, port, use_ssl = imap_host_for_settings(settings)
+    try:
+        conn = imaplib.IMAP4_SSL(host, port) if use_ssl else imaplib.IMAP4(host, port)
+        conn.login(email, email_password)
+        conn.select("INBOX")
+        conn.logout()
+        return True, "ok"
+    except Exception as e:
+        return False, str(e)
+
+
+def mark_imap_message_seen(
+    settings: AppSettings,
+    email: str,
+    email_password: str,
+    uid: str,
+) -> bool:
+    host, port, use_ssl = imap_host_for_settings(settings)
+    try:
+        conn = imaplib.IMAP4_SSL(host, port) if use_ssl else imaplib.IMAP4(host, port)
+        conn.login(email, email_password)
+        conn.select("INBOX")
+        conn.store(uid.encode() if isinstance(uid, str) else uid, "+FLAGS", "\\Seen")
+        conn.logout()
+        return True
+    except Exception as e:
+        logger.warning("mark_imap_message_seen: %s", e)
+        return False

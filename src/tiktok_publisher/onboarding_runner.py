@@ -12,7 +12,10 @@ import yaml
 from tiktok_publisher.avatar_library import resolve_avatar_path
 from tiktok_publisher.browser_session import BrowserHandle
 from tiktok_publisher.config import AppSettings
-from tiktok_publisher.email_imap import wait_for_verification_code_imap
+from tiktok_publisher.email_imap import (
+    mark_imap_message_seen,
+    wait_for_verification_code_imap,
+)
 from tiktok_publisher.email_webmail import (
     fetch_code_from_webmail_tab_async,
     login_webmail_async,
@@ -233,7 +236,7 @@ async def _fetch_verification_code(
                 ctx.email,
                 ctx.email_password,
                 since_unix=since_unix,
-                mark_read=True,
+                mark_read=False,
             ),
         )
         if result:
@@ -319,7 +322,11 @@ async def run_onboarding_steps_async(
             _set_phase(on_phase, "webmail")
             pr = trace.start_phase("webmail")
             ok = await login_webmail_async(
-                settings, handle, ctx.email, ctx.email_password
+                settings,
+                handle,
+                ctx.email,
+                ctx.email_password,
+                row_index=ctx.row_index,
             )
             if not ok:
                 shot = await onboard_screenshot(settings, page, "webmail_fail", ctx.row_index)
@@ -353,6 +360,9 @@ async def run_onboarding_steps_async(
             trace.finish_phase(pr, ok=False, detail=str(e), screenshot=str(shot) if shot else None)
             return Outcome.from_code(OutcomeCode.onboard_password_not_changed, str(e))
         trace.finish_phase(pr, ok=True, detail="saved")
+        blocked_pwd = await _pause_if_blocked(settings, page, pause_for_manual, trace, None)
+        if blocked_pwd:
+            return blocked_pwd
 
         if expect_verify:
             if not await _wait_for_verify_prompt(
@@ -397,6 +407,10 @@ async def run_onboarding_steps_async(
                         OutcomeCode.onboard_password_not_changed,
                         "password verify not confirmed",
                     )
+                if imap_uid and _uses_imap_for_code(settings):
+                    mark_imap_message_seen(
+                        settings, ctx.email, ctx.email_password, imap_uid
+                    )
             trace.finish_phase(pr, ok=True, imap_uid=imap_uid)
 
         _set_phase(on_phase, "avatar")
@@ -412,6 +426,13 @@ async def run_onboarding_steps_async(
         blocked = await _pause_if_blocked(settings, page, pause_for_manual, None, None)
         if blocked:
             return blocked
+
+        if not await _assert_logged_in(page, sel, nav_ms):
+            shot = await onboard_screenshot(settings, page, "final_session_fail", ctx.row_index)
+            return Outcome.from_code(
+                OutcomeCode.no_login,
+                f"session not logged in after onboard shot={shot}",
+            )
 
         return Outcome.from_code(OutcomeCode.onboard_ready, "onboard completed")
     finally:

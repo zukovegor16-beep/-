@@ -11,6 +11,7 @@ from pathlib import Path
 from threading import Event, Lock, Thread
 
 from tiktok_publisher.asset_fingerprint import file_fingerprint
+from tiktok_publisher.browser_errors import is_browser_disconnect
 from tiktok_publisher.browser_session import BrowserHandle, close_browser, open_browser
 from tiktok_publisher.captions import pick_random_caption
 from tiktok_publisher.config import AppSettings, OrchestratorSettings
@@ -415,7 +416,7 @@ class Orchestrator:
                     and not pub_result.ok
                     and browser_handle
                     and not session_restarted
-                    and _is_browser_disconnect(pub_result.message)
+                    and is_browser_disconnect(pub_result.message)
                 ):
                     session_restarted = True
                     close_browser(browser_handle)
@@ -785,11 +786,6 @@ def _parse_outcome_code(status: str) -> OutcomeCode:
         return OutcomeCode(status)
     except ValueError:
         return OutcomeCode.unknown_error
-
-
-def _is_browser_disconnect(err: str) -> bool:
-    low = err.lower()
-    return any(x in low for x in ("disconnect", "closed", "target", "browser has been"))
 
 
 def _iso_now() -> str:

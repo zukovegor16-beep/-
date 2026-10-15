@@ -7,6 +7,7 @@ from tiktok_publisher.config import AppSettings
 from tiktok_publisher.dolphin_client import DolphinClient
 from tiktok_publisher.excel_registry import ExcelRegistry
 from tiktok_publisher.avatar_library import resolve_avatar_path
+from tiktok_publisher.email_imap import probe_imap_login
 from tiktok_publisher.geo_catalog import load_geo_catalog
 from tiktok_publisher.posting_window import in_posting_window
 from tiktok_publisher.queue import list_pending_videos
@@ -258,6 +259,22 @@ def run_preflight_onboard(settings: AppSettings) -> PreflightResult:
         ping_ok, msg = DolphinClient(settings).ping()
         if not ping_ok:
             issues.append(PreflightIssue("error", "dolphin", f"Dolphin API: {msg}"))
+
+    if (
+        not settings.dry_run
+        and pending
+        and settings.onboard.email_code_mode in ("imap", "browser_then_imap")
+    ):
+        row = pending[0]
+        ok, msg = probe_imap_login(settings, row.email, row.email_password)
+        if not ok:
+            issues.append(
+                PreflightIssue(
+                    "error",
+                    "imap_login",
+                    f"IMAP login failed (строка {row.row_index}): {msg}",
+                )
+            )
 
     has_error = any(i.level == "error" for i in issues)
     return PreflightResult(ok=not has_error, issues=issues)
