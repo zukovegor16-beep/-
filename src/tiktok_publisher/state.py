@@ -15,6 +15,7 @@ class PublicationRecord:
     file_path: str
     caption_used: str
     status: str
+    status_label: str
     error_message: str
     started_at: str
     finished_at: str
@@ -69,6 +70,14 @@ class StateStore:
                     ON published_assets(account_no, status);
                 """
             )
+            cols = {
+                row[1]
+                for row in conn.execute("PRAGMA table_info(publications)").fetchall()
+            }
+            if "status_label" not in cols:
+                conn.execute(
+                    "ALTER TABLE publications ADD COLUMN status_label TEXT DEFAULT ''"
+                )
 
     def start_run(self) -> str:
         run_id = uuid4().hex[:12]
@@ -93,8 +102,8 @@ class StateStore:
                 """
                 INSERT INTO publications (
                     run_id, account_no, account_name, file_path, caption_used,
-                    status, error_message, started_at, finished_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    status, status_label, error_message, started_at, finished_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     rec.run_id,
@@ -103,6 +112,7 @@ class StateStore:
                     rec.file_path,
                     rec.caption_used,
                     rec.status,
+                    rec.status_label,
                     rec.error_message,
                     rec.started_at,
                     rec.finished_at,
@@ -176,7 +186,8 @@ class StateStore:
             rows = conn.execute(
                 """
                 SELECT * FROM publications
-                WHERE run_id = ? AND status = 'error' AND file_path != ''
+                WHERE run_id = ? AND status NOT IN ('published', 'dry_run', 'duplicate_skipped')
+                  AND file_path != ''
                 ORDER BY id
                 """,
                 (run_id,),
@@ -196,6 +207,7 @@ def _row_to_pub(row: sqlite3.Row) -> PublicationRecord:
         file_path=row["file_path"],
         caption_used=row["caption_used"] or "",
         status=row["status"],
+        status_label=(row["status_label"] or "") if "status_label" in row.keys() else "",
         error_message=row["error_message"] or "",
         started_at=row["started_at"],
         finished_at=row["finished_at"],

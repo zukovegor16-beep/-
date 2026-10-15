@@ -8,6 +8,8 @@ from pathlib import Path
 from tiktok_publisher.browser_session import BrowserHandle
 from tiktok_publisher.config import AppSettings, load_selectors
 from tiktok_publisher.dolphin_client import ProfileSession
+from tiktok_publisher.outcomes import OutcomeCode, classify_publish_error
+from tiktok_publisher.publish_result import PublishResult
 
 logger = logging.getLogger(__name__)
 
@@ -106,11 +108,11 @@ async def publish_video_async(
     run_id: str = "",
     account_no: str = "",
     retry: bool = True,
-) -> tuple[bool, str]:
+) -> PublishResult:
     if settings.dry_run or (session is None and browser_handle is None):
         logger.info("[dry-run] upload %s caption=%r", video_path.name, caption[:80])
         await asyncio.sleep(0.02)
-        return True, ""
+        return PublishResult(True, OutcomeCode.dry_run, "")
 
     selectors = load_selectors(settings.selectors_file)
     upload_url = selectors.get("upload_url", "https://www.tiktok.com/upload")
@@ -176,7 +178,7 @@ async def publish_video_async(
             if not await _verify_post_success(page, selectors, upload_url, confirm_ms):
                 raise RuntimeError("Не удалось подтвердить публикацию (success criteria)")
 
-            return True, ""
+            return PublishResult(True, OutcomeCode.published, "")
         except Exception as e:
             last_err = str(e)
             logger.warning("publish attempt %s failed: %s", attempt + 1, e)
@@ -189,12 +191,14 @@ async def publish_video_async(
             if attempt == 0 and retry and _is_retryable(last_err):
                 await asyncio.sleep(2)
                 continue
-            return False, last_err
+            code = classify_publish_error(last_err)
+            return PublishResult(False, code, last_err)
         finally:
             if own_handle and handle is not None:
                 await handle.disconnect()
 
-    return False, last_err
+    code = classify_publish_error(last_err)
+    return PublishResult(False, code, last_err)
 
 
 def _is_retryable(err: str) -> bool:
@@ -215,7 +219,7 @@ def publish_video(
     browser_handle: BrowserHandle | None = None,
     loop: asyncio.AbstractEventLoop | None = None,
     **kwargs,
-) -> tuple[bool, str]:
+) -> PublishResult:
     if loop is None:
         return asyncio.run(
             publish_video_async(

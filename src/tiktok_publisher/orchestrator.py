@@ -19,6 +19,12 @@ from tiktok_publisher.dolphin_registry import set_client_factory
 from tiktok_publisher.excel_pending import ExcelPendingStore
 from tiktok_publisher.excel_registry import AccountRow, ExcelRegistry
 from tiktok_publisher.posting_window import in_posting_window, seconds_until_window_opens
+from tiktok_publisher.outcomes import (
+    Outcome,
+    OutcomeCode,
+    is_success_code,
+    summarize_account_outcomes,
+)
 from tiktok_publisher.publisher import publish_video_async
 from tiktok_publisher.queue import move_to_failed, move_to_posted, next_video
 from tiktok_publisher.report import write_run_report
@@ -37,6 +43,7 @@ class CurrentTask:
     file_path: str
     caption_preview: str
     phase: str
+    outcome_label: str = ""
 
 
 @dataclass
@@ -242,6 +249,10 @@ class Orchestrator:
         profile_session: ProfileSession | None = None
         browser_handle: BrowserHandle | None = None
         session_restarted = False
+        account_codes: list[OutcomeCode] = []
+        ok_count = 0
+        stopped_by_user = False
+        stopped_by_circuit = False
 
         try:
             if not self.settings.dry_run:
@@ -250,43 +261,52 @@ class Orchestrator:
                     profile_session = self.dolphin.start_profile(acc.dolphin_profile_id)
                     browser_handle = open_browser(profile_session, loop)
                 except Exception as e:
-                    rec = self._make_record(
-                        run_id, acc, "", "", "error", f"dolphin start: {e}"
+                    outcome = Outcome.from_code(
+                        OutcomeCode.dolphin_error, f"dolphin start: {e}"
+                    )
+                    account_codes.append(outcome.code)
+                    rec = self._make_record_from_outcome(
+                        run_id, acc, "", "", outcome
                     )
                     self._append_record(records, rec)
-                    self._excel_status(acc.row_index, "error", str(e))
                     return
 
             while attempts < max_attempts:
                 if self._stop.is_set():
+                    stopped_by_user = True
                     return
                 if not in_posting_window(self._orch):
                     return
                 if self._circuit_open(acc.account_no):
                     logger.warning("circuit breaker: account %s", acc.account_no)
+                    stopped_by_circuit = True
                     return
 
                 video = self._next_video_for_account(acc, retry_paths, attempts)
                 if video is None:
-                    rec = self._make_record(
-                        run_id, acc, "", "", "error", "no videos in folder"
+                    outcome = Outcome.from_code(
+                        OutcomeCode.no_videos, "no videos in folder"
                     )
+                    account_codes.append(outcome.code)
+                    rec = self._make_record_from_outcome(run_id, acc, "", "", outcome)
                     self._finalize_publication(
                         acc, run_id, records, rec, None, run_started=run_started
                     )
-                    self._excel_status(acc.row_index, "error", "no videos")
                     return
 
                 fp = file_fingerprint(video)
                 if self.store.has_successful_asset(acc.account_no, fp):
                     started = _iso_now()
-                    rec = self._make_record(
+                    outcome = Outcome.from_code(
+                        OutcomeCode.duplicate_skipped, "already published (ledger)"
+                    )
+                    account_codes.append(outcome.code)
+                    rec = self._make_record_from_outcome(
                         run_id,
                         acc,
                         str(video),
                         "",
-                        "skipped_duplicate",
-                        "already published (ledger)",
+                        outcome,
                         started,
                         started,
                     )
@@ -304,13 +324,12 @@ class Orchestrator:
                     continue
 
                 if video.stat().st_size < self._orch.min_video_bytes:
-                    rec = self._make_record(
-                        run_id,
-                        acc,
-                        str(video),
-                        "",
-                        "error",
-                        "file too small",
+                    outcome = Outcome.from_code(
+                        OutcomeCode.file_invalid, "file too small"
+                    )
+                    account_codes.append(outcome.code)
+                    rec = self._make_record_from_outcome(
+                        run_id, acc, str(video), "", outcome
                     )
                     self._finalize_publication(
                         acc, run_id, records, rec, video, run_started=run_started
@@ -322,23 +341,25 @@ class Orchestrator:
                 try:
                     caption = pick_random_caption(acc.caption_variants(delimiter))
                 except ValueError as e:
-                    rec = self._make_record(run_id, acc, str(video), "", "error", str(e))
+                    outcome = Outcome.from_code(OutcomeCode.no_caption, str(e))
+                    account_codes.append(outcome.code)
+                    rec = self._make_record_from_outcome(
+                        run_id, acc, str(video), "", outcome
+                    )
                     self._finalize_publication(
                         acc, run_id, records, rec, video, run_started=run_started
                     )
-                    self._excel_status(acc.row_index, "error", str(e))
                     if self._orch.count_errors_toward_limit:
                         attempts += 1
                     continue
 
                 if len(caption) > self._orch.max_caption_length:
-                    rec = self._make_record(
-                        run_id,
-                        acc,
-                        str(video),
-                        caption,
-                        "error",
-                        "caption too long",
+                    outcome = Outcome.from_code(
+                        OutcomeCode.file_invalid, "caption too long"
+                    )
+                    account_codes.append(outcome.code)
+                    rec = self._make_record_from_outcome(
+                        run_id, acc, str(video), caption, outcome
                     )
                     self._finalize_publication(
                         acc, run_id, records, rec, video, run_started=run_started
@@ -350,13 +371,16 @@ class Orchestrator:
                 self._set_task(acc, str(video), caption[:120], "upload")
                 started = _iso_now()
 
-                ok, err = False, ""
+                pub_result = None
                 upload_lock = UploadLock(video)
                 try:
                     if not upload_lock.acquire():
-                        ok, err = False, "upload in progress (lock)"
+                        pub_result = None
+                        outcome = Outcome.from_code(
+                            OutcomeCode.upload_locked, "upload in progress (lock)"
+                        )
                     else:
-                        ok, err = loop.run_until_complete(
+                        pub_result = loop.run_until_complete(
                             publish_video_async(
                                 self.settings,
                                 profile_session,
@@ -367,14 +391,18 @@ class Orchestrator:
                                 account_no=acc.account_no,
                             )
                         )
+                        outcome = pub_result.to_outcome(
+                            dry_run=self.settings.dry_run
+                        )
                 finally:
                     upload_lock.release()
 
                 if (
-                    not ok
+                    pub_result is not None
+                    and not pub_result.ok
                     and browser_handle
                     and not session_restarted
-                    and _is_browser_disconnect(err)
+                    and _is_browser_disconnect(pub_result.message)
                 ):
                     session_restarted = True
                     close_browser(browser_handle)
@@ -382,7 +410,7 @@ class Orchestrator:
                         self.dolphin.stop_profile(acc.dolphin_profile_id)
                     profile_session = self.dolphin.start_profile(acc.dolphin_profile_id)
                     browser_handle = open_browser(profile_session, loop)
-                    ok, err = loop.run_until_complete(
+                    pub_result = loop.run_until_complete(
                         publish_video_async(
                             self.settings,
                             profile_session,
@@ -394,14 +422,17 @@ class Orchestrator:
                             retry=False,
                         )
                     )
+                    outcome = pub_result.to_outcome(dry_run=self.settings.dry_run)
 
                 finished = _iso_now()
-                status = "ok" if ok else "error"
-                rec = self._make_record(
-                    run_id, acc, str(video), caption, status, err, started, finished
+                account_codes.append(outcome.code)
+                if is_success_code(outcome.code):
+                    ok_count += 1
+                rec = self._make_record_from_outcome(
+                    run_id, acc, str(video), caption, outcome, started, finished
                 )
 
-                if ok:
+                if is_success_code(outcome.code):
                     self.store.record_published_asset(
                         acc.account_no,
                         fp,
@@ -415,11 +446,20 @@ class Orchestrator:
                 else:
                     self._bump_consecutive_errors(acc.account_no)
 
+                self._set_task(
+                    acc, str(video), caption[:120], "upload", outcome.label_ru
+                )
                 self._finalize_publication(
-                    acc, run_id, records, rec, video, ok=ok, run_started=run_started
+                    acc,
+                    run_id,
+                    records,
+                    rec,
+                    video,
+                    outcome=outcome,
+                    run_started=run_started,
                 )
 
-                if ok or self._orch.count_errors_toward_limit:
+                if is_success_code(outcome.code) or self._orch.count_errors_toward_limit:
                     attempts += 1
 
                 if browser_handle and not self.settings.dry_run:
@@ -427,15 +467,26 @@ class Orchestrator:
                     if not healthy and not session_restarted:
                         logger.warning("browser unhealthy after post, will restart next error")
 
-                self._sleep_between_posts(status == "error")
+                self._sleep_between_posts(not is_success_code(outcome.code))
 
         except Exception as e:
             logger.exception("account %s failed", acc.account_no)
-            rec = self._make_record(run_id, acc, "", "", "error", str(e))
+            outcome = Outcome.from_code(OutcomeCode.unknown_error, str(e))
+            account_codes.append(outcome.code)
+            rec = self._make_record_from_outcome(run_id, acc, "", "", outcome)
             self._append_record(records, rec)
-            if not self._orch.count_infra_errors_toward_limit:
-                pass
         finally:
+            if stopped_by_user:
+                account_codes.append(OutcomeCode.user_stop)
+            if stopped_by_circuit:
+                account_codes.append(OutcomeCode.circuit_breaker)
+            if account_codes:
+                summary = summarize_account_outcomes(
+                    account_codes, ok_count, max_attempts
+                )
+                self._excel_status(
+                    acc.row_index, summary.label_ru, summary.detail or None
+                )
             close_browser(browser_handle)
             if profile_session and not self.settings.dry_run:
                 self.dolphin.stop_profile(acc.dolphin_profile_id)
@@ -462,33 +513,47 @@ class Orchestrator:
         rec: PublicationRecord,
         video: Path | None,
         *,
-        ok: bool | None = None,
+        outcome: Outcome | None = None,
         run_started: float,
     ) -> None:
-        if ok is None:
-            ok = rec.status == "ok"
+        code = _parse_outcome_code(rec.status)
+        if outcome is None:
+            outcome = Outcome.from_code(code, rec.error_message)
+        success = is_success_code(code)
         self._append_record(records, rec)
-        self._bump_progress(rec.status)
+        self._bump_progress(code)
         self._excel_log(
             acc.account_no,
             Path(rec.file_path).name if rec.file_path else "",
             rec.caption_used,
-            rec.status,
+            rec.status_label,
             rec.error_message,
             rec.started_at,
             rec.finished_at,
         )
-        self._excel_status(acc.row_index, rec.status, rec.error_message or None)
-        if video and ok and self.settings.orchestrator.on_success == "move_to_posted":
+        if video and success and self.settings.orchestrator.on_success == "move_to_posted":
             try:
                 move_to_posted(video)
             except Exception as e:
                 logger.warning("move to posted failed: %s", e)
-        elif video and not ok and rec.status == "error" and self._orch.skip_failed_file:
-            try:
-                move_to_failed(video)
-            except Exception as e:
-                logger.warning("move to failed failed: %s", e)
+                move_fail = Outcome.from_code(
+                    OutcomeCode.published_move_failed, str(e)
+                )
+                self._excel_status(
+                    acc.row_index, move_fail.label_ru, move_fail.detail
+                )
+        elif video and not success and self._orch.skip_failed_file:
+            if code not in (
+                OutcomeCode.no_login,
+                OutcomeCode.captcha,
+                OutcomeCode.rate_limit,
+                OutcomeCode.upload_locked,
+                OutcomeCode.duplicate_skipped,
+            ):
+                try:
+                    move_to_failed(video)
+                except Exception as e:
+                    logger.warning("move to failed failed: %s", e)
         self._maybe_flush_report(run_id, records, run_started)
 
     def _excel_log(self, *args) -> None:
@@ -536,6 +601,7 @@ class Orchestrator:
         file_path: str,
         caption_preview: str,
         phase: str,
+        outcome_label: str = "",
     ) -> None:
         t = CurrentTask(
             account_no=acc.account_no,
@@ -543,6 +609,7 @@ class Orchestrator:
             file_path=file_path,
             caption_preview=caption_preview,
             phase=phase,
+            outcome_label=outcome_label,
         )
         with self._lock:
             self._active_tasks[acc.account_no] = t
@@ -560,12 +627,12 @@ class Orchestrator:
             records.append(rec)
             self.store.add_publication(rec)
 
-    def _bump_progress(self, status: str) -> None:
+    def _bump_progress(self, code: OutcomeCode) -> None:
         with self._lock:
             self._progress.done_slots += 1
-            if status == "ok":
+            if is_success_code(code):
                 self._progress.ok_count += 1
-            elif status != "skipped_duplicate":
+            elif code != OutcomeCode.duplicate_skipped:
                 self._progress.error_count += 1
 
     def _sleep_between_posts(self, after_error: bool) -> None:
@@ -577,14 +644,13 @@ class Orchestrator:
         dr = self._orch.delay_between_posts_sec
         time.sleep(random.uniform(dr.min, dr.max))
 
-    def _make_record(
+    def _make_record_from_outcome(
         self,
         run_id: str,
         acc: AccountRow,
         file_path: str,
         caption: str,
-        status: str,
-        error: str,
+        outcome: Outcome,
         started: str | None = None,
         finished: str | None = None,
     ) -> PublicationRecord:
@@ -595,8 +661,9 @@ class Orchestrator:
             account_name=acc.account_name,
             file_path=file_path,
             caption_used=caption,
-            status=status,
-            error_message=error,
+            status=outcome.code.value,
+            status_label=outcome.label_ru,
+            error_message=outcome.detail,
             started_at=started or now,
             finished_at=finished or now,
         )
@@ -654,6 +721,20 @@ class Orchestrator:
             "excel_write_degraded": self._excel_degraded,
             "excel_pending_count": self._excel_pending.pending_count(),
         }
+
+
+def _parse_outcome_code(status: str) -> OutcomeCode:
+    legacy = {
+        "ok": OutcomeCode.published,
+        "error": OutcomeCode.not_published,
+        "skipped_duplicate": OutcomeCode.duplicate_skipped,
+    }
+    if status in legacy:
+        return legacy[status]
+    try:
+        return OutcomeCode(status)
+    except ValueError:
+        return OutcomeCode.unknown_error
 
 
 def _is_browser_disconnect(err: str) -> bool:

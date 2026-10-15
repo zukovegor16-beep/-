@@ -82,7 +82,8 @@
       if (d.current_task) {
         taskEl.style.display = 'block';
         const t = d.current_task;
-        taskEl.innerHTML = `<strong>Сейчас:</strong> ${t.account_no} ${t.account_name||''}<br>Файл: ${t.file_path}<br>Подпись: ${t.caption_preview}<br>Этап: ${t.phase}`;
+        taskEl.innerHTML = `<strong>Сейчас:</strong> ${t.account_no} ${t.account_name||''}<br>Файл: ${t.file_path}<br>Подпись: ${t.caption_preview}<br>Этап: ${t.phase}` +
+          (t.outcome_label ? `<br>Статус: ${t.outcome_label}` : '');
       } else {
         taskEl.style.display = 'none';
       }

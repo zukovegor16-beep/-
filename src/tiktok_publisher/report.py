@@ -6,6 +6,7 @@ import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill
 
+from tiktok_publisher.outcomes import OutcomeCode, is_success_code
 from tiktok_publisher.queue import list_pending_videos
 from tiktok_publisher.config import AppSettings
 from tiktok_publisher.excel_registry import AccountRow
@@ -27,7 +28,8 @@ def write_run_report(
             "account_name": r.account_name,
             "file": r.file_path,
             "caption_used": r.caption_used,
-            "status": r.status,
+            "status_code": r.status,
+            "status_label": r.status_label or r.status,
             "error": r.error_message,
             "started_at": r.started_at,
             "finished_at": r.finished_at,
@@ -38,8 +40,14 @@ def write_run_report(
 
     summary = []
     for acc in accounts:
-        ok = sum(1 for r in records if r.account_no == acc.account_no and r.status == "ok")
-        err = sum(1 for r in records if r.account_no == acc.account_no and r.status == "error")
+        def _ok(r):
+            try:
+                return is_success_code(OutcomeCode(r.status))
+            except ValueError:
+                return r.status == "ok"
+
+        ok = sum(1 for r in records if r.account_no == acc.account_no and _ok(r))
+        err = sum(1 for r in records if r.account_no == acc.account_no and not _ok(r))
         pending = len(list_pending_videos(acc.video_folder, settings))
         summary.append(
             {
@@ -52,8 +60,14 @@ def write_run_report(
         )
     df_sum = pd.DataFrame(summary)
 
-    ok_n = sum(1 for r in records if r.status == "ok")
-    err_n = sum(1 for r in records if r.status == "error")
+    def _record_ok(r):
+        try:
+            return is_success_code(OutcomeCode(r.status))
+        except ValueError:
+            return r.status == "ok"
+
+    ok_n = sum(1 for r in records if _record_ok(r))
+    err_n = sum(1 for r in records if not _record_ok(r))
     duration = run_duration_sec or 1.0
     metrics = {
         "run_id": run_id,

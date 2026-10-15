@@ -58,7 +58,8 @@ def test_duplicate_skipped_second_run(tmp_path: Path):
     orch.wait(timeout=30)
     recs = store.publications_for_run(orch.current_run_id or "")
     assert len(recs) == 1
-    assert recs[0].status == "skipped_duplicate"
+    assert recs[0].status == "duplicate_skipped"
+    assert recs[0].status_label == "уже опубликовано"
     assert (folder / "posted" / "v1.mp4").exists()
 
 

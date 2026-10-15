@@ -4,6 +4,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from openpyxl import Workbook
 
 from tiktok_publisher.config import AppSettings
+from tiktok_publisher.outcomes import OutcomeCode
+from tiktok_publisher.publish_result import PublishResult
 from tiktok_publisher.dolphin_client import ProfileSession
 from tiktok_publisher.orchestrator import Orchestrator
 
@@ -55,7 +57,9 @@ def test_dolphin_start_once_per_account_block(tmp_path: Path):
         starts.append(pid)
         return session
 
-    publish = AsyncMock(return_value=(True, ""))
+    publish = AsyncMock(
+        return_value=PublishResult(True, OutcomeCode.published, "")
+    )
     handle = MagicMock()
     handle.is_healthy = AsyncMock(return_value=True)
 

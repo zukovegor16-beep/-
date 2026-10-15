@@ -13,7 +13,7 @@ HEADERS = [
     "videos_per_run",
     "caption_variants",
     "active",
-    "last_run_status",
+    "status",
     "last_run_error",
     "last_run_at",
 ]

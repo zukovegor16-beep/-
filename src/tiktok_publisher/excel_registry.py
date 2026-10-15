@@ -15,6 +15,12 @@ from tiktok_publisher.captions import split_caption_variants
 from tiktok_publisher.config import AppSettings
 
 HEADER_ALIASES = {
+    "last_run_status": {
+        "last_run_status",
+        "status",
+        "статус",
+        "run_status",
+    },
     "account_no": {"account_no", "номер", "account", "id"},
     "account_name": {"account_name", "name", "имя", "название"},
     "video_folder": {"video_folder", "folder", "папка", "video_folder_path"},
@@ -165,7 +171,7 @@ class ExcelRegistry:
             headers = [c.value for c in ws[1]]
             col_map = _map_headers(tuple(headers))
             now = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
-            updates = {
+            updates: dict[str, Any] = {
                 "last_run_status": status,
                 "last_run_error": error or "",
                 "last_run_at": now,
@@ -256,7 +262,7 @@ def create_workbook_from_template(template: Path, dest: Path) -> None:
                 "videos_per_run",
                 "caption_variants",
                 "active",
-                "last_run_status",
+                "status",
                 "last_run_error",
                 "last_run_at",
             ]
