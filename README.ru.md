@@ -22,7 +22,9 @@ copy config\settings.example.yaml config\settings.yaml
 copy config\accounts.template.xlsx config\accounts.xlsx
 ```
 
-Заполните `config/accounts.xlsx` (лист **Аккаунты**). Пример колонок — [`docs/EXCEL_SPEC.ru.md`](docs/EXCEL_SPEC.ru.md).
+Заполните `config/accounts.xlsx` (листы **Аккаунты** и при необходимости **Онбординг**). Пример колонок — [`docs/EXCEL_SPEC.ru.md`](docs/EXCEL_SPEC.ru.md), онбординг — [`docs/ONBOARDING.ru.md`](docs/ONBOARDING.ru.md).
+
+Geo для новых профилей Dolphin: `config/geo_catalog.yaml` (ключ в колонке `geo`).
 
 ## Dolphin Anty
 
