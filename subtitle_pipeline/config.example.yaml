@@ -1,0 +1,21 @@
+# Target subtitles: en | ru | same (same = language of speech, no translation)
+subtitle_language: en
+
+whisper:
+  model_size: small   # tiny | base | small | medium | large-v3
+  device: auto        # auto | cpu | cuda
+  compute_type: auto
+  language: null      # null = auto-detect; or ru | en
+
+translation:
+  model_id: facebook/nllb-200-distilled-600M
+  batch_size: 8
+  max_new_tokens: 256
+
+pycaps:
+  template: minimalist   # built-in or path to your template folder
+  whisper_backend: faster
+
+paths:
+  work_dir: work/subtitles
+  keep_intermediates: true

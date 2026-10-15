@@ -1,0 +1,8 @@
+faster-whisper>=1.0.0
+transformers>=4.36.0
+torch>=2.0.0
+sentencepiece>=0.2.0
+PyYAML>=6.0
+# Animated burn-in (install separately; includes Whisper for pycaps fallback):
+# pip install "git+https://github.com/francozanardi/pycaps.git#egg=pycaps[base,faster-whisper]"
+# playwright install chromium
