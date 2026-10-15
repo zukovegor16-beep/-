@@ -36,6 +36,17 @@ class BrowserHandle:
         except Exception as e:
             logger.warning("browser disconnect: %s", e)
 
+    async def is_healthy(self) -> bool:
+        try:
+            page = await self.get_page()
+            url = page.url
+            if not url or url == "about:blank":
+                return False
+            await page.title()
+            return True
+        except Exception:
+            return False
+
 
 async def connect_profile(session: ProfileSession) -> Any:
     import pyanty as dolphin  # type: ignore

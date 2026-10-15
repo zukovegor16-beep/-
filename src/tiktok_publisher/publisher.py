@@ -15,6 +15,8 @@ LOGIN_HINTS = re.compile(
     r"login|log_in|sign_up|signup|/login",
     re.I,
 )
+CAPTCHA_HINTS = re.compile(r"captcha|verify|verification|robot", re.I)
+RATE_LIMIT_HINTS = re.compile(r"rate.?limit|too many|try again later|频繁", re.I)
 
 
 async def _screenshot(page, path: Path) -> None:
@@ -25,12 +27,28 @@ async def _screenshot(page, path: Path) -> None:
         logger.warning("screenshot failed: %s", e)
 
 
+def _is_blocked_page(url: str, body_snippet: str) -> str | None:
+    if LOGIN_HINTS.search(url):
+        return "TikTok не авторизован — войдите в профиле Dolphin"
+    low = body_snippet.lower()
+    if CAPTCHA_HINTS.search(low) or CAPTCHA_HINTS.search(url):
+        return "TikTok captcha/verify — решите вручную в профиле"
+    if RATE_LIMIT_HINTS.search(low):
+        return "TikTok rate limit — уменьшите частоту постинга"
+    return None
+
+
 async def _resolve_upload_page(handle: BrowserHandle, upload_url: str, nav_ms: int):
     page = await handle.get_page()
     await page.goto(upload_url, timeout=nav_ms, wait_until="domcontentloaded")
     url = page.url
-    if LOGIN_HINTS.search(url):
-        raise RuntimeError("TikTok не авторизован — войдите в профиле Dolphin")
+    try:
+        body = (await page.content())[:8000]
+    except Exception:
+        body = ""
+    blocked = _is_blocked_page(url, body)
+    if blocked:
+        raise RuntimeError(blocked)
     return page
 
 
@@ -42,6 +60,40 @@ async def _fill_caption(page, desc_sel: str, caption: str) -> None:
     except Exception:
         await page.keyboard.press("Control+A")
         await page.keyboard.type(caption, delay=20)
+
+
+async def _verify_post_success(page, selectors: dict, upload_url: str, confirm_ms: int) -> bool:
+    """At least 2 of 3 signals that post succeeded."""
+    signals = 0
+    confirm = selectors.get("post_confirmation")
+    if confirm:
+        try:
+            await page.locator(f"xpath={confirm}").wait_for(timeout=min(confirm_ms, 15000))
+            signals += 1
+        except Exception:
+            pass
+    url = page.url
+    if "/upload" not in url.lower():
+        signals += 1
+    post_sel = selectors.get("post_button")
+    if post_sel:
+        try:
+            btn = page.locator(f"xpath={post_sel}")
+            if await btn.count() == 0:
+                signals += 1
+            elif not await btn.first.is_enabled():
+                signals += 1
+        except Exception:
+            signals += 1
+    try:
+        body = (await page.content())[:8000]
+    except Exception:
+        body = ""
+    if _is_blocked_page(url, body):
+        return False
+    if signals == 0 and confirm:
+        return False
+    return signals >= 2 or (signals >= 1 and not confirm)
 
 
 async def publish_video_async(
@@ -121,9 +173,8 @@ async def publish_video_async(
                 except Exception:
                     pass
 
-            confirm = selectors.get("post_confirmation")
-            if confirm:
-                await page.locator(f"xpath={confirm}").wait_for(timeout=confirm_ms)
+            if not await _verify_post_success(page, selectors, upload_url, confirm_ms):
+                raise RuntimeError("Не удалось подтвердить публикацию (success criteria)")
 
             return True, ""
         except Exception as e:
@@ -148,9 +199,11 @@ async def publish_video_async(
 
 def _is_retryable(err: str) -> bool:
     low = err.lower()
+    if any(x in low for x in ("captcha", "авторизован", "rate limit")):
+        return False
     return any(
         x in low
-        for x in ("timeout", "selector", "waiting", "detached", "navigation")
+        for x in ("timeout", "selector", "waiting", "detached", "navigation", "success criteria")
     )
 
 

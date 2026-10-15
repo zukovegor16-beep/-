@@ -23,11 +23,15 @@
   <div class="bar">
     <button id="btnStart">Старт</button>
     <button id="btnStop">Стоп</button>
+    <button id="btnPreflight">Preflight</button>
+    <button id="btnSyncExcel">Sync Excel</button>
     <a id="btnReport" href="/api/report/latest">Скачать отчёт</a>
     <span id="state" class="badge">—</span>
     <span id="dryRun"></span>
     <span id="speedInfo"></span>
   </div>
+  <div id="preflight" class="task" style="display:none"></div>
+  <div id="excelWarn" class="task" style="display:none;background:#fff8e6"></div>
   <div id="progress" class="task" style="display:none"></div>
   <div id="task" class="task" style="display:none"></div>
   <table>
@@ -82,10 +86,33 @@
       } else {
         taskEl.style.display = 'none';
       }
+      const ew = document.getElementById('excelWarn');
+      if (d.excel_write_degraded || (d.excel_pending_count || 0) > 0) {
+        ew.style.display = 'block';
+        ew.innerHTML = `<strong>Excel:</strong> deferred writes pending=${d.excel_pending_count || 0} — нажмите Sync Excel`;
+      } else {
+        ew.style.display = 'none';
+      }
       document.getElementById('logs').textContent = (d.logs || []).join('\n');
     }
+    document.getElementById('btnPreflight').onclick = async () => {
+      const r = await fetch('/api/preflight');
+      const d = await r.json();
+      const el = document.getElementById('preflight');
+      el.style.display = 'block';
+      el.innerHTML = '<strong>Preflight:</strong> ' + (d.ok ? 'OK' : 'FAIL') +
+        '<ul>' + (d.issues || []).map(i => `<li>[${i.level}] ${i.message}</li>`).join('') + '</ul>';
+    };
+    document.getElementById('btnSyncExcel').onclick = async () => {
+      await fetch('/api/sync-excel', { method: 'POST' });
+      refresh();
+    };
     document.getElementById('btnStart').onclick = async () => {
-      await fetch('/api/start', { method: 'POST' });
+      const r = await fetch('/api/start', { method: 'POST' });
+      if (!r.ok) {
+        const d = await r.json();
+        alert(d.detail?.message || JSON.stringify(d.detail || d));
+      }
       refresh();
     };
     document.getElementById('btnStop').onclick = async () => {

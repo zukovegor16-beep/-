@@ -6,6 +6,9 @@ from pathlib import Path
 from threading import Lock
 from typing import Any
 
+import os
+import tempfile
+
 from openpyxl import Workbook, load_workbook
 
 from tiktok_publisher.captions import split_caption_variants
@@ -66,6 +69,19 @@ class AccountRow:
 
     def caption_variants(self, delimiter: str) -> list[str]:
         return split_caption_variants(self.caption_variants_raw, delimiter)
+
+
+def _atomic_save_workbook(wb, dest: Path) -> None:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(suffix=".xlsx", dir=str(dest.parent))
+    os.close(fd)
+    tmp_path = Path(tmp)
+    try:
+        wb.save(tmp_path)
+        tmp_path.replace(dest)
+    finally:
+        if tmp_path.is_file():
+            tmp_path.unlink(missing_ok=True)
 
 
 class ExcelRegistry:
@@ -159,8 +175,11 @@ class ExcelRegistry:
                 if idx is not None:
                     ws.cell(row=row_index, column=idx + 1, value=value)
             try:
-                wb.save(self.path)
+                _atomic_save_workbook(wb, self.path)
             except PermissionError:
+                wb.close()
+                return False
+            except OSError:
                 wb.close()
                 return False
             wb.close()
@@ -210,8 +229,11 @@ class ExcelRegistry:
                 ]
             )
             try:
-                wb.save(self.path)
+                _atomic_save_workbook(wb, self.path)
             except PermissionError:
+                wb.close()
+                return False
+            except OSError:
                 wb.close()
                 return False
             wb.close()

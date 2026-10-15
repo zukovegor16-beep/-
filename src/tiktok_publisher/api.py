@@ -7,8 +7,10 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from tiktok_publisher.config import AppSettings
+from tiktok_publisher.excel_pending import sync_pending_excel
 from tiktok_publisher.log_buffer import get_log_tail
 from tiktok_publisher.orchestrator import Orchestrator
+from tiktok_publisher.preflight import run_preflight
 
 
 def create_app(settings: AppSettings, orchestrator: Orchestrator) -> FastAPI:
@@ -30,10 +32,27 @@ def create_app(settings: AppSettings, orchestrator: Orchestrator) -> FastAPI:
         snap["logs"] = get_log_tail(30)
         return snap
 
+    @app.get("/api/preflight")
+    def preflight() -> dict:
+        pf = run_preflight(settings)
+        return {"ok": pf.ok, "issues": [i.__dict__ for i in pf.issues]}
+
+    @app.post("/api/sync-excel")
+    def sync_excel() -> dict:
+        applied, failed = sync_pending_excel(settings)
+        return {"applied": applied, "failed": failed}
+
     @app.post("/api/start")
     def start_run() -> dict:
         if orchestrator.is_running:
             raise HTTPException(status_code=409, detail="Already running")
+        if settings.orchestrator.require_preflight:
+            pf = run_preflight(settings)
+            if not pf.ok:
+                raise HTTPException(
+                    status_code=400,
+                    detail={"message": "Preflight failed", "issues": [i.__dict__ for i in pf.issues]},
+                )
         try:
             run_id = orchestrator.start()
         except Exception as e:

@@ -41,6 +41,7 @@ def test_dolphin_start_once_per_account_block(tmp_path: Path):
         excel={"registry_path": str(xlsx), "sheet_accounts": "Аккаунты"},
         orchestrator={
             "speed_preset": "custom",
+            "min_video_bytes": 1,
             "delay_between_posts_sec": {"min": 0, "max": 0},
             "delay_after_error_sec": 0,
         },
@@ -56,6 +57,7 @@ def test_dolphin_start_once_per_account_block(tmp_path: Path):
 
     publish = AsyncMock(return_value=(True, ""))
     handle = MagicMock()
+    handle.is_healthy = AsyncMock(return_value=True)
 
     orch = Orchestrator(settings)
     with (
@@ -109,6 +111,7 @@ def test_parallel_two_accounts(tmp_path: Path):
         excel={"registry_path": str(xlsx), "sheet_accounts": "Аккаунты"},
         orchestrator={
             "speed_preset": "custom",
+            "min_video_bytes": 1,
             "max_concurrent_profiles": 2,
             "delay_between_posts_sec": {"min": 0, "max": 0},
             "delay_after_error_sec": 0,

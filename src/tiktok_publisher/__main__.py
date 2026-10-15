@@ -3,15 +3,27 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
-from pathlib import Path
 
 import uvicorn
 
 from tiktok_publisher.config import load_settings
 from tiktok_publisher.doctor import run_doctor
+from tiktok_publisher.excel_pending import sync_pending_excel
+from tiktok_publisher.instance_lock import InstanceLock, InstanceLockError
 from tiktok_publisher.log_buffer import setup_logging
 from tiktok_publisher.orchestrator import Orchestrator
+from tiktok_publisher.preflight import run_preflight
 from tiktok_publisher.report import export_last_run
+
+
+def _print_preflight(settings, exit_on_fail: bool) -> bool:
+    pf = run_preflight(settings)
+    for issue in pf.issues:
+        tag = issue.level.upper()
+        print(f"[{tag}] {issue.code}: {issue.message}")
+    if not pf.ok and exit_on_fail:
+        return False
+    return pf.ok or not exit_on_fail
 
 
 def main() -> None:
@@ -24,15 +36,24 @@ def main() -> None:
 
     p_start = sub.add_parser("start", help="Run orchestrator in foreground")
     p_start.add_argument("--dry-run", action="store_true")
+    p_start.add_argument("--skip-preflight", action="store_true")
+    p_start.add_argument("--only-errors", metavar="RUN_ID", default=None)
 
     sub.add_parser("stop", help="No-op unless using API; use Ctrl+C for foreground")
 
     p_report = sub.add_parser("report", help="Export last run report path")
     p_report.add_argument("--run", default="last")
 
-    sub.add_parser("doctor", help="Check config, Excel, folders, Dolphin")
+    p_doctor = sub.add_parser("doctor", help="Check config, Excel, folders, Dolphin")
+    p_doctor.add_argument(
+        "--list-stale-profiles",
+        action="store_true",
+        help="Показать подсказку по зависшим профилям Dolphin",
+    )
 
     sub.add_parser("plan", help="Show run plan from Excel (no publish)")
+    sub.add_parser("preflight", help="Preflight checks without publishing")
+    sub.add_parser("sync-excel", help="Apply pending Excel writes from last failed sync")
 
     p_smoke = sub.add_parser("smoke", help="Open TikTok upload in Dolphin profile")
     p_smoke.add_argument("--profile-id", required=True)
@@ -42,7 +63,25 @@ def main() -> None:
     setup_logging(settings.logging.log_dir)
 
     if args.cmd == "doctor":
+        if getattr(args, "list_stale_profiles", False):
+            from tiktok_publisher.dolphin_registry import active_profiles
+
+            ids = active_profiles()
+            if ids:
+                print("[warn] active in this process:", ", ".join(ids))
+            else:
+                print("[info] нет активных профилей в этом процессе")
+            print("[info] закройте лишние профили в Dolphin Anty вручную при сбоях")
         sys.exit(run_doctor(settings))
+
+    if args.cmd == "preflight":
+        ok = _print_preflight(settings, exit_on_fail=False)
+        sys.exit(0 if ok else 1)
+
+    if args.cmd == "sync-excel":
+        applied, failed = sync_pending_excel(settings)
+        print(f"applied={applied} failed={failed}")
+        sys.exit(0 if failed == 0 else 1)
 
     if args.cmd == "plan":
         from tiktok_publisher.excel_registry import ExcelRegistry
@@ -76,10 +115,22 @@ def main() -> None:
                 sys.exit(1)
         return
 
+    lock = InstanceLock(settings.data_dir_path / ".publisher.lock")
+
     if args.cmd == "start":
         if args.dry_run:
             settings.dry_run = True
+        if not args.skip_preflight and settings.orchestrator.require_preflight:
+            if not _print_preflight(settings, exit_on_fail=True):
+                sys.exit(1)
+        try:
+            lock.acquire()
+        except InstanceLockError as e:
+            print(e, file=sys.stderr)
+            sys.exit(1)
         orch = Orchestrator(settings)
+        if args.only_errors:
+            orch.only_errors_from_run_id = args.only_errors
         run_id = orch.start()
         logging.info("Started run %s", run_id)
         try:
@@ -87,21 +138,34 @@ def main() -> None:
         except KeyboardInterrupt:
             orch.stop()
             orch.wait(120)
+        finally:
+            lock.release()
         print(f"Report: {orch.last_report_path}")
         return
 
     if args.cmd == "serve":
         from tiktok_publisher.api import create_app
 
+        try:
+            lock.acquire()
+        except InstanceLockError as e:
+            print(e, file=sys.stderr)
+            sys.exit(1)
         host = args.host or settings.server.host
         port = args.port or settings.server.port
         orch = Orchestrator(settings)
         app = create_app(settings, orch)
-        uvicorn.run(app, host=host, port=port, log_level="info")
+        try:
+            uvicorn.run(app, host=host, port=port, log_level="info")
+        finally:
+            lock.release()
         return
 
     if args.cmd == "stop":
-        print("Для остановки используйте POST /api/stop в веб-UI или Ctrl+C в foreground", file=sys.stderr)
+        print(
+            "Для остановки используйте POST /api/stop в веб-UI или Ctrl+C в foreground",
+            file=sys.stderr,
+        )
         return
 
 

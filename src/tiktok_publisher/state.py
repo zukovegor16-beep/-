@@ -54,6 +54,19 @@ class StateStore:
                     finished_at TEXT NOT NULL,
                     FOREIGN KEY (run_id) REFERENCES runs(id)
                 );
+                CREATE TABLE IF NOT EXISTS published_assets (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    account_no TEXT NOT NULL,
+                    fingerprint TEXT NOT NULL,
+                    file_name TEXT NOT NULL,
+                    file_path TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    run_id TEXT NOT NULL,
+                    finished_at TEXT NOT NULL,
+                    UNIQUE(account_no, fingerprint)
+                );
+                CREATE INDEX IF NOT EXISTS idx_published_assets_account
+                    ON published_assets(account_no, status);
                 """
             )
 
@@ -110,6 +123,65 @@ class StateStore:
                 "SELECT id FROM runs ORDER BY started_at DESC LIMIT 1"
             ).fetchone()
         return row["id"] if row else None
+
+    def has_successful_asset(self, account_no: str, fingerprint: str) -> bool:
+        with self._connect() as conn:
+            row = conn.execute(
+                """
+                SELECT 1 FROM published_assets
+                WHERE account_no = ? AND fingerprint = ? AND status = 'ok'
+                LIMIT 1
+                """,
+                (account_no, fingerprint),
+            ).fetchone()
+        return row is not None
+
+    def record_published_asset(
+        self,
+        account_no: str,
+        fingerprint: str,
+        file_name: str,
+        file_path: str,
+        status: str,
+        run_id: str,
+        finished_at: str,
+    ) -> None:
+        with self._connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO published_assets (
+                    account_no, fingerprint, file_name, file_path,
+                    status, run_id, finished_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(account_no, fingerprint) DO UPDATE SET
+                    status = excluded.status,
+                    run_id = excluded.run_id,
+                    finished_at = excluded.finished_at,
+                    file_path = excluded.file_path,
+                    file_name = excluded.file_name
+                """,
+                (
+                    account_no,
+                    fingerprint,
+                    file_name,
+                    file_path,
+                    status,
+                    run_id,
+                    finished_at,
+                ),
+            )
+
+    def error_publications_for_run(self, run_id: str) -> list[PublicationRecord]:
+        with self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM publications
+                WHERE run_id = ? AND status = 'error' AND file_path != ''
+                ORDER BY id
+                """,
+                (run_id,),
+            ).fetchall()
+        return [_row_to_pub(r) for r in rows]
 
 
 def _iso_now() -> str:

@@ -24,11 +24,19 @@ class OrchestratorSettings(BaseModel):
     delay_between_posts_sec: DelayRange = Field(default_factory=DelayRange)
     delay_after_error_sec: int = 300
     count_errors_toward_limit: bool = True
+    count_infra_errors_toward_limit: bool = False
     skip_failed_file: bool = True
+    skip_duplicate_counts_toward_limit: bool = False
     posting_window: dict[str, str] | None = None
+    posting_window_mode: Literal["reject", "wait"] = "reject"
     timezone: str = "Europe/Moscow"
     on_success: Literal["move_to_posted"] = "move_to_posted"
     dolphin_min_start_interval_sec: float = 1.0
+    report_flush_every_n: int = 5
+    circuit_breaker_consecutive_errors: int = 0
+    min_video_bytes: int = 1024
+    max_caption_length: int = 2200
+    require_preflight: bool = True
 
 
 class QueueSettings(BaseModel):

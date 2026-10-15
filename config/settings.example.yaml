@@ -14,10 +14,18 @@ orchestrator:
     max: 120
   delay_after_error_sec: 300
   count_errors_toward_limit: true
+  count_infra_errors_toward_limit: false
   skip_failed_file: true
+  skip_duplicate_counts_toward_limit: false
   dolphin_min_start_interval_sec: 1.0
   posting_window: null
+  posting_window_mode: reject
   timezone: "Europe/Moscow"
+  report_flush_every_n: 5
+  circuit_breaker_consecutive_errors: 0
+  min_video_bytes: 1024
+  max_caption_length: 2200
+  require_preflight: true
   on_success: move_to_posted  # единственный режим v1 (вариант A)
 
 queue:

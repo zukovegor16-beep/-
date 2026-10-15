@@ -31,6 +31,13 @@ def setup_logging(log_dir: str | None = None) -> None:
         from pathlib import Path
 
         Path(log_dir).mkdir(parents=True, exist_ok=True)
-        fh = logging.FileHandler(Path(log_dir) / "tiktok-publisher.log", encoding="utf-8")
+        from logging.handlers import RotatingFileHandler
+
+        fh = RotatingFileHandler(
+            Path(log_dir) / "tiktok-publisher.log",
+            maxBytes=5 * 1024 * 1024,
+            backupCount=5,
+            encoding="utf-8",
+        )
         fh.setFormatter(fmt)
         root.addHandler(fh)

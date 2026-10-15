@@ -40,6 +40,7 @@ def test_dry_run_sequential(tmp_path: Path):
         },
         orchestrator={
             "speed_preset": "custom",
+            "min_video_bytes": 1,
             "delay_between_posts_sec": {"min": 0, "max": 0},
             "delay_after_error_sec": 0,
         },

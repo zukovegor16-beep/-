@@ -8,6 +8,7 @@ from threading import Lock
 import httpx
 
 from tiktok_publisher.config import AppSettings
+from tiktok_publisher.dolphin_registry import register_profile, unregister_profile
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +67,7 @@ class DolphinClient:
         if not port or not ws:
             raise RuntimeError(f"Не удалось запустить профиль {profile_id}: {run_info}")
         logger.info("Dolphin profile %s started on port %s", profile_id, port)
+        register_profile(str(profile_id))
         return ProfileSession(profile_id=profile_id, port=int(port), ws_endpoint=str(ws))
 
     def stop_profile(self, profile_id: str) -> None:
@@ -78,3 +80,5 @@ class DolphinClient:
             logger.info("Dolphin profile %s stopped", profile_id)
         except Exception as e:
             logger.warning("stop profile %s: %s", profile_id, e)
+        finally:
+            unregister_profile(str(profile_id))

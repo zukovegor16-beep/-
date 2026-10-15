@@ -71,6 +71,19 @@ tiktok-publisher start --dry-run
 | `report --run last` | Путь к последнему отчёту |
 | `plan` | План прогона (очереди, total_slots) без публикации |
 | `smoke --profile-id ID` | Проверка Dolphin: start → CDP → stop |
+| `preflight` | Проверки перед прогоном |
+| `sync-excel` | Дозапись Log/статусов из `pending_excel.jsonl` |
+| `start --only-errors RUN_ID` | Повтор только failed из прогона |
+| `doctor --list-stale-profiles` | Подсказка по зависшим профилям |
+
+## Надёжность (v3)
+
+- Ledger в SQLite против **дубликатов** upload
+- **Preflight** + deferred Excel (`sync-excel`)
+- **posting_window**, circuit breaker, incremental report
+- Один экземпляр: `data/.publisher.lock`
+
+Подробнее: [`docs/RELIABILITY.ru.md`](docs/RELIABILITY.ru.md)
 
 ## Документация
 
