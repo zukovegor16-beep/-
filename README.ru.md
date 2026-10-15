@@ -75,8 +75,15 @@ tiktok-publisher start --dry-run
 | `smoke --profile-id ID` | Проверка Dolphin: start → CDP → stop |
 | `preflight` | Проверки перед прогоном |
 | `sync-excel` | Дозапись Log/статусов из `pending_excel.jsonl` |
+| `onboard` / `onboard-plan` | Онбординг из Excel / план без CDP |
 | `start --only-errors RUN_ID` | Повтор только failed из прогона |
 | `doctor --list-stale-profiles` | Подсказка по зависшим профилям |
+
+## v4: онбординг и прогрев
+
+- **Онбординг:** логин, смена пароля, аватар, создание профиля Dolphin с geo (pyanty), перенос в «Аккаунты» с `active=нет`.
+- **Прогрев FYP:** `session.order` (`warmup_then_publish` по умолчанию) — скролл/лайки до или после постов.
+- UI: кнопки **Онбординг** / **Продолжить (OTP)**; API `/api/onboard/*`.
 
 ## Надёжность (v3)
 
