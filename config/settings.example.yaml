@@ -1,0 +1,38 @@
+dry_run: false
+
+dolphin:
+  api_base: "http://127.0.0.1:3001"
+  api_token: null
+
+orchestrator:
+  mode: sequential
+  max_concurrent_profiles: 1
+  delay_between_posts_sec:
+    min: 45
+    max: 120
+  delay_after_error_sec: 300
+  posting_window: null
+  timezone: "Europe/Moscow"
+  on_success: move_to_posted  # единственный режим v1 (вариант A)
+
+queue:
+  sort_by: mtime
+  extensions:
+    - ".mp4"
+    - ".mov"
+
+server:
+  host: "127.0.0.1"
+  port: 8765
+
+paths:
+  content_root: "./content"
+  data_dir: "./data"
+
+excel:
+  registry_path: "./config/accounts.xlsx"
+  sheet_accounts: "Аккаунты"
+  caption_delimiter: "|||"
+
+logging:
+  log_dir: "./logs"

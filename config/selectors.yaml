@@ -1,0 +1,15 @@
+# TikTok web upload selectors (update when UI changes)
+upload_url: "https://www.tiktok.com/upload"
+iframe: "//iframe"
+split_window_dismiss: "//button[./div[text()='Not now']]"
+upload_video_input: "//input[@type='file']"
+upload_finished: "//div[contains(@class, 'btn-cancel')]"
+description: "//div[@contenteditable='true']"
+post_button: "//button[@data-e2e='post_video_button']"
+post_now_button: "//button[.//div[text()='Post now']]"
+post_confirmation: "//div[contains(text(), 'Your video has been uploaded') or contains(text(), 'Video published') or contains(text(), '视频已发布')]"
+
+timeouts:
+  navigation_ms: 60000
+  upload_processing_ms: 300000
+  post_confirm_ms: 120000

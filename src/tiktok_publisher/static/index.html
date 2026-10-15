@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>TikTok Publisher</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; max-width: 960px; }
+    h1 { font-size: 1.4rem; }
+    .bar { display: flex; gap: 12px; align-items: center; margin: 16px 0; }
+    button { padding: 8px 16px; cursor: pointer; }
+    table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; font-size: 14px; }
+    th { background: #eee; }
+    .task { background: #f5f9ff; padding: 12px; border-radius: 8px; margin: 12px 0; }
+    .logs { font-family: monospace; font-size: 12px; background: #111; color: #ddd; padding: 12px; max-height: 200px; overflow: auto; white-space: pre-wrap; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; background: #ddd; }
+    .badge.run { background: #9f9; }
+  </style>
+</head>
+<body>
+  <h1>Автопубликация TikTok</h1>
+  <p>Реестр: Excel · Dolphin Anty · sequential N роликов на аккаунт</p>
+  <div class="bar">
+    <button id="btnStart">Старт</button>
+    <button id="btnStop">Стоп</button>
+    <a id="btnReport" href="/api/report/latest">Скачать отчёт</a>
+    <span id="state" class="badge">—</span>
+    <span id="dryRun"></span>
+  </div>
+  <div id="task" class="task" style="display:none"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>№</th>
+        <th>Имя</th>
+        <th>Папка</th>
+        <th>N за run</th>
+        <th>В очереди</th>
+        <th>Dolphin ID</th>
+      </tr>
+    </thead>
+    <tbody id="accounts"></tbody>
+  </table>
+  <h3>Лог</h3>
+  <div id="logs" class="logs"></div>
+  <script>
+    async function refresh() {
+      const r = await fetch('/api/status');
+      const d = await r.json();
+      const st = document.getElementById('state');
+      st.textContent = d.running ? 'Идёт прогон' : 'Ожидание';
+      st.className = 'badge' + (d.running ? ' run' : '');
+      document.getElementById('dryRun').textContent = d.dry_run ? '(dry-run)' : '';
+      const tb = document.getElementById('accounts');
+      tb.innerHTML = '';
+      (d.accounts || []).forEach(a => {
+        if (a.error) return;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${a.account_no}</td><td>${a.account_name||''}</td><td>${a.video_folder}</td><td>${a.videos_per_run}</td><td>${a.queue_count}</td><td>${a.dolphin_profile_id}</td>`;
+        tb.appendChild(tr);
+      });
+      const taskEl = document.getElementById('task');
+      if (d.current_task) {
+        taskEl.style.display = 'block';
+        const t = d.current_task;
+        taskEl.innerHTML = `<strong>Сейчас:</strong> ${t.account_no} ${t.account_name||''}<br>Файл: ${t.file_path}<br>Подпись: ${t.caption_preview}<br>Этап: ${t.phase}`;
+      } else {
+        taskEl.style.display = 'none';
+      }
+      document.getElementById('logs').textContent = (d.logs || []).join('\n');
+    }
+    document.getElementById('btnStart').onclick = async () => {
+      await fetch('/api/start', { method: 'POST' });
+      refresh();
+    };
+    document.getElementById('btnStop').onclick = async () => {
+      await fetch('/api/stop', { method: 'POST' });
+      refresh();
+    };
+    refresh();
+    setInterval(refresh, 2500);
+  </script>
+</body>
+</html>
