@@ -1,40 +1,60 @@
-# Онбординг TikTok (v4)
+# Онбординг TikTok (E2E)
 
-## Лист «Онбординг» в `accounts.xlsx`
+## Порядок в одном профиле Dolphin
+
+1. Создание/старт профиля (geo, proxy из Excel).
+2. **Почта** (режим `webmail`): вход в Gmail/Outlook во второй вкладке.
+3. **TikTok:** логин (`tiktok_login` + `tiktok_password_current`; для входа по email используется колонка `email`, если заполнена).
+4. **Пароль:** смена на `tiktok_password_new` **или** `onboard.unified_password` из `settings.yaml` (один пароль на все аккаунты).
+5. **Код из письма:** режим `imap` (рекомендуется Gmail + app password в `email_password`), `webmail` (скан открытых вкладок) или `manual` (кнопка «Продолжить» после ручного ввода кода).
+6. **Аватар:** файл из колонки `avatar_path` или каталога `onboard.avatar_library_dir` (`by_login` → `login.jpg`).
+7. Excel: `onboard_status=готов`, строка в «Аккаунты» (`active=нет`). Заполните `video_folder`, `active=да` → публикация.
+
+## Лист «Онбординг»
 
 | Колонка | Назначение |
 |---------|------------|
-| geo | Ключ из `config/geo_catalog.yaml` (US, DE, …) |
-| tiktok_login / tiktok_password_current / tiktok_password_new | Учётная запись TikTok |
-| email / email_password | Для OTP (MVP: ручной ввод) |
-| avatar_path | Путь к файлу аватарки |
-| proxy | Опционально `user:pass@host:port` для нового профиля Dolphin |
-| dolphin_profile_id | Пусто → создаётся профиль с geo через pyanty |
-| onboard_status / onboard_error | Обновляет программа |
+| geo | `geo_catalog.yaml` |
+| tiktok_login | Логин TikTok (часто = email) |
+| tiktok_password_current | Текущий пароль |
+| tiktok_password_new | Опционально; иначе `unified_password` |
+| email / email_password | IMAP/webmail (app password для Gmail) |
+| avatar_path | Опционально, если есть `avatar_library` |
+| dolphin_profile_id | Пусто → создать профиль |
+| onboard_status / onboard_error | Статусы RU |
 
-После успеха строка получает `onboard_status=готов`, в лист **«Аккаунты»** добавляется строка с `active=нет`, пустой `video_folder` и указанным `dolphin_profile_id`. Заполните папку, подписи, `videos_per_run` и поставьте `active=да`.
+## Настройки (`onboard` в settings.yaml)
 
-## Geo
-
-Справочник координат и timezone: `config/geo_catalog.yaml`. Код страны в Excel должен совпадать с ключом в YAML.
-
-## OTP и капча
-
-По умолчанию `onboard.otp_mode: manual`. При капче/verify программа ждёт до `manual_wait_sec`, затем продолжайте:
-
-- Web UI: **«Продолжить (OTP)»** → `POST /api/onboard/continue`
-- CLI: `onboard-continue` (подсказка; при `serve` используйте API)
-
-## Команды
-
-```bash
-python -m tiktok_publisher onboard-plan
-python -m tiktok_publisher onboard --dry-run
-python -m tiktok_publisher serve
+```yaml
+onboard:
+  unified_password: "ВАШ_ЕДИНЫЙ_ПАРОЛЬ"   # не коммитить
+  email_code_mode: imap
+  email_provider: gmail
+  avatar_library_dir: "./content/avatars"
+  avatar_pick: by_login
+  email_code_timeout_sec: 180
 ```
 
-Preflight онбординга: `GET /api/onboard/preflight` или `GET /api/preflight?mode=onboard`.
+Пример сложного пароля (замените локально): `TkOps#2026!xK9`.
 
-## Безопасность
+## Команды и UI
 
-Пароли в xlsx хранятся в открытом виде. Не коммитьте реальный файл в git. Vault/IMAP — опционально позже (этап F).
+```bash
+tiktok-publisher onboard-plan
+tiktok-publisher onboard --dry-run
+tiktok-publisher serve   # Онбординг / Продолжить (OTP)
+```
+
+## Риски
+
+- Селекторы TikTok и webmail меняются — калибровка на Windows.
+- Gmail: используйте **пароль приложения**, не обычный пароль + 2FA.
+- Автоматизация webmail хрупкая; **IMAP** стабильнее.
+
+## E2E чеклист (Windows)
+
+- [ ] Dolphin запущен, `doctor` ok
+- [ ] `onboard-plan` — pending строки, geo, email, unified_password
+- [ ] `onboard` на 1 строке (не dry-run)
+- [ ] Код из письма получен (IMAP) или manual continue
+- [ ] «Аккаунты»: `active=да`, папка видео → preflight → Старт публикации

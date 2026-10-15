@@ -86,6 +86,18 @@ class OnboardSettings(BaseModel):
     pause_on_captcha: bool = True
     manual_wait_sec: int = 300
     otp_mode: Literal["manual", "auto"] = "manual"
+    unified_password: str | None = None
+    avatar_library_dir: str = "./content/avatars"
+    avatar_pick: Literal["column", "by_login", "random"] = "by_login"
+    email_provider: Literal["gmail", "outlook", "mail_ru", "custom"] = "gmail"
+    email_code_mode: Literal["webmail", "imap", "manual"] = "imap"
+    email_webmail_url: str | None = None
+    imap_host: str | None = None
+    imap_port: int = 993
+    imap_use_ssl: bool = True
+    email_code_timeout_sec: int = 180
+    email_code_regex: str = r"\b(\d{6})\b"
+    selectors_webmail_path: str = "./config/selectors_webmail.yaml"
 
 
 class LoggingSettings(BaseModel):
@@ -107,6 +119,13 @@ class AppSettings(BaseModel):
     selectors_onboard_path: str = "./config/selectors_onboard.yaml"
     selectors_warmup_path: str = "./config/selectors_warmup.yaml"
     geo_catalog_path: str = "./config/geo_catalog.yaml"
+
+    def resolve_onboard_password_new(self, row_password_new: str) -> str:
+        if row_password_new and str(row_password_new).strip():
+            return str(row_password_new).strip()
+        if self.onboard.unified_password:
+            return self.onboard.unified_password.strip()
+        return ""
 
     @property
     def data_dir_path(self) -> Path:
@@ -139,6 +158,14 @@ class AppSettings(BaseModel):
     @property
     def geo_catalog_file(self) -> Path:
         return Path(self.geo_catalog_path)
+
+    @property
+    def selectors_webmail_file(self) -> Path:
+        return Path(self.onboard.selectors_webmail_path)
+
+    @property
+    def avatar_library_path(self) -> Path:
+        return Path(self.onboard.avatar_library_dir)
 
 
 def load_settings(path: Path | None = None) -> AppSettings:

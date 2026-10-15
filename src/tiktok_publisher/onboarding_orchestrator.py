@@ -12,7 +12,8 @@ from tiktok_publisher.dolphin_profiles import create_profile_for_geo
 from tiktok_publisher.excel_registry import ExcelRegistry, OnboardRow
 from tiktok_publisher.geo_catalog import resolve_geo
 from tiktok_publisher.onboard_plan import build_onboard_plan
-from tiktok_publisher.onboarding_runner import run_onboarding_steps_async
+from tiktok_publisher.onboarding_runner import OnboardContext, run_onboarding_steps_async
+from tiktok_publisher.avatar_library import resolve_avatar_path
 from tiktok_publisher.outcomes import Outcome, OutcomeCode
 from tiktok_publisher.preflight import run_preflight_onboard
 from tiktok_publisher.session_runner import profile_browser_session
@@ -159,6 +160,41 @@ class OnboardingOrchestrator:
                 self._fail_row(row, OutcomeCode.onboard_data_error, "нет текущего пароля")
                 return
 
+            password_new = self.settings.resolve_onboard_password_new(
+                row.tiktok_password_new
+            )
+            if not self.settings.dry_run and not password_new:
+                self._fail_row(
+                    row,
+                    OutcomeCode.onboard_data_error,
+                    "нет tiktok_password_new и onboard.unified_password",
+                )
+                return
+
+            ob = self.settings.onboard
+            if not self.settings.dry_run and ob.email_code_mode != "manual":
+                if not row.email.strip() or not row.email_password.strip():
+                    self._fail_row(
+                        row,
+                        OutcomeCode.onboard_data_error,
+                        "email/email_password обязательны для IMAP/webmail",
+                    )
+                    return
+
+            if not self.settings.dry_run:
+                av = resolve_avatar_path(
+                    self.settings,
+                    login=row.tiktok_login,
+                    column_path=row.avatar_path,
+                )
+                if av is None or not av.is_file():
+                    self._fail_row(
+                        row,
+                        OutcomeCode.onboard_avatar_failed,
+                        "аватар не найден (колонка или avatar_library)",
+                    )
+                    return
+
             profile_id = row.dolphin_profile_id.strip()
             if not profile_id:
                 self.current_task.phase = "create_profile"
@@ -184,17 +220,29 @@ class OnboardingOrchestrator:
             self._pause_event = pause_ev
 
             self.current_task.phase = "browser"
+            ctx = OnboardContext(
+                login=row.tiktok_login,
+                password_current=row.tiktok_password_current,
+                password_new=password_new or row.tiktok_password_new,
+                email=row.email,
+                email_password=row.email_password,
+                avatar_path=row.avatar_path,
+            )
+
+            def _phase(name: str) -> None:
+                if self.current_task:
+                    self.current_task.phase = name
+
             with profile_browser_session(self.settings, profile_id, loop) as bs:
                 self.current_task.phase = "onboard_steps"
                 outcome = loop.run_until_complete(
                     run_onboarding_steps_async(
                         self.settings,
                         bs.handle,
-                        login=row.tiktok_login,
-                        password_current=row.tiktok_password_current,
-                        password_new=row.tiktok_password_new,
-                        avatar_path=row.avatar_path,
+                        ctx,
                         pause_for_manual=pause_ev,
+                        on_phase=_phase,
+                        loop=loop,
                     )
                 )
 

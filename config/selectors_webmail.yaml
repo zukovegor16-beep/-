@@ -1,0 +1,22 @@
+# Gmail web UI (fragile — prefer email_code_mode: imap + app password)
+gmail:
+  login_url: "https://mail.google.com/"
+  email_input: "//input[@type='email']"
+  email_next: "//button[contains(., 'Next') or contains(., 'Далее')]"
+  password_input: "//input[@type='password']"
+  password_next: "//button[contains(., 'Next') or contains(., 'Далее')]"
+  inbox_ready: "//div[@role='main']"
+  open_search: "//input[@placeholder='Search mail' or @aria-label='Search mail']"
+  search_query: "from:tiktok OR from:noreply verification"
+
+outlook:
+  login_url: "https://outlook.live.com/mail/"
+  email_input: "//input[@type='email']"
+  email_next: "//input[@type='submit']"
+  password_input: "//input[@type='password']"
+  password_next: "//input[@type='submit']"
+
+code_regex: "\\b(\\d{6})\\b"
+timeouts:
+  navigation_ms: 60000
+  action_ms: 20000

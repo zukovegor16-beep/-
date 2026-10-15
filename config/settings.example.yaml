@@ -23,6 +23,17 @@ onboard:
   pause_on_captcha: true
   manual_wait_sec: 300
   otp_mode: manual
+  # Единый новый пароль TikTok (локально в settings.yaml, не в git)
+  unified_password: null
+  avatar_library_dir: "./content/avatars"
+  avatar_pick: by_login   # column | by_login | random
+  email_provider: gmail
+  email_code_mode: imap   # imap | webmail | manual
+  email_code_timeout_sec: 180
+  imap_host: null
+  imap_port: 993
+  imap_use_ssl: true
+  selectors_webmail_path: "./config/selectors_webmail.yaml"
 
 orchestrator:
   mode: sequential

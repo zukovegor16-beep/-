@@ -26,6 +26,9 @@ class OutcomeCode(str, Enum):
     onboard_ready = "onboard_ready"
     onboard_avatar_failed = "onboard_avatar_failed"
     onboard_data_error = "onboard_data_error"
+    onboard_email_failed = "onboard_email_failed"
+    onboard_verify_code_timeout = "onboard_verify_code_timeout"
+    onboard_password_not_changed = "onboard_password_not_changed"
     warmup_ok = "warmup_ok"
 
 
@@ -50,6 +53,9 @@ LABELS_RU: dict[OutcomeCode, str] = {
     OutcomeCode.onboard_ready: "готов",
     OutcomeCode.onboard_avatar_failed: "аватар не установлен",
     OutcomeCode.onboard_data_error: "ошибка данных",
+    OutcomeCode.onboard_email_failed: "ошибка почты",
+    OutcomeCode.onboard_verify_code_timeout: "код из почты не получен",
+    OutcomeCode.onboard_password_not_changed: "пароль не изменён",
     OutcomeCode.warmup_ok: "прогрев выполнен",
 }
 

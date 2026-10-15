@@ -18,16 +18,22 @@ class BrowserHandle:
     profile: ProfileSession
     loop: asyncio.AbstractEventLoop
 
+    async def _context(self):
+        if self.browser.contexts:
+            return self.browser.contexts[0]
+        return await self.browser.new_context()
+
     async def get_page(self):
         pages = self.browser.pages
         if asyncio.iscoroutine(pages):
             pages = await pages
         if pages:
             return pages[0]
-        if self.browser.contexts:
-            ctx = self.browser.contexts[0]
-        else:
-            ctx = await self.browser.new_context()
+        ctx = await self._context()
+        return await ctx.new_page()
+
+    async def new_page(self):
+        ctx = await self._context()
         return await ctx.new_page()
 
     async def disconnect(self) -> None:

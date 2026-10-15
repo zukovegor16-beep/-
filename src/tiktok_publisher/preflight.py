@@ -6,6 +6,7 @@ from pathlib import Path
 from tiktok_publisher.config import AppSettings
 from tiktok_publisher.dolphin_client import DolphinClient
 from tiktok_publisher.excel_registry import ExcelRegistry
+from tiktok_publisher.avatar_library import resolve_avatar_path
 from tiktok_publisher.geo_catalog import load_geo_catalog
 from tiktok_publisher.posting_window import in_posting_window
 from tiktok_publisher.queue import list_pending_videos
@@ -205,6 +206,39 @@ def run_preflight_onboard(settings: AppSettings) -> PreflightResult:
                     f"строка {row.row_index}: avatar не найден {row.avatar_path}",
                 )
             )
+        pwd_new = settings.resolve_onboard_password_new(row.tiktok_password_new)
+        if not settings.dry_run and not pwd_new:
+            issues.append(
+                PreflightIssue(
+                    "error",
+                    "unified_password",
+                    f"строка {row.row_index}: задайте tiktok_password_new или onboard.unified_password",
+                )
+            )
+        mode = settings.onboard.email_code_mode
+        if not settings.dry_run and mode != "manual":
+            if not row.email.strip() or not row.email_password.strip():
+                issues.append(
+                    PreflightIssue(
+                        "error",
+                        "email_credentials",
+                        f"строка {row.row_index}: email и email_password для {mode}",
+                    )
+                )
+        if not settings.dry_run:
+            av = resolve_avatar_path(
+                settings,
+                login=row.tiktok_login,
+                column_path=row.avatar_path,
+            )
+            if av is None or not av.is_file():
+                issues.append(
+                    PreflightIssue(
+                        "error",
+                        "avatar_resolve",
+                        f"строка {row.row_index}: нет аватара в library/column",
+                    )
+                )
 
     if not settings.dry_run:
         ping_ok, msg = DolphinClient(settings).ping()
