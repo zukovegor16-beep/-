@@ -9,8 +9,13 @@ session:
   order: warmup_then_publish
   warmup_fail_blocks_publish: true
   warmup:
+    preset: normal
     scroll_count_min: 5
     scroll_count_max: 12
+    watch_time_sec:
+      min: 3
+      max: 12
+    scroll_up_probability: 0.08
     scroll_pause_sec:
       min: 2
       max: 6
@@ -28,7 +33,7 @@ onboard:
   avatar_library_dir: "./content/avatars"
   avatar_pick: by_login   # column | by_login | random
   email_provider: gmail
-  email_code_mode: imap   # imap | webmail | manual
+  email_code_mode: imap   # imap | webmail | manual | browser_then_imap
   email_code_timeout_sec: 180
   imap_host: null
   imap_port: 993

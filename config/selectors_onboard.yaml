@@ -20,6 +20,13 @@ password_verify_code: "//input[contains(@placeholder,'code') or contains(@placeh
 password_verify_submit: "//button[contains(., 'Next') or contains(., 'Verify') or contains(., 'Submit') or contains(., 'Confirm')]"
 
 avatar_file_input: "//input[@type='file' and contains(@accept,'image')]"
+avatar_save: "//button[contains(., 'Apply') or contains(., 'Save') or contains(., 'Confirm') or contains(., 'Сохранить')]"
+avatar_success: "//div[contains(., 'uploaded') or contains(., 'success') or contains(., 'Updated')]"
+
+logged_in_indicator: "//div[@data-e2e='profile-icon'] | //a[contains(@href,'/@') and contains(@href,'tiktok.com')]"
+
+password_change_success: "//div[contains(., 'Password updated') or contains(., 'success') or contains(., 'Пароль')]"
+password_change_error: "//div[contains(@class,'error') and contains(., 'password')]"
 
 timeouts:
   navigation_ms: 60000

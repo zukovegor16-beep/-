@@ -3,7 +3,10 @@ from __future__ import annotations
 import imaplib
 import logging
 import time
+from dataclasses import dataclass
+from datetime import datetime, timezone
 from email import message_from_bytes
+from email.utils import parsedate_to_datetime
 from typing import Callable
 
 from tiktok_publisher.config import AppSettings
@@ -16,6 +19,15 @@ PROVIDER_IMAP: dict[str, tuple[str, int]] = {
     "outlook": ("outlook.office365.com", 993),
     "mail_ru": ("imap.mail.ru", 993),
 }
+
+DEFAULT_FROM_HINTS = ("tiktok", "noreply", "account.tiktok", "mail.tiktok")
+
+
+@dataclass(frozen=True)
+class ImapCodeResult:
+    code: str
+    uid: str
+    subject: str
 
 
 def imap_host_for_settings(settings: AppSettings) -> tuple[str, int, bool]:
@@ -49,6 +61,26 @@ def _message_text(msg) -> str:
     return "\n".join(chunks)
 
 
+def _imap_since_date(since_unix: float) -> str:
+    dt = datetime.fromtimestamp(since_unix, tz=timezone.utc)
+    return dt.strftime("%d-%b-%Y")
+
+
+def _from_matches(from_header: str, hints: tuple[str, ...]) -> bool:
+    low = (from_header or "").lower()
+    return any(h in low for h in hints)
+
+
+def _message_internal_ts(msg) -> float:
+    raw = msg.get("Date")
+    if not raw:
+        return 0.0
+    try:
+        return parsedate_to_datetime(raw).timestamp()
+    except Exception:
+        return 0.0
+
+
 def wait_for_verification_code_imap(
     settings: AppSettings,
     email: str,
@@ -56,45 +88,61 @@ def wait_for_verification_code_imap(
     *,
     since_unix: float | None = None,
     code_extractor: Callable[[str], str | None] | None = None,
-) -> str | None:
+    mark_read: bool = True,
+) -> ImapCodeResult | None:
     host, port, use_ssl = imap_host_for_settings(settings)
     pattern = settings.onboard.email_code_regex
     extract = code_extractor or (
         lambda t: extract_verification_code(t, pattern=pattern)
     )
+    since = since_unix or (time.time() - 120)
+    since_date = _imap_since_date(since)
+    from_hints = DEFAULT_FROM_HINTS
     deadline = time.time() + settings.onboard.email_code_timeout_sec
-    seen_uids: set[bytes] = set()
 
     while time.time() < deadline:
         try:
-            if use_ssl:
-                conn = imaplib.IMAP4_SSL(host, port)
-            else:
-                conn = imaplib.IMAP4(host, port)
+            conn = imaplib.IMAP4_SSL(host, port) if use_ssl else imaplib.IMAP4(host, port)
             conn.login(email, email_password)
             conn.select("INBOX")
-            typ, data = conn.search(None, "UNSEEN")
+            typ, data = conn.search(None, "SINCE", since_date)
             if typ != "OK":
                 conn.logout()
-                time.sleep(5)
+                time.sleep(6)
                 continue
             uids = data[0].split() if data and data[0] else []
-            for uid in reversed(uids):
-                if uid in seen_uids:
-                    continue
+            candidates: list[tuple[float, bytes, str, str]] = []
+            for uid in uids:
                 typ, msg_data = conn.fetch(uid, "(RFC822)")
                 if typ != "OK" or not msg_data:
                     continue
                 raw = msg_data[0][1]
                 msg = message_from_bytes(raw)
+                ts = _message_internal_ts(msg)
+                if ts and ts < since - 5:
+                    continue
+                subj = str(msg.get("Subject", ""))
+                from_h = str(msg.get("From", ""))
+                if not _from_matches(from_h, from_hints) and "tiktok" not in subj.lower():
+                    continue
                 text = _message_text(msg)
                 code = extract(text)
                 if code:
-                    conn.store(uid, "+FLAGS", "\\Seen")
-                    conn.logout()
-                    return code
-                seen_uids.add(uid)
+                    candidates.append((ts or time.time(), uid, code, subj))
             conn.logout()
+            if candidates:
+                candidates.sort(key=lambda x: x[0])
+                _ts, uid, code, subj = candidates[-1]
+                if mark_read:
+                    try:
+                        conn2 = imaplib.IMAP4_SSL(host, port) if use_ssl else imaplib.IMAP4(host, port)
+                        conn2.login(email, email_password)
+                        conn2.select("INBOX")
+                        conn2.store(uid, "+FLAGS", "\\Seen")
+                        conn2.logout()
+                    except Exception as e:
+                        logger.debug("mark read: %s", e)
+                return ImapCodeResult(code=code, uid=uid.decode() if isinstance(uid, bytes) else str(uid), subject=subj)
         except Exception as e:
             logger.warning("IMAP poll: %s", e)
         time.sleep(8)

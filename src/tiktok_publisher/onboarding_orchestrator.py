@@ -227,6 +227,7 @@ class OnboardingOrchestrator:
                 email=row.email,
                 email_password=row.email_password,
                 avatar_path=row.avatar_path,
+                row_index=row.row_index,
             )
 
             def _phase(name: str) -> None:

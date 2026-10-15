@@ -6,7 +6,8 @@
 2. **Почта** (режим `webmail`): вход в Gmail/Outlook во второй вкладке.
 3. **TikTok:** логин (`tiktok_login` + `tiktok_password_current`; для входа по email используется колонка `email`, если заполнена).
 4. **Пароль:** смена на `tiktok_password_new` **или** `onboard.unified_password` из `settings.yaml` (один пароль на все аккаунты).
-5. **Код из письма:** режим `imap` (рекомендуется Gmail + app password в `email_password`), `webmail` (скан открытых вкладок) или `manual` (кнопка «Продолжить» после ручного ввода кода).
+5. **Код из письма:** `imap` (SINCE дата + From TikTok, последнее письмо), `browser_then_imap` (webmail login + IMAP код), `webmail`, `manual` + «Продолжить».
+6. **Надёжность:** retry кликов/fill, скриншоты `logs/onboard_row{N}_*.png`, trace `data/onboard_trace.jsonl`.
 6. **Аватар:** файл из колонки `avatar_path` или каталога `onboard.avatar_library_dir` (`by_login` → `login.jpg`).
 7. Excel: `onboard_status=готов`, строка в «Аккаунты» (`active=нет`). Заполните `video_folder`, `active=да` → публикация.
 

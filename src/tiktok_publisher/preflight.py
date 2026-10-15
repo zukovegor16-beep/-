@@ -180,6 +180,7 @@ def run_preflight_onboard(settings: AppSettings) -> PreflightResult:
             PreflightIssue("warn", "no_onboard_rows", "Нет строк онбординга (все «готов» или лист пуст)")
         )
 
+    imap_warned = False
     for row in pending:
         code = row.geo.strip().upper()
         if not code:
@@ -225,6 +226,19 @@ def run_preflight_onboard(settings: AppSettings) -> PreflightResult:
                         f"строка {row.row_index}: email и email_password для {mode}",
                     )
                 )
+        if (
+            not settings.dry_run
+            and mode in ("imap", "browser_then_imap")
+            and not imap_warned
+        ):
+            imap_warned = True
+            issues.append(
+                PreflightIssue(
+                    "warn",
+                    "imap_app_password",
+                    "Gmail/Outlook: используйте app password в email_password для IMAP",
+                )
+            )
         if not settings.dry_run:
             av = resolve_avatar_path(
                 settings,

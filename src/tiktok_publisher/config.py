@@ -62,12 +62,15 @@ class ExcelSettings(BaseModel):
 
 
 class WarmupSettings(BaseModel):
+    preset: Literal["safe", "normal"] = "normal"
     scroll_count_min: int = 5
     scroll_count_max: int = 12
     scroll_pause_sec: DelayRange = Field(default_factory=lambda: DelayRange(min=2, max=6))
+    watch_time_sec: DelayRange = Field(default_factory=lambda: DelayRange(min=3, max=12))
     likes_min: int = 0
     likes_max: int = 3
     like_probability: float = 0.35
+    scroll_up_probability: float = 0.08
     max_duration_sec: int = 180
 
 
@@ -90,7 +93,7 @@ class OnboardSettings(BaseModel):
     avatar_library_dir: str = "./content/avatars"
     avatar_pick: Literal["column", "by_login", "random"] = "by_login"
     email_provider: Literal["gmail", "outlook", "mail_ru", "custom"] = "gmail"
-    email_code_mode: Literal["webmail", "imap", "manual"] = "imap"
+    email_code_mode: Literal["webmail", "imap", "manual", "browser_then_imap"] = "imap"
     email_webmail_url: str | None = None
     imap_host: str | None = None
     imap_port: int = 993
