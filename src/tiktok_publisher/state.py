@@ -1,0 +1,214 @@
+from __future__ import annotations
+
+import sqlite3
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+from uuid import uuid4
+
+
+@dataclass
+class PublicationRecord:
+    run_id: str
+    account_no: str
+    account_name: str
+    file_path: str
+    caption_used: str
+    status: str
+    status_label: str
+    error_message: str
+    started_at: str
+    finished_at: str
+
+
+class StateStore:
+    def __init__(self, db_path: Path):
+        self.db_path = db_path
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self._init_db()
+
+    def _connect(self) -> sqlite3.Connection:
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+    def _init_db(self) -> None:
+        with self._connect() as conn:
+            conn.executescript(
+                """
+                CREATE TABLE IF NOT EXISTS runs (
+                    id TEXT PRIMARY KEY,
+                    started_at TEXT NOT NULL,
+                    stopped_at TEXT,
+                    stop_reason TEXT
+                );
+                CREATE TABLE IF NOT EXISTS publications (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    run_id TEXT NOT NULL,
+                    account_no TEXT NOT NULL,
+                    account_name TEXT,
+                    file_path TEXT NOT NULL,
+                    caption_used TEXT,
+                    status TEXT NOT NULL,
+                    error_message TEXT,
+                    started_at TEXT NOT NULL,
+                    finished_at TEXT NOT NULL,
+                    FOREIGN KEY (run_id) REFERENCES runs(id)
+                );
+                CREATE TABLE IF NOT EXISTS published_assets (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    account_no TEXT NOT NULL,
+                    fingerprint TEXT NOT NULL,
+                    file_name TEXT NOT NULL,
+                    file_path TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    run_id TEXT NOT NULL,
+                    finished_at TEXT NOT NULL,
+                    UNIQUE(account_no, fingerprint)
+                );
+                CREATE INDEX IF NOT EXISTS idx_published_assets_account
+                    ON published_assets(account_no, status);
+                """
+            )
+            cols = {
+                row[1]
+                for row in conn.execute("PRAGMA table_info(publications)").fetchall()
+            }
+            if "status_label" not in cols:
+                conn.execute(
+                    "ALTER TABLE publications ADD COLUMN status_label TEXT DEFAULT ''"
+                )
+
+    def start_run(self) -> str:
+        run_id = uuid4().hex[:12]
+        now = _iso_now()
+        with self._connect() as conn:
+            conn.execute(
+                "INSERT INTO runs (id, started_at) VALUES (?, ?)",
+                (run_id, now),
+            )
+        return run_id
+
+    def finish_run(self, run_id: str, reason: str) -> None:
+        with self._connect() as conn:
+            conn.execute(
+                "UPDATE runs SET stopped_at = ?, stop_reason = ? WHERE id = ?",
+                (_iso_now(), reason, run_id),
+            )
+
+    def add_publication(self, rec: PublicationRecord) -> None:
+        with self._connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO publications (
+                    run_id, account_no, account_name, file_path, caption_used,
+                    status, status_label, error_message, started_at, finished_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    rec.run_id,
+                    rec.account_no,
+                    rec.account_name,
+                    rec.file_path,
+                    rec.caption_used,
+                    rec.status,
+                    rec.status_label,
+                    rec.error_message,
+                    rec.started_at,
+                    rec.finished_at,
+                ),
+            )
+
+    def publications_for_run(self, run_id: str) -> list[PublicationRecord]:
+        with self._connect() as conn:
+            rows = conn.execute(
+                "SELECT * FROM publications WHERE run_id = ? ORDER BY id",
+                (run_id,),
+            ).fetchall()
+        return [_row_to_pub(r) for r in rows]
+
+    def last_run_id(self) -> str | None:
+        with self._connect() as conn:
+            row = conn.execute(
+                "SELECT id FROM runs ORDER BY started_at DESC LIMIT 1"
+            ).fetchone()
+        return row["id"] if row else None
+
+    def has_successful_asset(self, account_no: str, fingerprint: str) -> bool:
+        with self._connect() as conn:
+            row = conn.execute(
+                """
+                SELECT 1 FROM published_assets
+                WHERE account_no = ? AND fingerprint = ? AND status = 'ok'
+                LIMIT 1
+                """,
+                (account_no, fingerprint),
+            ).fetchone()
+        return row is not None
+
+    def record_published_asset(
+        self,
+        account_no: str,
+        fingerprint: str,
+        file_name: str,
+        file_path: str,
+        status: str,
+        run_id: str,
+        finished_at: str,
+    ) -> None:
+        with self._connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO published_assets (
+                    account_no, fingerprint, file_name, file_path,
+                    status, run_id, finished_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(account_no, fingerprint) DO UPDATE SET
+                    status = excluded.status,
+                    run_id = excluded.run_id,
+                    finished_at = excluded.finished_at,
+                    file_path = excluded.file_path,
+                    file_name = excluded.file_name
+                """,
+                (
+                    account_no,
+                    fingerprint,
+                    file_name,
+                    file_path,
+                    status,
+                    run_id,
+                    finished_at,
+                ),
+            )
+
+    def error_publications_for_run(self, run_id: str) -> list[PublicationRecord]:
+        with self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM publications
+                WHERE run_id = ? AND status NOT IN ('published', 'dry_run', 'duplicate_skipped')
+                  AND file_path != ''
+                ORDER BY id
+                """,
+                (run_id,),
+            ).fetchall()
+        return [_row_to_pub(r) for r in rows]
+
+
+def _iso_now() -> str:
+    return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+
+
+def _row_to_pub(row: sqlite3.Row) -> PublicationRecord:
+    return PublicationRecord(
+        run_id=row["run_id"],
+        account_no=row["account_no"],
+        account_name=row["account_name"] or "",
+        file_path=row["file_path"],
+        caption_used=row["caption_used"] or "",
+        status=row["status"],
+        status_label=(row["status_label"] or "") if "status_label" in row.keys() else "",
+        error_message=row["error_message"] or "",
+        started_at=row["started_at"],
+        finished_at=row["finished_at"],
+    )

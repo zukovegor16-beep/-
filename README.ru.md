@@ -1,0 +1,100 @@
+# TikTok Publisher
+
+Локальная автопубликация TikTok через **Dolphin Anty**: один **Excel**-реестр, папки с видео, **Старт** в веб-интерфейсе.
+
+## Требования
+
+- Windows (Dolphin Anty + Local API)
+- Python 3.11+
+- Dolphin Anty запущен, в каждом профиле — ручной вход в TikTok
+
+## Установка
+
+```bash
+pip install -e ".[dolphin,dev]"
+tiktok-publisher doctor
+```
+
+Скопируйте настройки:
+
+```bash
+copy config\settings.example.yaml config\settings.yaml
+copy config\accounts.template.xlsx config\accounts.xlsx
+```
+
+Заполните `config/accounts.xlsx` (листы **Аккаунты** и при необходимости **Онбординг**). Пример колонок — [`docs/EXCEL_SPEC.ru.md`](docs/EXCEL_SPEC.ru.md), онбординг — [`docs/ONBOARDING.ru.md`](docs/ONBOARDING.ru.md).
+
+Geo для новых профилей Dolphin: `config/geo_catalog.yaml` (ключ в колонке `geo`).
+
+## Dolphin Anty
+
+1. Создайте профиль на аккаунт (прокси, fingerprint).
+2. Откройте профиль, войдите в TikTok.
+3. Скопируйте **Profile ID** в колонку `dolphin_profile_id` в Excel.
+
+Программа на один блок `videos_per_run` для строки Excel: **один** start profile → до N загрузок подряд (один CDP) → **stop profile**.
+
+При `max_concurrent_profiles: K` (K>1) несколько аккаунтов идут параллельно; внутри аккаунта порядок по-прежнему последовательный.
+
+## Запуск
+
+```bash
+tiktok-publisher serve
+```
+
+Откройте http://127.0.0.1:8765 — **Старт** / **Стоп** / **Скачать отчёт**.
+
+Тест без TikTok:
+
+```yaml
+# config/settings.yaml
+dry_run: true
+```
+
+```bash
+tiktok-publisher start --dry-run
+```
+
+## Поведение
+
+- **Sequential:** сначала `videos_per_run` роликов для первой активной строки, затем для второй и т.д.
+- **Подпись:** случайный вариант из `caption_variants` (`|||`).
+- **После успеха:** файл в `video_folder/posted/`; при ошибке и `skip_failed_file: true` — в `failed/`.
+- **Отчёт:** `data/reports/report_<run_id>.xlsx` (лист **Метрики**: posts_per_hour, длительность).
+- **Скорость:** `orchestrator.speed_preset` — `safe` / `normal` / `fast` (паузы между постами) или `custom` (свои `delay_between_posts_sec`).
+
+## CLI
+
+| Команда | Описание |
+|---------|----------|
+| `serve` | Веб-UI |
+| `start --dry-run` | Прогон в консоли |
+| `doctor` | Проверка Excel, папок, Dolphin |
+| `report --run last` | Путь к последнему отчёту |
+| `plan` | План прогона (очереди, total_slots) без публикации |
+| `smoke --profile-id ID` | Проверка Dolphin: start → CDP → stop |
+| `preflight` | Проверки перед прогоном |
+| `sync-excel` | Дозапись Log/статусов из `pending_excel.jsonl` |
+| `onboard` / `onboard-plan` | Онбординг из Excel / план без CDP |
+| `start --only-errors RUN_ID` | Повтор только failed из прогона |
+| `doctor --list-stale-profiles` | Подсказка по зависшим профилям |
+
+## v4: онбординг и прогрев
+
+- **Онбординг:** логин, смена пароля, аватар, создание профиля Dolphin с geo (pyanty), перенос в «Аккаунты» с `active=нет`.
+- **Прогрев FYP:** `session.order` (`warmup_then_publish` по умолчанию) — скролл/лайки до или после постов.
+- UI: кнопки **Онбординг** / **Продолжить (OTP)**; API `/api/onboard/*`.
+
+## Надёжность (v3)
+
+- Ledger в SQLite против **дубликатов** upload
+- **Preflight** + deferred Excel (`sync-excel`)
+- **posting_window**, circuit breaker, incremental report
+- Один экземпляр: `data/.publisher.lock`
+
+Подробнее: [`docs/RELIABILITY.ru.md`](docs/RELIABILITY.ru.md)
+
+## Документация
+
+- [`docs/PLAN.ru.md`](docs/PLAN.ru.md) — архитектура
+- [`docs/EXCEL_SPEC.ru.md`](docs/EXCEL_SPEC.ru.md) — формат Excel

@@ -1,0 +1,92 @@
+dry_run: false
+
+dolphin:
+  api_base: "http://127.0.0.1:3001"
+  api_token: null
+
+session:
+  # publish_only | warmup_then_publish | publish_then_warmup | warmup_publish_warmup
+  order: warmup_then_publish
+  warmup_fail_blocks_publish: true
+  warmup:
+    preset: normal
+    scroll_count_min: 5
+    scroll_count_max: 12
+    watch_time_sec:
+      min: 3
+      max: 12
+    scroll_up_probability: 0.08
+    scroll_pause_sec:
+      min: 2
+      max: 6
+    likes_min: 0
+    likes_max: 3
+    like_probability: 0.35
+    max_duration_sec: 180
+
+onboard:
+  pause_on_captcha: true
+  manual_wait_sec: 300
+  otp_mode: manual
+  # Единый новый пароль TikTok (локально в settings.yaml, не в git)
+  unified_password: null
+  avatar_library_dir: "./content/avatars"
+  avatar_pick: by_login   # column | by_login | random
+  email_provider: gmail
+  email_code_mode: imap   # imap | webmail | manual | browser_then_imap
+  email_code_timeout_sec: 180
+  imap_host: null
+  imap_port: 993
+  imap_use_ssl: true
+  selectors_webmail_path: "./config/selectors_webmail.yaml"
+
+orchestrator:
+  mode: sequential
+  max_concurrent_profiles: 1
+  # safe | normal | fast — фиксированные паузы; custom — использовать delay_* ниже
+  speed_preset: normal
+  delay_between_posts_sec:
+    min: 45
+    max: 120
+  delay_after_error_sec: 300
+  count_errors_toward_limit: true
+  count_infra_errors_toward_limit: false
+  skip_failed_file: true
+  skip_duplicate_counts_toward_limit: false
+  dolphin_min_start_interval_sec: 1.0
+  posting_window: null
+  posting_window_mode: reject
+  timezone: "Europe/Moscow"
+  report_flush_every_n: 5
+  circuit_breaker_consecutive_errors: 0
+  min_video_bytes: 1024
+  max_caption_length: 2200
+  require_preflight: true
+  on_success: move_to_posted  # единственный режим v1 (вариант A)
+
+queue:
+  sort_by: mtime
+  extensions:
+    - ".mp4"
+    - ".mov"
+
+server:
+  host: "127.0.0.1"
+  port: 8765
+
+paths:
+  content_root: "./content"
+  data_dir: "./data"
+
+excel:
+  registry_path: "./config/accounts.xlsx"
+  sheet_accounts: "Аккаунты"
+  sheet_onboarding: "Онбординг"
+  caption_delimiter: "|||"
+
+selectors_onboard_path: "./config/selectors_onboard.yaml"
+selectors_warmup_path: "./config/selectors_warmup.yaml"
+geo_catalog_path: "./config/geo_catalog.yaml"
+
+logging:
+  log_dir: "./logs"

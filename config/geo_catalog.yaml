@@ -1,0 +1,21 @@
+# Ключ geo = значение в колонке Excel (Онбординг / Аккаунты)
+US:
+  latitude: 40.7128
+  longitude: -74.0060
+  timezone: America/New_York
+  locale: en-US
+DE:
+  latitude: 52.52
+  longitude: 13.405
+  timezone: Europe/Berlin
+  locale: de-DE
+KZ:
+  latitude: 43.238949
+  longitude: 76.889709
+  timezone: Asia/Almaty
+  locale: ru-KZ
+RU:
+  latitude: 55.7558
+  longitude: 37.6173
+  timezone: Europe/Moscow
+  locale: ru-RU

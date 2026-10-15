@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>TikTok Publisher</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; max-width: 960px; }
+    h1 { font-size: 1.4rem; }
+    .bar { display: flex; gap: 12px; align-items: center; margin: 16px 0; }
+    button { padding: 8px 16px; cursor: pointer; }
+    table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; font-size: 14px; }
+    th { background: #eee; }
+    .task { background: #f5f9ff; padding: 12px; border-radius: 8px; margin: 12px 0; }
+    .logs { font-family: monospace; font-size: 12px; background: #111; color: #ddd; padding: 12px; max-height: 200px; overflow: auto; white-space: pre-wrap; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; background: #ddd; }
+    .badge.run { background: #9f9; }
+  </style>
+</head>
+<body>
+  <h1>Автопубликация TikTok</h1>
+  <p>Реестр: Excel · Dolphin Anty · sequential N роликов на аккаунт</p>
+  <div class="bar">
+    <button id="btnStart">Старт публикации</button>
+    <button id="btnStop">Стоп</button>
+    <button id="btnOnboardStart">Онбординг</button>
+    <button id="btnOnboardStop">Стоп онбординг</button>
+    <button id="btnOnboardContinue">Продолжить (OTP)</button>
+    <button id="btnPreflight">Preflight</button>
+    <button id="btnSyncExcel">Sync Excel</button>
+    <a id="btnReport" href="/api/report/latest">Скачать отчёт</a>
+    <span id="state" class="badge">—</span>
+    <span id="dryRun"></span>
+    <span id="speedInfo"></span>
+  </div>
+  <div id="preflight" class="task" style="display:none"></div>
+  <div id="excelWarn" class="task" style="display:none;background:#fff8e6"></div>
+  <div id="progress" class="task" style="display:none"></div>
+  <div id="task" class="task" style="display:none"></div>
+  <div id="onboardTask" class="task" style="display:none;background:#f9fff5"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>№</th>
+        <th>Имя</th>
+        <th>Папка</th>
+        <th>N за run</th>
+        <th>В очереди</th>
+        <th>Dolphin ID</th>
+      </tr>
+    </thead>
+    <tbody id="accounts"></tbody>
+  </table>
+  <h3>Лог</h3>
+  <div id="logs" class="logs"></div>
+  <script>
+    async function refresh() {
+      const r = await fetch('/api/status');
+      const d = await r.json();
+      const st = document.getElementById('state');
+      st.textContent = d.running ? 'Идёт прогон' : 'Ожидание';
+      st.className = 'badge' + (d.running ? ' run' : '');
+      document.getElementById('dryRun').textContent = d.dry_run ? '(dry-run)' : '';
+      document.getElementById('speedInfo').textContent =
+        `preset=${d.speed_preset || 'normal'} K=${d.max_concurrent_profiles || 1}`;
+      const pr = d.progress || {};
+      const pel = document.getElementById('progress');
+      if (pr.total_slots) {
+        pel.style.display = 'block';
+        pel.innerHTML = `<strong>Прогресс:</strong> ${pr.done_slots || 0}/${pr.total_slots} ` +
+          `(ok ${pr.ok_count || 0}, err ${pr.error_count || 0}) · ` +
+          `${pr.posts_per_hour || 0} posts/h` +
+          (pr.eta_sec != null ? ` · ETA ~${Math.round(pr.eta_sec)}s` : '');
+      } else {
+        pel.style.display = 'none';
+      }
+      const tb = document.getElementById('accounts');
+      tb.innerHTML = '';
+      (d.accounts || []).forEach(a => {
+        if (a.error) return;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${a.account_no}</td><td>${a.account_name||''}</td><td>${a.video_folder}</td><td>${a.videos_per_run}</td><td>${a.queue_count}</td><td>${a.dolphin_profile_id}</td>`;
+        tb.appendChild(tr);
+      });
+      const taskEl = document.getElementById('task');
+      if (d.current_task) {
+        taskEl.style.display = 'block';
+        const t = d.current_task;
+        taskEl.innerHTML = `<strong>Сейчас:</strong> ${t.account_no} ${t.account_name||''}<br>Файл: ${t.file_path}<br>Подпись: ${t.caption_preview}<br>Этап: ${t.phase}` +
+          (t.outcome_label ? `<br>Статус: ${t.outcome_label}` : '');
+      } else {
+        taskEl.style.display = 'none';
+      }
+      const ew = document.getElementById('excelWarn');
+      if (d.excel_write_degraded || (d.excel_pending_count || 0) > 0) {
+        ew.style.display = 'block';
+        ew.innerHTML = `<strong>Excel:</strong> deferred writes pending=${d.excel_pending_count || 0} — нажмите Sync Excel`;
+      } else {
+        ew.style.display = 'none';
+      }
+      document.getElementById('logs').textContent = (d.logs || []).join('\n');
+      try {
+        const ob = await (await fetch('/api/onboard/status')).json();
+        const ot = document.getElementById('onboardTask');
+        if (ob.running || ob.current_task) {
+          ot.style.display = 'block';
+          const p = ob.progress || {};
+          const t = ob.current_task || {};
+          ot.innerHTML = `<strong>Онбординг:</strong> ${ob.running ? 'идёт' : 'ожидание'} ` +
+            `(${p.done || 0}/${p.total || 0})<br>` +
+            (t.login ? `login=${t.login} geo=${t.geo} phase=${t.phase} ${t.outcome_label || ''}` : '');
+        } else {
+          ot.style.display = 'none';
+        }
+      } catch (_) {}
+    }
+    document.getElementById('btnOnboardStart').onclick = async () => {
+      const r = await fetch('/api/onboard/start', { method: 'POST' });
+      if (!r.ok) alert(await r.text());
+      refresh();
+    };
+    document.getElementById('btnOnboardStop').onclick = async () => {
+      await fetch('/api/onboard/stop', { method: 'POST' });
+      refresh();
+    };
+    document.getElementById('btnOnboardContinue').onclick = async () => {
+      const r = await fetch('/api/onboard/continue', { method: 'POST' });
+      if (!r.ok) alert(await r.text());
+      refresh();
+    };
+    document.getElementById('btnPreflight').onclick = async () => {
+      const r = await fetch('/api/preflight');
+      const d = await r.json();
+      const el = document.getElementById('preflight');
+      el.style.display = 'block';
+      el.innerHTML = '<strong>Preflight:</strong> ' + (d.ok ? 'OK' : 'FAIL') +
+        '<ul>' + (d.issues || []).map(i => `<li>[${i.level}] ${i.message}</li>`).join('') + '</ul>';
+    };
+    document.getElementById('btnSyncExcel').onclick = async () => {
+      await fetch('/api/sync-excel', { method: 'POST' });
+      refresh();
+    };
+    document.getElementById('btnStart').onclick = async () => {
+      const r = await fetch('/api/start', { method: 'POST' });
+      if (!r.ok) {
+        const d = await r.json();
+        alert(d.detail?.message || JSON.stringify(d.detail || d));
+      }
+      refresh();
+    };
+    document.getElementById('btnStop').onclick = async () => {
+      await fetch('/api/stop', { method: 'POST' });
+      refresh();
+    };
+    refresh();
+    setInterval(refresh, 2500);
+  </script>
+</body>
+</html>
