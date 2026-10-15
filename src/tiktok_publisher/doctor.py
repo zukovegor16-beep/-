@@ -5,6 +5,7 @@ from pathlib import Path
 from tiktok_publisher.config import AppSettings, load_settings
 from tiktok_publisher.dolphin_client import DolphinClient
 from tiktok_publisher.excel_registry import ExcelRegistry, create_workbook_from_template
+from tiktok_publisher.geo_catalog import load_geo_catalog
 
 
 def run_doctor(settings: AppSettings | None = None) -> int:
@@ -59,7 +60,28 @@ def run_doctor(settings: AppSettings | None = None) -> int:
     else:
         print(f"[warn] selectors missing: {sel}")
 
+    geo_path = settings.geo_catalog_file
+    catalog = load_geo_catalog(geo_path)
+    if catalog:
+        print(f"[ok] geo catalog: {geo_path} ({len(catalog)} keys)")
+    else:
+        print(f"[warn] geo catalog empty/missing: {geo_path}")
+
+    try:
+        import pyanty  # noqa: F401
+
+        print("[ok] pyanty installed (Dolphin profile create)")
+    except ImportError:
+        print("[warn] pyanty не установлен — pip install 'tiktok-publisher[dolphin]'")
+
+    try:
+        pending = ExcelRegistry(settings).read_onboarding_pending()
+        print(f"[info] онбординг pending: {len(pending)} строк")
+    except Exception as e:
+        print(f"[info] лист онбординг: {e}")
+
     k = settings.orchestrator.max_concurrent_profiles
+    print(f"[info] session.order={settings.session.order}")
     print(f"[info] max_concurrent_profiles={k} (рекомендация: K=1 до 16GB RAM, K=2–3 при 32GB+)")
     print(f"[info] speed_preset={settings.orchestrator.speed_preset}")
 

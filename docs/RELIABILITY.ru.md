@@ -1,3 +1,13 @@
+# Надёжность (v3 + v4)
+
+## Онбординг / прогрев (v4)
+
+- Перед онбордингом: `onboard-plan`, preflight `mode=onboard`, geo в catalog.
+- OTP/captcha: пауза + `/api/onboard/continue` или таймаут `manual_wait_sec`.
+- Прогрев: при `warmup_fail_blocks_publish` сбой FYP (нет входа/капча) отменяет upload в этой сессии аккаунта.
+
+---
+
 # Надёжность (v3)
 
 ## Перед Стартом

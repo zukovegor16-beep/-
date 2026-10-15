@@ -1,0 +1,18 @@
+login_url: "https://www.tiktok.com/login"
+password_settings_url: "https://www.tiktok.com/setting/password"
+profile_edit_url: "https://www.tiktok.com/setting/profile"
+
+login_username: "//input[@name='username']"
+login_password: "//input[@type='password']"
+login_submit: "//button[@type='submit']"
+
+password_current: "//input[@placeholder='Current password' or @autocomplete='current-password']"
+password_new: "//input[@placeholder='New password' or @autocomplete='new-password']"
+password_confirm: "//input[@placeholder='Confirm password']"
+password_save: "//button[contains(., 'Save') or contains(., 'Сохранить')]"
+
+avatar_file_input: "//input[@type='file' and contains(@accept,'image')]"
+
+timeouts:
+  navigation_ms: 60000
+  action_ms: 30000

@@ -55,6 +55,13 @@ def main() -> None:
     sub.add_parser("preflight", help="Preflight checks without publishing")
     sub.add_parser("sync-excel", help="Apply pending Excel writes from last failed sync")
 
+    p_onboard = sub.add_parser("onboard", help="Run onboarding from Excel sheet")
+    p_onboard.add_argument("--dry-run", action="store_true")
+    p_onboard.add_argument("--skip-preflight", action="store_true")
+
+    sub.add_parser("onboard-plan", help="Show pending onboarding rows (no CDP)")
+    sub.add_parser("onboard-continue", help="Resume onboard after manual OTP (with serve API)")
+
     p_smoke = sub.add_parser("smoke", help="Open TikTok upload in Dolphin profile")
     p_smoke.add_argument("--profile-id", required=True)
 
@@ -82,6 +89,62 @@ def main() -> None:
         applied, failed = sync_pending_excel(settings)
         print(f"applied={applied} failed={failed}")
         sys.exit(0 if failed == 0 else 1)
+
+    if args.cmd == "onboard-plan":
+        from tiktok_publisher.excel_registry import ExcelRegistry
+        from tiktok_publisher.onboard_plan import build_onboard_plan
+
+        reg = ExcelRegistry(settings)
+        pending = reg.read_onboarding_pending()
+        plan = build_onboard_plan(pending, settings)
+        print(f"Pending onboarding rows: {plan.total}")
+        for s in plan.rows:
+            print(
+                f"  row={s.row_index} geo={s.geo} login={s.tiktok_login!r} "
+                f"profile={'yes' if s.has_profile else 'no'} avatar={'ok' if s.avatar_ok else '—'}"
+            )
+        return
+
+    if args.cmd == "onboard-continue":
+        print(
+            "Используйте POST /api/onboard/continue при запущенном serve "
+            "или дождитесь таймаута manual_wait_sec",
+            file=sys.stderr,
+        )
+        return
+
+    if args.cmd == "onboard":
+        from tiktok_publisher.onboarding_orchestrator import OnboardingOrchestrator
+        from tiktok_publisher.preflight import run_preflight_onboard
+
+        if args.dry_run:
+            settings.dry_run = True
+        if not args.skip_preflight:
+            pf = run_preflight_onboard(settings)
+            for issue in pf.issues:
+                print(f"[{issue.level.upper()}] {issue.code}: {issue.message}")
+            if not pf.ok:
+                sys.exit(1)
+        lock = InstanceLock(settings.data_dir_path / ".publisher.lock")
+        try:
+            lock.acquire()
+        except InstanceLockError as e:
+            print(e, file=sys.stderr)
+            sys.exit(1)
+        ob = OnboardingOrchestrator(settings)
+        try:
+            ob.start()
+        except Exception as e:
+            print(e, file=sys.stderr)
+            sys.exit(1)
+        try:
+            ob.wait()
+        except KeyboardInterrupt:
+            ob.stop()
+            ob.wait(120)
+        finally:
+            lock.release()
+        return
 
     if args.cmd == "plan":
         from tiktok_publisher.excel_registry import ExcelRegistry
@@ -153,8 +216,11 @@ def main() -> None:
             sys.exit(1)
         host = args.host or settings.server.host
         port = args.port or settings.server.port
+        from tiktok_publisher.onboarding_orchestrator import OnboardingOrchestrator
+
         orch = Orchestrator(settings)
-        app = create_app(settings, orch)
+        onboard_orch = OnboardingOrchestrator(settings)
+        app = create_app(settings, orch, onboard_orch)
         try:
             uvicorn.run(app, host=host, port=port, log_level="info")
         finally:

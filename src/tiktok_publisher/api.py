@@ -9,11 +9,17 @@ from fastapi.staticfiles import StaticFiles
 from tiktok_publisher.config import AppSettings
 from tiktok_publisher.excel_pending import sync_pending_excel
 from tiktok_publisher.log_buffer import get_log_tail
+from tiktok_publisher.onboarding_orchestrator import OnboardingOrchestrator
 from tiktok_publisher.orchestrator import Orchestrator
-from tiktok_publisher.preflight import run_preflight
+from tiktok_publisher.preflight import run_preflight, run_preflight_onboard
 
 
-def create_app(settings: AppSettings, orchestrator: Orchestrator) -> FastAPI:
+def create_app(
+    settings: AppSettings,
+    orchestrator: Orchestrator,
+    onboard_orchestrator: OnboardingOrchestrator | None = None,
+) -> FastAPI:
+    onboard = onboard_orchestrator or OnboardingOrchestrator(settings)
     app = FastAPI(title="TikTok Publisher", version="0.1.0")
     static_dir = Path(__file__).parent / "static"
     if static_dir.is_dir():
@@ -33,8 +39,8 @@ def create_app(settings: AppSettings, orchestrator: Orchestrator) -> FastAPI:
         return snap
 
     @app.get("/api/preflight")
-    def preflight() -> dict:
-        pf = run_preflight(settings)
+    def preflight(mode: str = "publish") -> dict:
+        pf = run_preflight_onboard(settings) if mode == "onboard" else run_preflight(settings)
         return {"ok": pf.ok, "issues": [i.__dict__ for i in pf.issues]}
 
     @app.post("/api/sync-excel")
@@ -84,5 +90,37 @@ def create_app(settings: AppSettings, orchestrator: Orchestrator) -> FastAPI:
     @app.get("/api/logs")
     def logs(tail: int = 50) -> dict:
         return {"lines": get_log_tail(tail)}
+
+    @app.get("/api/onboard/status")
+    def onboard_status() -> dict:
+        return onboard.status_snapshot()
+
+    @app.get("/api/onboard/preflight")
+    def onboard_preflight() -> dict:
+        pf = run_preflight_onboard(settings)
+        return {"ok": pf.ok, "issues": [i.__dict__ for i in pf.issues]}
+
+    @app.post("/api/onboard/start")
+    def onboard_start() -> dict:
+        if onboard.is_running:
+            raise HTTPException(status_code=409, detail="Onboard already running")
+        if orchestrator.is_running:
+            raise HTTPException(status_code=409, detail="Publish run in progress")
+        try:
+            onboard.start()
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+        return {"started": True}
+
+    @app.post("/api/onboard/stop")
+    def onboard_stop() -> dict:
+        onboard.stop()
+        return {"stop_requested": True}
+
+    @app.post("/api/onboard/continue")
+    def onboard_continue() -> dict:
+        if not onboard.continue_manual():
+            raise HTTPException(status_code=409, detail="No onboard pause active")
+        return {"continued": True}
 
     return app

@@ -4,6 +4,26 @@ dolphin:
   api_base: "http://127.0.0.1:3001"
   api_token: null
 
+session:
+  # publish_only | warmup_then_publish | publish_then_warmup | warmup_publish_warmup
+  order: warmup_then_publish
+  warmup_fail_blocks_publish: true
+  warmup:
+    scroll_count_min: 5
+    scroll_count_max: 12
+    scroll_pause_sec:
+      min: 2
+      max: 6
+    likes_min: 0
+    likes_max: 3
+    like_probability: 0.35
+    max_duration_sec: 180
+
+onboard:
+  pause_on_captcha: true
+  manual_wait_sec: 300
+  otp_mode: manual
+
 orchestrator:
   mode: sequential
   max_concurrent_profiles: 1
@@ -45,7 +65,12 @@ paths:
 excel:
   registry_path: "./config/accounts.xlsx"
   sheet_accounts: "Аккаунты"
+  sheet_onboarding: "Онбординг"
   caption_delimiter: "|||"
+
+selectors_onboard_path: "./config/selectors_onboard.yaml"
+selectors_warmup_path: "./config/selectors_warmup.yaml"
+geo_catalog_path: "./config/geo_catalog.yaml"
 
 logging:
   log_dir: "./logs"

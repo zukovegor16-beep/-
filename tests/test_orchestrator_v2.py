@@ -41,6 +41,7 @@ def test_dolphin_start_once_per_account_block(tmp_path: Path):
         dry_run=False,
         paths={"data_dir": str(tmp_path / "data"), "content_root": str(tmp_path)},
         excel={"registry_path": str(xlsx), "sheet_accounts": "Аккаунты"},
+        session={"order": "publish_only"},
         orchestrator={
             "speed_preset": "custom",
             "min_video_bytes": 1,

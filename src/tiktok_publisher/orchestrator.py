@@ -32,6 +32,7 @@ from tiktok_publisher.run_plan import RunPlan, build_run_plan
 from tiktok_publisher.speed_presets import apply_speed_preset
 from tiktok_publisher.state import PublicationRecord, StateStore
 from tiktok_publisher.upload_lock import UploadLock
+from tiktok_publisher.warmup import run_warmup
 
 logger = logging.getLogger(__name__)
 
@@ -271,6 +272,18 @@ class Orchestrator:
                     self._append_record(records, rec)
                     return
 
+            if browser_handle and self._needs_warmup_before():
+                warmup_outcome = self._run_warmup_phase(loop, browser_handle, acc)
+                if warmup_outcome:
+                    account_codes.append(warmup_outcome.code)
+                    if self._warmup_failed_blocking(warmup_outcome):
+                        self._excel_status(
+                            acc.row_index,
+                            warmup_outcome.label_ru,
+                            warmup_outcome.detail or None,
+                        )
+                        return
+
             while attempts < max_attempts:
                 if self._stop.is_set():
                     stopped_by_user = True
@@ -469,6 +482,11 @@ class Orchestrator:
 
                 self._sleep_between_posts(not is_success_code(outcome.code))
 
+            if browser_handle and self._needs_warmup_after():
+                warmup_outcome = self._run_warmup_phase(loop, browser_handle, acc)
+                if warmup_outcome:
+                    account_codes.append(warmup_outcome.code)
+
         except Exception as e:
             logger.exception("account %s failed", acc.account_no)
             outcome = Outcome.from_code(OutcomeCode.unknown_error, str(e))
@@ -643,6 +661,38 @@ class Orchestrator:
             return
         dr = self._orch.delay_between_posts_sec
         time.sleep(random.uniform(dr.min, dr.max))
+
+    def _needs_warmup_before(self) -> bool:
+        return self.settings.session.order in (
+            "warmup_then_publish",
+            "warmup_publish_warmup",
+        )
+
+    def _needs_warmup_after(self) -> bool:
+        return self.settings.session.order in (
+            "publish_then_warmup",
+            "warmup_publish_warmup",
+        )
+
+    def _run_warmup_phase(
+        self,
+        loop: asyncio.AbstractEventLoop,
+        browser_handle: BrowserHandle,
+        acc: AccountRow,
+    ) -> Outcome | None:
+        if self.settings.session.order == "publish_only":
+            return None
+        self._set_task(acc, "", "", "warmup")
+        result = run_warmup(self.settings, browser_handle, loop)
+        return result.outcome
+
+    def _warmup_failed_blocking(self, outcome: Outcome) -> bool:
+        if not self.settings.session.warmup_fail_blocks_publish:
+            return False
+        return outcome.code not in (
+            OutcomeCode.warmup_ok,
+            OutcomeCode.dry_run,
+        )
 
     def _make_record_from_outcome(
         self,

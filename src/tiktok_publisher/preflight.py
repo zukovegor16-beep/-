@@ -6,6 +6,7 @@ from pathlib import Path
 from tiktok_publisher.config import AppSettings
 from tiktok_publisher.dolphin_client import DolphinClient
 from tiktok_publisher.excel_registry import ExcelRegistry
+from tiktok_publisher.geo_catalog import load_geo_catalog
 from tiktok_publisher.posting_window import in_posting_window
 from tiktok_publisher.queue import list_pending_videos
 from tiktok_publisher.run_plan import build_run_plan
@@ -124,6 +125,18 @@ def run_preflight(settings: AppSettings) -> PreflightResult:
             )
         )
 
+    if (
+        settings.session.order != "publish_only"
+        and orch.max_concurrent_profiles > 1
+    ):
+        issues.append(
+            PreflightIssue(
+                "warn",
+                "warmup_parallel",
+                "Прогрев FYP + K>1: рекомендуется max_concurrent_profiles=1",
+            )
+        )
+
     if _excel_locked(settings.excel_path):
         issues.append(
             PreflightIssue(
@@ -132,6 +145,71 @@ def run_preflight(settings: AppSettings) -> PreflightResult:
                 "Excel может быть открыт в другой программе — запись пойдёт в pending",
             )
         )
+
+    has_error = any(i.level == "error" for i in issues)
+    return PreflightResult(ok=not has_error, issues=issues)
+
+
+def run_preflight_onboard(settings: AppSettings) -> PreflightResult:
+    issues: list[PreflightIssue] = []
+    if not settings.excel_path.is_file():
+        issues.append(
+            PreflightIssue("error", "excel_missing", f"Excel не найден: {settings.excel_path}")
+        )
+        return PreflightResult(ok=False, issues=issues)
+
+    catalog = load_geo_catalog(settings.geo_catalog_file)
+    if not catalog:
+        issues.append(
+            PreflightIssue(
+                "error",
+                "geo_catalog",
+                f"Пустой или отсутствует geo catalog: {settings.geo_catalog_file}",
+            )
+        )
+
+    try:
+        pending = ExcelRegistry(settings).read_onboarding_pending()
+    except Exception as e:
+        issues.append(PreflightIssue("error", "excel_onboard", str(e)))
+        return PreflightResult(ok=False, issues=issues)
+
+    if not pending:
+        issues.append(
+            PreflightIssue("warn", "no_onboard_rows", "Нет строк онбординга (все «готов» или лист пуст)")
+        )
+
+    for row in pending:
+        code = row.geo.strip().upper()
+        if not code:
+            issues.append(
+                PreflightIssue(
+                    "error",
+                    "geo_empty",
+                    f"строка {row.row_index}: geo пустой",
+                )
+            )
+        elif code not in catalog:
+            issues.append(
+                PreflightIssue(
+                    "error",
+                    "geo_unknown",
+                    f"строка {row.row_index}: geo {row.geo!r} нет в catalog",
+                )
+            )
+        if row.avatar_path and not row.avatar_path.is_file():
+            issues.append(
+                PreflightIssue(
+                    "warn",
+                    "avatar_missing",
+                    f"строка {row.row_index}: avatar не найден {row.avatar_path}",
+                )
+            )
+
+    if not settings.dry_run:
+        ping_ok, msg = DolphinClient(settings).ping()
+        if not ping_ok:
+            issues.append(PreflightIssue("error", "dolphin", f"Dolphin API: {msg}"))
 
     has_error = any(i.level == "error" for i in issues)
     return PreflightResult(ok=not has_error, issues=issues)

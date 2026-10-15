@@ -57,7 +57,35 @@ class PathsSettings(BaseModel):
 class ExcelSettings(BaseModel):
     registry_path: str = "./config/accounts.xlsx"
     sheet_accounts: str = "Аккаунты"
+    sheet_onboarding: str = "Онбординг"
     caption_delimiter: str = "|||"
+
+
+class WarmupSettings(BaseModel):
+    scroll_count_min: int = 5
+    scroll_count_max: int = 12
+    scroll_pause_sec: DelayRange = Field(default_factory=lambda: DelayRange(min=2, max=6))
+    likes_min: int = 0
+    likes_max: int = 3
+    like_probability: float = 0.35
+    max_duration_sec: int = 180
+
+
+class SessionSettings(BaseModel):
+    order: Literal[
+        "publish_only",
+        "warmup_then_publish",
+        "publish_then_warmup",
+        "warmup_publish_warmup",
+    ] = "warmup_then_publish"
+    warmup_fail_blocks_publish: bool = True
+    warmup: WarmupSettings = Field(default_factory=WarmupSettings)
+
+
+class OnboardSettings(BaseModel):
+    pause_on_captcha: bool = True
+    manual_wait_sec: int = 300
+    otp_mode: Literal["manual", "auto"] = "manual"
 
 
 class LoggingSettings(BaseModel):
@@ -67,6 +95,8 @@ class LoggingSettings(BaseModel):
 class AppSettings(BaseModel):
     dry_run: bool = False
     dolphin: DolphinSettings = Field(default_factory=DolphinSettings)
+    session: SessionSettings = Field(default_factory=SessionSettings)
+    onboard: OnboardSettings = Field(default_factory=OnboardSettings)
     orchestrator: OrchestratorSettings = Field(default_factory=OrchestratorSettings)
     queue: QueueSettings = Field(default_factory=QueueSettings)
     server: ServerSettings = Field(default_factory=ServerSettings)
@@ -74,6 +104,9 @@ class AppSettings(BaseModel):
     excel: ExcelSettings = Field(default_factory=ExcelSettings)
     logging: LoggingSettings = Field(default_factory=LoggingSettings)
     selectors_path: str = "./config/selectors.yaml"
+    selectors_onboard_path: str = "./config/selectors_onboard.yaml"
+    selectors_warmup_path: str = "./config/selectors_warmup.yaml"
+    geo_catalog_path: str = "./config/geo_catalog.yaml"
 
     @property
     def data_dir_path(self) -> Path:
@@ -94,6 +127,18 @@ class AppSettings(BaseModel):
     @property
     def selectors_file(self) -> Path:
         return Path(self.selectors_path)
+
+    @property
+    def selectors_onboard_file(self) -> Path:
+        return Path(self.selectors_onboard_path)
+
+    @property
+    def selectors_warmup_file(self) -> Path:
+        return Path(self.selectors_warmup_path)
+
+    @property
+    def geo_catalog_file(self) -> Path:
+        return Path(self.geo_catalog_path)
 
 
 def load_settings(path: Path | None = None) -> AppSettings:

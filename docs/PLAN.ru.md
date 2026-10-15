@@ -1,3 +1,9 @@
+# План: автопубликация TikTok (v1–v4)
+
+**v4 (онбординг + geo + прогрев):** см. [`ONBOARDING.ru.md`](ONBOARDING.ru.md), `session.order` в `settings.yaml`, лист «Онбординг» в Excel. При прогреве FYP рекомендуется `max_concurrent_profiles: 1`.
+
+---
+
 # План: автопубликация TikTok (финальная спецификация v1)
 
 Документ объединяет все согласованные решения. Реализация — Python на Windows, Dolphin Anty, один Excel-реестр, локальный веб «Старт / Стоп».

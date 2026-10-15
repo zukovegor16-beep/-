@@ -23,6 +23,10 @@ class OutcomeCode(str, Enum):
     published_move_failed = "published_move_failed"
     upload_locked = "upload_locked"
     unknown_error = "unknown_error"
+    onboard_ready = "onboard_ready"
+    onboard_avatar_failed = "onboard_avatar_failed"
+    onboard_data_error = "onboard_data_error"
+    warmup_ok = "warmup_ok"
 
 
 LABELS_RU: dict[OutcomeCode, str] = {
@@ -43,6 +47,10 @@ LABELS_RU: dict[OutcomeCode, str] = {
     OutcomeCode.published_move_failed: "опубликовано (файл не перенесён)",
     OutcomeCode.upload_locked: "файл занят",
     OutcomeCode.unknown_error: "ошибка",
+    OutcomeCode.onboard_ready: "готов",
+    OutcomeCode.onboard_avatar_failed: "аватар не установлен",
+    OutcomeCode.onboard_data_error: "ошибка данных",
+    OutcomeCode.warmup_ok: "прогрев выполнен",
 }
 
 SUMMARY_PRIORITY: list[OutcomeCode] = [

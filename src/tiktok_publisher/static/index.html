@@ -21,8 +21,11 @@
   <h1>Автопубликация TikTok</h1>
   <p>Реестр: Excel · Dolphin Anty · sequential N роликов на аккаунт</p>
   <div class="bar">
-    <button id="btnStart">Старт</button>
+    <button id="btnStart">Старт публикации</button>
     <button id="btnStop">Стоп</button>
+    <button id="btnOnboardStart">Онбординг</button>
+    <button id="btnOnboardStop">Стоп онбординг</button>
+    <button id="btnOnboardContinue">Продолжить (OTP)</button>
     <button id="btnPreflight">Preflight</button>
     <button id="btnSyncExcel">Sync Excel</button>
     <a id="btnReport" href="/api/report/latest">Скачать отчёт</a>
@@ -34,6 +37,7 @@
   <div id="excelWarn" class="task" style="display:none;background:#fff8e6"></div>
   <div id="progress" class="task" style="display:none"></div>
   <div id="task" class="task" style="display:none"></div>
+  <div id="onboardTask" class="task" style="display:none;background:#f9fff5"></div>
   <table>
     <thead>
       <tr>
@@ -95,7 +99,35 @@
         ew.style.display = 'none';
       }
       document.getElementById('logs').textContent = (d.logs || []).join('\n');
+      try {
+        const ob = await (await fetch('/api/onboard/status')).json();
+        const ot = document.getElementById('onboardTask');
+        if (ob.running || ob.current_task) {
+          ot.style.display = 'block';
+          const p = ob.progress || {};
+          const t = ob.current_task || {};
+          ot.innerHTML = `<strong>Онбординг:</strong> ${ob.running ? 'идёт' : 'ожидание'} ` +
+            `(${p.done || 0}/${p.total || 0})<br>` +
+            (t.login ? `login=${t.login} geo=${t.geo} phase=${t.phase} ${t.outcome_label || ''}` : '');
+        } else {
+          ot.style.display = 'none';
+        }
+      } catch (_) {}
     }
+    document.getElementById('btnOnboardStart').onclick = async () => {
+      const r = await fetch('/api/onboard/start', { method: 'POST' });
+      if (!r.ok) alert(await r.text());
+      refresh();
+    };
+    document.getElementById('btnOnboardStop').onclick = async () => {
+      await fetch('/api/onboard/stop', { method: 'POST' });
+      refresh();
+    };
+    document.getElementById('btnOnboardContinue').onclick = async () => {
+      const r = await fetch('/api/onboard/continue', { method: 'POST' });
+      if (!r.ok) alert(await r.text());
+      refresh();
+    };
     document.getElementById('btnPreflight').onclick = async () => {
       const r = await fetch('/api/preflight');
       const d = await r.json();

@@ -28,6 +28,31 @@ HEADER_ALIASES = {
     "videos_per_run": {"videos_per_run", "videos", "count", "n", "количество"},
     "caption_variants": {"caption_variants", "captions", "подписи", "caption"},
     "active": {"active", "активен", "enabled"},
+    "geo": {"geo", "гео", "country", "region"},
+}
+
+ONBOARD_HEADER_ALIASES = {
+    "geo": {"geo", "гео", "country", "region"},
+    "tiktok_login": {"tiktok_login", "login", "логин", "tiktok"},
+    "tiktok_password_current": {
+        "tiktok_password_current",
+        "password_current",
+        "password",
+        "пароль",
+        "текущий_пароль",
+    },
+    "tiktok_password_new": {
+        "tiktok_password_new",
+        "password_new",
+        "новый_пароль",
+    },
+    "email": {"email", "почта", "mail"},
+    "email_password": {"email_password", "пароль_почты"},
+    "avatar_path": {"avatar_path", "avatar", "аватар"},
+    "proxy": {"proxy", "прокси"},
+    "dolphin_profile_id": {"dolphin_profile_id", "profile_id", "dolphin", "profile"},
+    "onboard_status": {"onboard_status", "status", "статус", "onboard"},
+    "onboard_error": {"onboard_error", "error", "ошибка"},
 }
 
 
@@ -37,12 +62,13 @@ def _normalize_header(value: Any) -> str:
     return str(value).strip().lower().replace(" ", "_")
 
 
-def _map_headers(row: tuple[Any, ...]) -> dict[str, int]:
+def _map_headers(row: tuple[Any, ...], aliases: dict[str, set[str]] | None = None) -> dict[str, int]:
+    alias_map = aliases or HEADER_ALIASES
     mapping: dict[str, int] = {}
     for idx, cell in enumerate(row):
         key = _normalize_header(cell)
-        for canonical, aliases in HEADER_ALIASES.items():
-            if key == canonical or key in aliases:
+        for canonical, names in alias_map.items():
+            if key == canonical or key in names:
                 mapping[canonical] = idx
                 break
     return mapping
@@ -72,9 +98,36 @@ class AccountRow:
     videos_per_run: int
     caption_variants_raw: str
     active: bool
+    geo: str = ""
 
     def caption_variants(self, delimiter: str) -> list[str]:
         return split_caption_variants(self.caption_variants_raw, delimiter)
+
+
+@dataclass
+class OnboardRow:
+    row_index: int
+    geo: str
+    tiktok_login: str
+    tiktok_password_current: str
+    tiktok_password_new: str
+    email: str
+    email_password: str
+    avatar_path: Path
+    proxy: str
+    dolphin_profile_id: str
+    onboard_status: str
+    onboard_error: str
+
+
+def _onboard_done(status: str) -> bool:
+    s = (status or "").strip().lower()
+    if not s:
+        return False
+    return s in {x.lower() for x in DONE_ONBOARD_LABELS}
+
+
+DONE_ONBOARD_LABELS = {"готов", "onboard_ready"}
 
 
 def _atomic_save_workbook(wb, dest: Path) -> None:
@@ -135,6 +188,7 @@ class ExcelRegistry:
             except (TypeError, ValueError):
                 n = 0
             folder_raw = _cell(row, col_map, "video_folder")
+            geo_raw = _cell(row, col_map, "geo")
             accounts.append(
                 AccountRow(
                     row_index=i,
@@ -145,9 +199,148 @@ class ExcelRegistry:
                     videos_per_run=max(0, n),
                     caption_variants_raw=str(_cell(row, col_map, "caption_variants") or ""),
                     active=True,
+                    geo=str(geo_raw or "").strip(),
                 )
             )
         return accounts
+
+    def read_onboarding_rows(self) -> list[OnboardRow]:
+        if not self.path.is_file():
+            raise FileNotFoundError(f"Excel не найден: {self.path}")
+        wb = load_workbook(self.path, read_only=True, data_only=True)
+        sheet_name = self.settings.excel.sheet_onboarding
+        if sheet_name not in wb.sheetnames:
+            wb.close()
+            return []
+        ws = wb[sheet_name]
+        rows = list(ws.iter_rows(values_only=True))
+        wb.close()
+        if not rows:
+            return []
+        col_map = _map_headers(rows[0], ONBOARD_HEADER_ALIASES)
+        required = ["geo", "tiktok_login", "tiktok_password_current"]
+        missing = [r for r in required if r not in col_map]
+        if missing:
+            raise ValueError(f"В листе «{sheet_name}» нет колонок: {', '.join(missing)}")
+
+        out: list[OnboardRow] = []
+        for i, row in enumerate(rows[1:], start=2):
+            if not row or all(c is None or str(c).strip() == "" for c in row):
+                continue
+            av = _cell(row, col_map, "avatar_path")
+            out.append(
+                OnboardRow(
+                    row_index=i,
+                    geo=str(_cell(row, col_map, "geo") or "").strip(),
+                    tiktok_login=str(_cell(row, col_map, "tiktok_login") or "").strip(),
+                    tiktok_password_current=str(
+                        _cell(row, col_map, "tiktok_password_current") or ""
+                    ).strip(),
+                    tiktok_password_new=str(
+                        _cell(row, col_map, "tiktok_password_new") or ""
+                    ).strip(),
+                    email=str(_cell(row, col_map, "email") or "").strip(),
+                    email_password=str(_cell(row, col_map, "email_password") or "").strip(),
+                    avatar_path=Path(str(av).strip()) if av else Path(""),
+                    proxy=str(_cell(row, col_map, "proxy") or "").strip(),
+                    dolphin_profile_id=str(
+                        _cell(row, col_map, "dolphin_profile_id") or ""
+                    ).strip(),
+                    onboard_status=str(_cell(row, col_map, "onboard_status") or "").strip(),
+                    onboard_error=str(_cell(row, col_map, "onboard_error") or "").strip(),
+                )
+            )
+        return out
+
+    def read_onboarding_pending(self) -> list[OnboardRow]:
+        return [r for r in self.read_onboarding_rows() if not _onboard_done(r.onboard_status)]
+
+    def update_onboard_row(
+        self,
+        row_index: int,
+        *,
+        dolphin_profile_id: str | None = None,
+        onboard_status: str | None = None,
+        onboard_error: str | None = None,
+    ) -> bool:
+        if not self.path.is_file():
+            return False
+        with self._write_lock:
+            try:
+                wb = load_workbook(self.path)
+            except PermissionError:
+                return False
+            sheet_name = self.settings.excel.sheet_onboarding
+            if sheet_name not in wb.sheetnames:
+                wb.close()
+                return False
+            ws = wb[sheet_name]
+            headers = [c.value for c in ws[1]]
+            col_map = _map_headers(tuple(headers), ONBOARD_HEADER_ALIASES)
+            updates: dict[str, Any] = {}
+            if dolphin_profile_id is not None:
+                updates["dolphin_profile_id"] = dolphin_profile_id
+            if onboard_status is not None:
+                updates["onboard_status"] = onboard_status
+            if onboard_error is not None:
+                updates["onboard_error"] = onboard_error
+            for field, value in updates.items():
+                idx = col_map.get(field)
+                if idx is not None:
+                    ws.cell(row=row_index, column=idx + 1, value=value)
+            try:
+                _atomic_save_workbook(wb, self.path)
+            except (PermissionError, OSError):
+                wb.close()
+                return False
+            wb.close()
+            return True
+
+    def promote_onboard_to_accounts(self, row: OnboardRow, profile_id: str) -> int:
+        """Append inactive account row; returns new row index."""
+        if not self.path.is_file():
+            raise FileNotFoundError(self.path)
+        with self._write_lock:
+            wb = load_workbook(self.path)
+            sheet_name = self.settings.excel.sheet_accounts
+            if sheet_name not in wb.sheetnames:
+                ws = wb.create_sheet(sheet_name)
+                ws.append(
+                    [
+                        "account_no",
+                        "account_name",
+                        "video_folder",
+                        "dolphin_profile_id",
+                        "videos_per_run",
+                        "caption_variants",
+                        "active",
+                        "geo",
+                        "status",
+                        "last_run_error",
+                        "last_run_at",
+                    ]
+                )
+            ws = wb[sheet_name]
+            account_no = row.tiktok_login or f"onboard-{row.row_index}"
+            ws.append(
+                [
+                    account_no,
+                    row.tiktok_login,
+                    "",
+                    profile_id,
+                    1,
+                    "",
+                    "нет",
+                    row.geo,
+                    "",
+                    "",
+                    "",
+                ]
+            )
+            new_row = ws.max_row
+            _atomic_save_workbook(wb, self.path)
+            wb.close()
+            return new_row
 
     def update_account_run_status(
         self,
@@ -262,9 +455,26 @@ def create_workbook_from_template(template: Path, dest: Path) -> None:
                 "videos_per_run",
                 "caption_variants",
                 "active",
+                "geo",
                 "status",
                 "last_run_error",
                 "last_run_at",
+            ]
+        )
+        ob = wb.create_sheet("Онбординг")
+        ob.append(
+            [
+                "geo",
+                "tiktok_login",
+                "tiktok_password_current",
+                "tiktok_password_new",
+                "email",
+                "email_password",
+                "avatar_path",
+                "proxy",
+                "dolphin_profile_id",
+                "onboard_status",
+                "onboard_error",
             ]
         )
         dest.parent.mkdir(parents=True, exist_ok=True)
