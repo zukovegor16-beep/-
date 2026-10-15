@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Generate config/accounts.template.xlsx."""
+"""Generate config/accounts.template.xlsx.
+
+Column ``status`` (aliases: last_run_status, статус) — Russian run summary written by the app.
+Column ``last_run_error`` — technical detail; human-readable outcome is in ``status``.
+"""
 from pathlib import Path
 
 from openpyxl import Workbook

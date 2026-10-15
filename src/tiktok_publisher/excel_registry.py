@@ -21,6 +21,8 @@ HEADER_ALIASES = {
         "статус",
         "run_status",
     },
+    "last_run_error": {"last_run_error", "error", "ошибка", "last_error"},
+    "last_run_at": {"last_run_at", "run_at", "updated_at", "последний_прогон"},
     "account_no": {"account_no", "номер", "account", "id"},
     "account_name": {"account_name", "name", "имя", "название"},
     "video_folder": {"video_folder", "folder", "папка", "video_folder_path"},

@@ -115,6 +115,17 @@ def outcome_from_publish(ok: bool, message: str, *, dry_run: bool) -> Outcome:
     return Outcome.from_code(code, message)
 
 
+def outcome_from_attempt(
+    ok: bool,
+    dry_run: bool,
+    err: str = "",
+    internal_status: str = "",
+) -> Outcome:
+    """Map legacy ok/error attempts to Outcome (uses message classification on failure)."""
+    detail = err or internal_status
+    return outcome_from_publish(ok, detail, dry_run=dry_run)
+
+
 def summarize_account_outcomes(
     codes: list[OutcomeCode],
     ok_count: int,

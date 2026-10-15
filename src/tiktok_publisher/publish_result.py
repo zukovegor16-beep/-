@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from tiktok_publisher.outcomes import Outcome, OutcomeCode, outcome_from_publish
+from tiktok_publisher.outcomes import Outcome, OutcomeCode
 
 
 @dataclass(frozen=True)
@@ -12,7 +12,11 @@ class PublishResult:
     message: str
 
     def to_outcome(self, *, dry_run: bool) -> Outcome:
-        return outcome_from_publish(self.ok, self.message, dry_run=dry_run)
+        if dry_run and self.ok:
+            return Outcome.from_code(OutcomeCode.dry_run, self.message)
+        if self.ok:
+            return Outcome.from_code(OutcomeCode.published, self.message)
+        return Outcome.from_code(self.code, self.message)
 
     @classmethod
     def from_outcome(cls, outcome: Outcome) -> PublishResult:
