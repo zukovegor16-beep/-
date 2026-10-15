@@ -1,14 +1,18 @@
 from __future__ import annotations
 
 import logging
+import time
 from dataclasses import dataclass
-from typing import Any
+from threading import Lock
 
 import httpx
 
 from tiktok_publisher.config import AppSettings
 
 logger = logging.getLogger(__name__)
+
+_start_lock = Lock()
+_last_start_at: float = 0.0
 
 
 @dataclass
@@ -36,6 +40,7 @@ class DolphinClient:
             return False, str(e)
 
     def start_profile(self, profile_id: str) -> ProfileSession:
+        global _last_start_at
         try:
             import pyanty as dolphin  # type: ignore
             from pyanty import DolphinAPI  # type: ignore
@@ -43,6 +48,13 @@ class DolphinClient:
             raise RuntimeError(
                 "Установите Dolphin support: pip install 'tiktok-publisher[dolphin]'"
             ) from e
+
+        interval = self.settings.orchestrator.dolphin_min_start_interval_sec
+        with _start_lock:
+            wait = interval - (time.time() - _last_start_at)
+            if wait > 0:
+                time.sleep(wait)
+            _last_start_at = time.time()
 
         token = self.settings.dolphin.api_token
         api = DolphinAPI(api_key=token) if token else DolphinAPI()

@@ -18,6 +18,7 @@ def write_run_report(
     records: list[PublicationRecord],
     accounts: list[AccountRow],
     settings: AppSettings,
+    run_duration_sec: float | None = None,
 ) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     pub_rows = [
@@ -51,14 +52,25 @@ def write_run_report(
         )
     df_sum = pd.DataFrame(summary)
 
+    ok_n = sum(1 for r in records if r.status == "ok")
+    err_n = sum(1 for r in records if r.status == "error")
+    duration = run_duration_sec or 1.0
+    metrics = {
+        "run_id": run_id,
+        "run_duration_sec": round(duration, 1),
+        "posts_ok": ok_n,
+        "posts_error": err_n,
+        "posts_per_hour": round(ok_n / duration * 3600, 2) if duration else 0,
+        "avg_sec_per_post": round(duration / max(len(records), 1), 1),
+    }
+
     with pd.ExcelWriter(path, engine="openpyxl") as writer:
         df_pub.to_excel(writer, sheet_name="Публикации", index=False)
         df_sum.to_excel(writer, sheet_name="Сводка", index=False)
-        meta = pd.DataFrame([{"run_id": run_id}])
-        meta.to_excel(writer, sheet_name="Meta", index=False)
+        pd.DataFrame([metrics]).to_excel(writer, sheet_name="Метрики", index=False)
 
     wb = load_workbook(path)
-    for sheet in ("Публикации", "Сводка"):
+    for sheet in ("Публикации", "Сводка", "Метрики"):
         if sheet in wb.sheetnames:
             ws = wb[sheet]
             for cell in ws[1]:

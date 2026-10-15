@@ -32,12 +32,36 @@ def main() -> None:
 
     sub.add_parser("doctor", help="Check config, Excel, folders, Dolphin")
 
+    sub.add_parser("plan", help="Show run plan from Excel (no publish)")
+
+    p_smoke = sub.add_parser("smoke", help="Open TikTok upload in Dolphin profile")
+    p_smoke.add_argument("--profile-id", required=True)
+
     args = parser.parse_args()
     settings = load_settings()
     setup_logging(settings.logging.log_dir)
 
     if args.cmd == "doctor":
         sys.exit(run_doctor(settings))
+
+    if args.cmd == "plan":
+        from tiktok_publisher.excel_registry import ExcelRegistry
+        from tiktok_publisher.run_plan import build_run_plan
+
+        accs = ExcelRegistry(settings).read_accounts()
+        plan = build_run_plan(accs, settings)
+        print(f"Accounts: {len(accs)}, total slots: {plan.total_slots}")
+        for s in plan.snapshots:
+            print(
+                f"  {s.account_no} {s.account_name!r} queue={s.queue_count} "
+                f"per_run={s.videos_per_run} profile={s.dolphin_profile_id}"
+            )
+        return
+
+    if args.cmd == "smoke":
+        from tiktok_publisher.smoke import run_smoke
+
+        sys.exit(run_smoke(settings, args.profile_id))
 
     if args.cmd == "report":
         from tiktok_publisher.state import StateStore

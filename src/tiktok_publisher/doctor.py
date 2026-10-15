@@ -59,5 +59,9 @@ def run_doctor(settings: AppSettings | None = None) -> int:
     else:
         print(f"[warn] selectors missing: {sel}")
 
+    k = settings.orchestrator.max_concurrent_profiles
+    print(f"[info] max_concurrent_profiles={k} (рекомендация: K=1 до 16GB RAM, K=2–3 при 32GB+)")
+    print(f"[info] speed_preset={settings.orchestrator.speed_preset}")
+
     print("\n=== done ===")
     return 0 if ok else 1

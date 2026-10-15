@@ -7,6 +7,7 @@ from tiktok_publisher.config import AppSettings
 
 
 POSTED_DIRNAME = "posted"
+FAILED_DIRNAME = "failed"
 
 
 def list_pending_videos(folder: Path, settings: AppSettings) -> list[Path]:
@@ -28,6 +29,16 @@ def list_pending_videos(folder: Path, settings: AppSettings) -> list[Path]:
 def next_video(folder: Path, settings: AppSettings) -> Path | None:
     pending = list_pending_videos(folder, settings)
     return pending[0] if pending else None
+
+
+def move_to_failed(video: Path) -> Path:
+    failed_dir = video.parent / FAILED_DIRNAME
+    failed_dir.mkdir(parents=True, exist_ok=True)
+    dest = failed_dir / video.name
+    if dest.exists():
+        dest = failed_dir / f"{video.stem}_{video.stat().st_mtime_ns}{video.suffix}"
+    shutil.move(str(video), str(dest))
+    return dest
 
 
 def move_to_posted(video: Path) -> Path:

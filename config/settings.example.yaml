@@ -7,10 +7,15 @@ dolphin:
 orchestrator:
   mode: sequential
   max_concurrent_profiles: 1
+  # safe | normal | fast — фиксированные паузы; custom — использовать delay_* ниже
+  speed_preset: normal
   delay_between_posts_sec:
     min: 45
     max: 120
   delay_after_error_sec: 300
+  count_errors_toward_limit: true
+  skip_failed_file: true
+  dolphin_min_start_interval_sec: 1.0
   posting_window: null
   timezone: "Europe/Moscow"
   on_success: move_to_posted  # единственный режим v1 (вариант A)

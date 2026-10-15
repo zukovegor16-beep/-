@@ -20,11 +20,15 @@ class DelayRange(BaseModel):
 class OrchestratorSettings(BaseModel):
     mode: Literal["sequential", "round_robin"] = "sequential"
     max_concurrent_profiles: int = 1
+    speed_preset: Literal["safe", "normal", "fast", "custom"] = "normal"
     delay_between_posts_sec: DelayRange = Field(default_factory=DelayRange)
     delay_after_error_sec: int = 300
+    count_errors_toward_limit: bool = True
+    skip_failed_file: bool = True
     posting_window: dict[str, str] | None = None
     timezone: str = "Europe/Moscow"
     on_success: Literal["move_to_posted"] = "move_to_posted"
+    dolphin_min_start_interval_sec: float = 1.0
 
 
 class QueueSettings(BaseModel):

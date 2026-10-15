@@ -39,6 +39,7 @@ def test_dry_run_sequential(tmp_path: Path):
             "sheet_accounts": "Аккаунты",
         },
         orchestrator={
+            "speed_preset": "custom",
             "delay_between_posts_sec": {"min": 0, "max": 0},
             "delay_after_error_sec": 0,
         },

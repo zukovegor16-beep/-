@@ -26,7 +26,9 @@
     <a id="btnReport" href="/api/report/latest">Скачать отчёт</a>
     <span id="state" class="badge">—</span>
     <span id="dryRun"></span>
+    <span id="speedInfo"></span>
   </div>
+  <div id="progress" class="task" style="display:none"></div>
   <div id="task" class="task" style="display:none"></div>
   <table>
     <thead>
@@ -51,6 +53,19 @@
       st.textContent = d.running ? 'Идёт прогон' : 'Ожидание';
       st.className = 'badge' + (d.running ? ' run' : '');
       document.getElementById('dryRun').textContent = d.dry_run ? '(dry-run)' : '';
+      document.getElementById('speedInfo').textContent =
+        `preset=${d.speed_preset || 'normal'} K=${d.max_concurrent_profiles || 1}`;
+      const pr = d.progress || {};
+      const pel = document.getElementById('progress');
+      if (pr.total_slots) {
+        pel.style.display = 'block';
+        pel.innerHTML = `<strong>Прогресс:</strong> ${pr.done_slots || 0}/${pr.total_slots} ` +
+          `(ok ${pr.ok_count || 0}, err ${pr.error_count || 0}) · ` +
+          `${pr.posts_per_hour || 0} posts/h` +
+          (pr.eta_sec != null ? ` · ETA ~${Math.round(pr.eta_sec)}s` : '');
+      } else {
+        pel.style.display = 'none';
+      }
       const tb = document.getElementById('accounts');
       tb.innerHTML = '';
       (d.accounts || []).forEach(a => {

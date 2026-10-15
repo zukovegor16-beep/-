@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+from threading import Lock
 from typing import Any
 
 from openpyxl import Workbook, load_workbook
@@ -68,6 +69,8 @@ class AccountRow:
 
 
 class ExcelRegistry:
+    _write_lock = Lock()
+
     def __init__(self, settings: AppSettings):
         self.settings = settings
         self.path = settings.excel_path
@@ -133,34 +136,35 @@ class ExcelRegistry:
         """Returns False if file locked or missing."""
         if not self.path.is_file():
             return False
-        try:
-            wb = load_workbook(self.path)
-        except PermissionError:
-            return False
-        sheet_name = self.settings.excel.sheet_accounts
-        if sheet_name not in wb.sheetnames:
+        with self._write_lock:
+            try:
+                wb = load_workbook(self.path)
+            except PermissionError:
+                return False
+            sheet_name = self.settings.excel.sheet_accounts
+            if sheet_name not in wb.sheetnames:
+                wb.close()
+                return False
+            ws = wb[sheet_name]
+            headers = [c.value for c in ws[1]]
+            col_map = _map_headers(tuple(headers))
+            now = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+            updates = {
+                "last_run_status": status,
+                "last_run_error": error or "",
+                "last_run_at": now,
+            }
+            for field, value in updates.items():
+                idx = col_map.get(field)
+                if idx is not None:
+                    ws.cell(row=row_index, column=idx + 1, value=value)
+            try:
+                wb.save(self.path)
+            except PermissionError:
+                wb.close()
+                return False
             wb.close()
-            return False
-        ws = wb[sheet_name]
-        headers = [c.value for c in ws[1]]
-        col_map = _map_headers(tuple(headers))
-        now = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
-        updates = {
-            "last_run_status": status,
-            "last_run_error": error or "",
-            "last_run_at": now,
-        }
-        for field, value in updates.items():
-            idx = col_map.get(field)
-            if idx is not None:
-                ws.cell(row=row_index, column=idx + 1, value=value)
-        try:
-            wb.save(self.path)
-        except PermissionError:
-            wb.close()
-            return False
-        wb.close()
-        return True
+            return True
 
     def append_log_row(
         self,
@@ -174,43 +178,44 @@ class ExcelRegistry:
     ) -> bool:
         if not self.path.is_file():
             return False
-        try:
-            wb = load_workbook(self.path)
-        except PermissionError:
-            return False
-        log_name = "Log"
-        if log_name not in wb.sheetnames:
-            ws = wb.create_sheet(log_name)
+        with self._write_lock:
+            try:
+                wb = load_workbook(self.path)
+            except PermissionError:
+                return False
+            log_name = "Log"
+            if log_name not in wb.sheetnames:
+                ws = wb.create_sheet(log_name)
+                ws.append(
+                    [
+                        "started_at",
+                        "finished_at",
+                        "account_no",
+                        "file",
+                        "caption_used",
+                        "status",
+                        "error",
+                    ]
+                )
+            ws = wb[log_name]
             ws.append(
                 [
-                    "started_at",
-                    "finished_at",
-                    "account_no",
-                    "file",
-                    "caption_used",
-                    "status",
-                    "error",
+                    started_at,
+                    finished_at,
+                    account_no,
+                    filename,
+                    caption_used,
+                    status,
+                    error,
                 ]
             )
-        ws = wb[log_name]
-        ws.append(
-            [
-                started_at,
-                finished_at,
-                account_no,
-                filename,
-                caption_used,
-                status,
-                error,
-            ]
-        )
-        try:
-            wb.save(self.path)
-        except PermissionError:
+            try:
+                wb.save(self.path)
+            except PermissionError:
+                wb.close()
+                return False
             wb.close()
-            return False
-        wb.close()
-        return True
+            return True
 
 
 def create_workbook_from_template(template: Path, dest: Path) -> None:
